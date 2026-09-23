@@ -8,7 +8,6 @@ import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -65,14 +64,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        // The phone sits next to the tablet as a control pad; don't let it sleep.
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-
-        val store = (application as KeySetApp).layouts
+        val app = application as KeySetApp
         setContent {
             KeySetTheme {
-                KeySetScreen(
-                    store = store,
+                AppShell(
+                    layouts = app.layouts,
+                    settingsStore = app.settings,
                     onFixStatus = ::fixStatus,
                     onMakeDiscoverable = ::makeDiscoverable,
                     onScan = ::scanForDevices,

@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Computer
@@ -56,6 +55,7 @@ import dev.keyset.core.bluetooth.bluetoothClassOrNull
 import dev.keyset.core.bluetooth.displayName
 import dev.keyset.core.designsystem.component.HelpButton
 import dev.keyset.core.designsystem.theme.KeySetColors
+import dev.keyset.core.designsystem.theme.KeySetShapes
 import dev.keyset.core.designsystem.theme.Palette
 
 /** Bottom sheet for pairing and connecting to a host (tablet or laptop). */
@@ -171,7 +171,7 @@ private fun NearbyDevices(scan: ScanState, onScan: () -> Unit) {
 private fun DiscoverableFallback(onMakeDiscoverable: () -> Unit) {
     Spacer(Modifier.size(16.dp))
     Row(verticalAlignment = Alignment.CenterVertically) {
-        OutlinedButton(onClick = onMakeDiscoverable, modifier = Modifier.weight(1f)) {
+        OutlinedButton(onClick = onMakeDiscoverable, shape = KeySetShapes.Small, modifier = Modifier.weight(1f)) {
             Text("Make phone discoverable")
         }
         HelpButton(
@@ -211,7 +211,7 @@ private fun DeviceRow(
     Row(
         Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
+            .clip(KeySetShapes.Small)
             .background(if (highlighted) Palette[2].copy(alpha = 0.18f) else Color.Transparent)
             .clickable(onClick = onClick)
             .padding(vertical = 12.dp, horizontal = 8.dp),

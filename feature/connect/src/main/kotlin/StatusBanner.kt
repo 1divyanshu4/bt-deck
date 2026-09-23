@@ -9,9 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -28,42 +25,49 @@ import androidx.compose.ui.unit.sp
 import dev.keyset.core.bluetooth.HidStatus
 import dev.keyset.core.designsystem.component.HelpButton
 import dev.keyset.core.designsystem.theme.KeySetColors
+import dev.keyset.core.designsystem.theme.KeySetShapes
 import dev.keyset.core.designsystem.theme.Palette
 
 /** Compact connection indicator for the top bar. */
 @Composable
-fun StatusChip(status: HidStatus, onClick: () -> Unit) {
-    val (text, color) = when (status) {
-        is HidStatus.Connected -> status.name to Palette[2]
-        is HidStatus.Connecting -> "Linking…" to Palette[3]
-        HidStatus.Ready -> "Offline" to Palette[3]
-        is HidStatus.ConnectFailed -> "Offline" to Palette[4]
-        else -> "Off" to Palette[4]
-    }
+fun StatusChip(status: HidStatus, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val (text, color) = chipText(status)
     Row(
-        Modifier
-            .clip(RoundedCornerShape(50))
+        modifier
+            .clip(KeySetShapes.Small)
             .background(KeySetColors.Surface)
             .clickable(onClick = onClick)
-            .padding(horizontal = 10.dp, vertical = 8.dp),
+            .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(Modifier.size(8.dp).clip(CircleShape).background(color))
-        Spacer(Modifier.width(6.dp))
-        Text(
-            text,
-            fontSize = 13.sp,
-            color = Color.White,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.widthIn(max = 96.dp),
-        )
+        Box(Modifier.size(8.dp).clip(KeySetShapes.Small).background(color))
+        Spacer(Modifier.width(8.dp))
+        Text(text, fontSize = 14.sp, color = Color.White, maxLines = 1, overflow = TextOverflow.Ellipsis)
     }
+}
+
+/** What the chip says for each state, and its dot colour (green, amber or red). */
+private fun chipText(status: HidStatus): Pair<String, Color> = when (status) {
+    is HidStatus.Connected -> "Connected to ${status.name}" to Palette[2]
+    is HidStatus.Connecting -> "Connecting to ${status.name}…" to Palette[3]
+    HidStatus.Starting -> "Starting…" to Palette[3]
+    HidStatus.Ready, is HidStatus.ConnectFailed -> "Not connected" to Palette[3]
+    HidStatus.Stopped -> "Keyboard off" to Palette[4]
+    HidStatus.BluetoothOff -> "Bluetooth off" to Palette[4]
+    HidStatus.NoBluetooth -> "No Bluetooth" to Palette[4]
+    HidStatus.NeedsPermission -> "Needs permission" to Palette[4]
+    HidStatus.NeedsBluetoothRestart -> "Restart Bluetooth" to Palette[4]
+    is HidStatus.Unsupported -> "Unavailable" to Palette[4]
 }
 
 /** One-line status with an action (and a "?" for details) whenever not connected. */
 @Composable
-fun StatusBanner(status: HidStatus, onFix: (HidStatus) -> Unit, onOpenConnect: () -> Unit) {
+fun StatusBanner(
+    status: HidStatus,
+    onFix: (HidStatus) -> Unit,
+    onOpenConnect: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     data class Banner(val message: String, val help: String?, val action: String?)
     val b = when (status) {
         HidStatus.NoBluetooth -> Banner("No Bluetooth", "This phone has no Bluetooth adapter.", null)
@@ -71,7 +75,6 @@ fun StatusBanner(status: HidStatus, onFix: (HidStatus) -> Unit, onOpenConnect: (
         HidStatus.NeedsPermission ->
             Banner("Permission needed", "KeySet needs Bluetooth permission to act as a keyboard.", "Allow")
         is HidStatus.Unsupported -> Banner(status.title, status.detail, "Retry")
-        HidStatus.Ready -> Banner("Not connected", null, "Connect")
         is HidStatus.ConnectFailed -> Banner(
             "Connect from ${status.name} once",
             "${status.name} hasn't accepted this device as a keyboard yet. Connect once from " +
@@ -90,10 +93,10 @@ fun StatusBanner(status: HidStatus, onFix: (HidStatus) -> Unit, onOpenConnect: (
         else -> return
     }
     Row(
-        Modifier
+        modifier
             .fillMaxWidth()
             .padding(top = 4.dp)
-            .clip(RoundedCornerShape(12.dp))
+            .clip(KeySetShapes.Medium)
             .background(KeySetColors.Surface)
             .padding(start = 14.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
         verticalAlignment = Alignment.CenterVertically,

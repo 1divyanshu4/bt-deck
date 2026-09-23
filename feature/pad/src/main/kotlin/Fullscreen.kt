@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -28,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import dev.keyset.core.designsystem.theme.KeySetShapes
 import dev.keyset.core.designsystem.theme.Palette
 import kotlinx.coroutines.delay
 
@@ -65,7 +65,7 @@ fun BoxScope.FullscreenHint() {
         modifier = Modifier
             .align(Alignment.BottomCenter)
             .padding(bottom = 24.dp, start = 16.dp, end = 16.dp)
-            .clip(RoundedCornerShape(50))
+            .clip(KeySetShapes.Small)
             .background(Color(0xE6202026))
             .padding(horizontal = 14.dp, vertical = 8.dp),
     )
@@ -78,7 +78,7 @@ fun DisconnectedStrip(onExit: () -> Unit) {
         Modifier
             .fillMaxWidth()
             .padding(top = 8.dp)
-            .clip(RoundedCornerShape(12.dp))
+            .clip(KeySetShapes.Medium)
             .background(Palette[4])
             .clickable(onClick = onExit)
             .padding(horizontal = 14.dp, vertical = 8.dp),

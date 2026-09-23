@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.kotlin.compose) apply false
     alias(libs.plugins.spotless)
+    alias(libs.plugins.aboutlibraries) apply false
 }
 
 // Formatting and lint for every Kotlin file (rules live in .editorconfig).

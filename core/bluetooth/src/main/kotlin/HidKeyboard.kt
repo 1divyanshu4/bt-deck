@@ -11,6 +11,7 @@ import android.bluetooth.BluetoothProfile
 import android.content.Context
 import android.util.Log
 import dev.keyset.core.model.buildReport
+import dev.keyset.core.model.keystrokeFor
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -69,6 +70,10 @@ object HidKeyboard {
     private const val PREFS = "hid"
     private const val PREF_LAST_HOST = "last_host"
     private const val PREF_AUTO_RECONNECT = "auto_reconnect"
+
+    /** Source id for keys pressed by [typeText]. */
+    private const val TYPING = "typing"
+    private const val KEY_GAP_MS = 12L
 
     // Standard boot keyboard: 1 byte modifiers, 1 reserved, 6 key slots.
     private val DESCRIPTOR = byteArrayOf(
@@ -522,6 +527,28 @@ object HidKeyboard {
             delay(35)
             release(source)
         }
+    }
+
+    /**
+     * Types [text] as key presses, one character at a time, using the US keyboard layout.
+     * Returns how many characters were skipped because they have no key (e.g. emoji).
+     */
+    suspend fun typeText(text: String): Int {
+        var skipped = 0
+        for (c in text) {
+            val keystroke = keystrokeFor(c)
+            if (keystroke == null) {
+                skipped++
+                continue
+            }
+            val (modifiers, key) = keystroke
+            press(TYPING, modifiers, key)
+            delay(KEY_GAP_MS)
+            release(TYPING)
+            // Hosts can merge a repeated letter if press and release come too close together.
+            delay(KEY_GAP_MS)
+        }
+        return skipped
     }
 
     fun releaseAll() {

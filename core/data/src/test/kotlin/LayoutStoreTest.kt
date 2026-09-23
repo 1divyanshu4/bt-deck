@@ -66,6 +66,12 @@ class LayoutStoreTest {
         assertEquals(PressMode.TAP, decodeState(raw)!!.selected.buttons.single().mode)
     }
 
+    @Test fun uniqueName_keepsFreeNamesAndNumbersTakenOnes() {
+        assertEquals("Drawing", uniqueName("Drawing", setOf("Krita")))
+        assertEquals("Drawing (default)", uniqueName("Drawing", setOf("Drawing")))
+        assertEquals("Drawing (default 2)", uniqueName("Drawing", setOf("Drawing", "Drawing (default)")))
+    }
+
     @Test fun defaultLayoutIsSane() {
         val buttons = defaultLayouts().flatMap { it.buttons }
         assertTrue(buttons.isNotEmpty())

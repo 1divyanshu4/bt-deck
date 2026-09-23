@@ -1,0 +1,203 @@
+package dev.keyset
+
+import android.content.res.Configuration
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.GridView
+import androidx.compose.material.icons.filled.Keyboard
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.ViewQuilt
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.unit.dp
+import dev.keyset.core.bluetooth.HidKeyboard
+import dev.keyset.core.bluetooth.HidStatus
+import dev.keyset.core.data.LayoutStore
+import dev.keyset.core.data.SettingsStore
+import dev.keyset.core.designsystem.theme.KeySetColors
+import dev.keyset.feature.connect.ConnectSheet
+import dev.keyset.feature.connect.StatusBanner
+import dev.keyset.feature.connect.StatusChip
+import dev.keyset.feature.keyboard.KeyboardScreen
+import dev.keyset.feature.layouts.LayoutsScreen
+import dev.keyset.feature.pad.SystemBarsHidden
+import dev.keyset.feature.settings.AboutScreen
+import dev.keyset.feature.settings.HelpScreen
+import dev.keyset.feature.settings.SettingsScreen
+
+/** The four tabs, in the order they appear in the bottom bar / side rail. */
+enum class Tab(val label: String, val icon: ImageVector) {
+    Pad("Pad", Icons.Default.GridView),
+    Layouts("Layouts", Icons.Default.ViewQuilt),
+    Keyboard("Keyboard", Icons.Default.Keyboard),
+    Settings("Settings", Icons.Default.Settings),
+}
+
+/** Pages inside the Settings tab. Help and licenses open from About. */
+private enum class SettingsPage { Main, About, Help, Licenses }
+
+/**
+ * The whole app: a bottom bar with Pad, Keyboard, Layouts and Settings. Also owns the
+ * things several tabs share: fullscreen, the connect sheet, and keep-screen-on.
+ */
+@Composable
+fun AppShell(
+    layouts: LayoutStore,
+    settingsStore: SettingsStore,
+    onFixStatus: (HidStatus) -> Unit,
+    onMakeDiscoverable: () -> Unit,
+    onScan: () -> Unit,
+) {
+    val state by layouts.state.collectAsState()
+    val settings by settingsStore.settings.collectAsState()
+    val status by HidKeyboard.status.collectAsState()
+
+    var tab by rememberSaveable { mutableStateOf(Tab.Pad) }
+    var settingsPage by rememberSaveable { mutableStateOf(SettingsPage.Main) }
+    var fullscreen by rememberSaveable { mutableStateOf(false) }
+    var showConnect by rememberSaveable { mutableStateOf(false) }
+    val openConnect = { showConnect = true }
+
+    KeepScreenOn(settings.keepScreenOn)
+    SystemBarsHidden(fullscreen)
+    // Back leaves fullscreen, then closes a settings page, then returns to the pad.
+    BackHandler(enabled = fullscreen || tab != Tab.Pad) {
+        when {
+            fullscreen -> fullscreen = false
+            settingsPage == SettingsPage.Help || settingsPage == SettingsPage.Licenses ->
+                settingsPage =
+                    SettingsPage.About
+            settingsPage == SettingsPage.About -> settingsPage = SettingsPage.Main
+            else -> tab = Tab.Pad
+        }
+    }
+
+    // Wide screens (landscape phones, tablets) get a side rail so screens keep their height.
+    val landscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val showBottomBar = !fullscreen && !landscape
+    val showRail = !fullscreen && landscape
+
+    Scaffold(
+        containerColor = KeySetColors.Background,
+        contentWindowInsets = WindowInsets.safeDrawing,
+        bottomBar = { if (showBottomBar) BottomBar(tab, onSelect = { tab = it }) },
+    ) { padding ->
+        Row(Modifier.fillMaxSize().padding(padding)) {
+            if (showRail) SideRail(tab, onSelect = { tab = it })
+            val content = Modifier.weight(1f).fillMaxHeight()
+            when (tab) {
+                Tab.Pad -> PadScreen(
+                    state = state,
+                    store = layouts,
+                    settings = settings,
+                    status = status,
+                    fullscreen = fullscreen,
+                    onFullscreenChange = { fullscreen = it },
+                    onOpenConnect = openConnect,
+                    onFixStatus = onFixStatus,
+                    modifier = content,
+                )
+                Tab.Keyboard -> Column(content) {
+                    // Shows only when something needs fixing; the chip covers "not connected".
+                    StatusBanner(status, onFixStatus, openConnect, Modifier.padding(horizontal = 12.dp))
+                    KeyboardScreen(vibrate = settings.vibrate, modifier = Modifier.weight(1f)) {
+                        StatusChip(status, openConnect)
+                    }
+                }
+                Tab.Layouts -> LayoutsScreen(state, layouts, onOpen = { tab = Tab.Pad }, modifier = content)
+                Tab.Settings -> when (settingsPage) {
+                    SettingsPage.Main -> SettingsScreen(
+                        settings = settings,
+                        onChange = settingsStore::update,
+                        onOpenAbout = { settingsPage = SettingsPage.About },
+                        modifier = content,
+                    )
+                    SettingsPage.About -> AboutScreen(
+                        appVersion = appVersion(),
+                        onBack = { settingsPage = SettingsPage.Main },
+                        onOpenHelp = { settingsPage = SettingsPage.Help },
+                        onOpenLicenses = { settingsPage = SettingsPage.Licenses },
+                        modifier = content,
+                    )
+                    SettingsPage.Help -> HelpScreen(onBack = { settingsPage = SettingsPage.About }, modifier = content)
+                    SettingsPage.Licenses -> LicensesScreen(onBack = {
+                        settingsPage = SettingsPage.About
+                    }, modifier = content)
+                }
+            }
+        }
+    }
+
+    if (showConnect) ConnectSheet(status, onMakeDiscoverable, onScan, onDismiss = { showConnect = false })
+}
+
+@Composable
+private fun BottomBar(selected: Tab, onSelect: (Tab) -> Unit) {
+    NavigationBar(containerColor = KeySetColors.Surface) {
+        for (tab in Tab.entries) {
+            NavigationBarItem(
+                selected = tab == selected,
+                onClick = { onSelect(tab) },
+                icon = { Icon(tab.icon, contentDescription = null) },
+                label = { Text(tab.label) },
+            )
+        }
+    }
+}
+
+@Composable
+private fun SideRail(selected: Tab, onSelect: (Tab) -> Unit) {
+    NavigationRail(containerColor = KeySetColors.Surface) {
+        Spacer(Modifier.weight(1f))
+        for (tab in Tab.entries) {
+            NavigationRailItem(
+                selected = tab == selected,
+                onClick = { onSelect(tab) },
+                icon = { Icon(tab.icon, contentDescription = null) },
+                label = { Text(tab.label) },
+            )
+        }
+        Spacer(Modifier.weight(1f))
+    }
+}
+
+/** Keeps the phone awake while KeySet is on screen, if the setting is on. */
+@Composable
+private fun KeepScreenOn(enabled: Boolean) {
+    val view = LocalView.current
+    DisposableEffect(enabled) {
+        view.keepScreenOn = enabled
+        onDispose { view.keepScreenOn = false }
+    }
+}
+
+@Composable
+private fun appVersion(): String {
+    val context = LocalContext.current
+    return context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "?"
+}

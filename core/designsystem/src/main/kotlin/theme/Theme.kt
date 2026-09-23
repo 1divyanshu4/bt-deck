@@ -1,13 +1,16 @@
 package dev.keyset.core.designsystem.theme
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
 /** Fixed dark palette: the pad sits next to a drawing tablet, often in a dim room. */
 object KeySetColors {
@@ -15,6 +18,16 @@ object KeySetColors {
     val Surface = Color(0xFF1C1C20)
     val SurfaceHigh = Color(0xFF26262C)
     val Primary = Color(0xFFB9A6FF)
+}
+
+/**
+ * Corner radii. Only two sizes are used anywhere in the app: small parts (buttons, chips,
+ * tiles, keyboard keys) get [Small], larger surfaces (pad keys, cards, dialogs, sheets) get
+ * [Medium].
+ */
+object KeySetShapes {
+    val Small = RoundedCornerShape(8.dp)
+    val Medium = RoundedCornerShape(12.dp)
 }
 
 /** Button accent colors, stored by index in PadButton.color. */
@@ -36,6 +49,14 @@ fun KeySetTheme(content: @Composable () -> Unit) {
             surface = KeySetColors.Surface,
             surfaceContainer = KeySetColors.Surface,
             surfaceContainerHigh = KeySetColors.SurfaceHigh,
+        ),
+        // Material components pick from these; nothing is rounder than Medium.
+        shapes = Shapes(
+            extraSmall = KeySetShapes.Small,
+            small = KeySetShapes.Small,
+            medium = KeySetShapes.Medium,
+            large = KeySetShapes.Medium,
+            extraLarge = KeySetShapes.Medium,
         ),
         content = content,
     )

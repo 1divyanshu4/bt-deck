@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CircularProgressIndicator
@@ -43,6 +42,7 @@ import dev.keyset.core.data.CustomIcons
 import dev.keyset.core.designsystem.component.ButtonIcon
 import dev.keyset.core.designsystem.icon.PadIcon
 import dev.keyset.core.designsystem.icon.PadIcons
+import dev.keyset.core.designsystem.theme.KeySetShapes
 import dev.keyset.core.designsystem.theme.Palette
 import kotlinx.coroutines.launch
 
@@ -177,7 +177,7 @@ private fun IconGroup(title: String, icons: List<PadIcon>, selected: String?, ti
 /** A 48dp square choice; the selected one is filled with [tint] and outlined. */
 @Composable
 private fun IconTile(selected: Boolean, tint: Color, onClick: () -> Unit, content: @Composable () -> Unit) {
-    val shape = RoundedCornerShape(12.dp)
+    val shape = KeySetShapes.Small
     val background = if (selected) tint else Color.White.copy(alpha = 0.06f)
     val outline = if (selected) Color.White else Color.Transparent
     Box(

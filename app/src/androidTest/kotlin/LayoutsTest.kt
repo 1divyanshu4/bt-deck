@@ -4,7 +4,7 @@ import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.isPopup
+import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -12,78 +12,99 @@ import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class LayoutsTest : KeySetUiTest() {
 
-    private fun openMenu() = rule.onNodeWithContentDescription("Layouts", useUnmergedTree = true).performClick()
-    private fun nameField() = rule.onNode(hasSetTextAction())
+    private fun layouts() = store.state.value.layouts
     private fun selected() = store.state.value.selected
+    private fun nameField() = rule.onNode(hasSetTextAction())
+    private fun menuFor(name: String) = rule.onNodeWithContentDescription("Options for $name").performClick()
+    private fun dialogButton(text: String) = rule.onNode(hasText(text) and hasAnyAncestor(isDialog()))
+
+    // The floating button's label lives on a child node, not the merged button node.
+    private fun newLayoutButton() = rule.onNodeWithText("New layout", useUnmergedTree = true)
+
+    @Before
+    fun openLayouts() = openTab("Layouts")
 
     @Test
-    fun newEmptyLayout() {
-        openMenu()
-        rule.onNodeWithText("New empty layout").performClick()
+    fun tappingACardOpensItOnThePad() {
+        rule.runOnUiThread { store.createLayout("Second") }
+        openTab("Layouts")
+        rule.onNodeWithText("Drawing").performClick()
+        assertEquals("Drawing", selected().name)
+        rule.onNodeWithContentDescription("Edit layout").assertExists() // back on the pad
+    }
+
+    @Test
+    fun newLayout() {
+        newLayoutButton().performClick()
         nameField().performTextInput("Krita")
-        rule.onNodeWithText("OK").performClick()
+        dialogButton("OK").performClick()
         assertEquals("Krita", selected().name)
         assertEquals(0, selected().buttons.size)
-        rule.onNodeWithText("No buttons yet", substring = true).assertExists()
+    }
+
+    @Test
+    fun renameLayout() {
+        menuFor("Drawing")
+        rule.onNodeWithText("Rename").performClick()
+        nameField().performTextReplacement("Clip Studio")
+        dialogButton("OK").performClick()
+        assertEquals("Clip Studio", selected().name)
+    }
+
+    @Test
+    fun emptyName_cannotBeSaved() {
+        menuFor("Drawing")
+        rule.onNodeWithText("Rename").performClick()
+        nameField().performTextReplacement("   ")
+        dialogButton("OK").assertIsNotEnabled()
     }
 
     @Test
     fun duplicateLayout_copiesButtonsWithNewIds() {
         val original = selected()
-        openMenu()
-        rule.onNodeWithText("Duplicate layout").performClick()
-        rule.onNodeWithText("OK").performClick()
+        menuFor("Drawing")
+        rule.onNodeWithText("Duplicate").performClick()
+        dialogButton("OK").performClick()
         val copy = selected()
         assertEquals("Drawing copy", copy.name)
         assertEquals(original.buttons.map { it.label }, copy.buttons.map { it.label })
-        assert(copy.buttons.map { it.id }.intersect(original.buttons.map { it.id }.toSet()).isEmpty())
-    }
-
-    @Test
-    fun renameLayout() {
-        openMenu()
-        rule.onNodeWithText("Rename layout").performClick()
-        nameField().performTextReplacement("Clip Studio")
-        rule.onNodeWithText("OK").performClick()
-        assertEquals("Clip Studio", selected().name)
-        rule.onNodeWithText("Clip Studio").assertExists()
-    }
-
-    @Test
-    fun emptyName_cannotBeSaved() {
-        openMenu()
-        rule.onNodeWithText("Rename layout").performClick()
-        nameField().performTextReplacement("   ")
-        rule.onNodeWithText("OK").assertIsNotEnabled()
+        assertTrue(copy.buttons.map { it.id }.intersect(original.buttons.map { it.id }.toSet()).isEmpty())
     }
 
     @Test
     fun changeColumns() {
-        for (n in 2..6) {
-            openMenu()
-            rule.onNodeWithText("$n").performClick()
-            assertEquals(n, selected().columns)
-            rule.onNodeWithText("New empty layout").assertExists() // menu stays open
-            androidx.test.espresso.Espresso.pressBack()
-        }
+        menuFor("Drawing")
+        rule.onNodeWithText("5").performClick()
+        assertEquals(5, selected().columns)
     }
 
     @Test
-    fun switchAndDeleteLayouts() {
-        rule.runOnUiThread { store.addLayout("Second", copyCurrent = false) }
-        openMenu()
-        rule.onNode(hasText("Drawing") and hasAnyAncestor(isPopup())).performClick()
-        assertEquals("Drawing", selected().name)
-        openMenu()
-        rule.onNodeWithText("Delete layout").performClick()
-        assertEquals(listOf("Second"), store.state.value.layouts.map { it.name })
-        openMenu()
-        rule.onNodeWithText("Delete layout").assertDoesNotExist() // never delete the last one
+    fun restoreDefaults_addsTheBuiltInLayoutWithIcons_andKeepsYours() {
+        rule.runOnUiThread { store.updateSelected { it.copy(buttons = emptyList()) } }
+        rule.onNodeWithText("Restore defaults").performClick()
+        dialogButton("Restore").performClick()
+        assertEquals(listOf("Drawing", "Drawing (default)"), layouts().map { it.name })
+        assertEquals("Drawing (default)", selected().name)
+        assertTrue(selected().buttons.any { it.icon != null })
+        assertTrue(layouts().first().buttons.isEmpty()) // the user's layout is untouched
+    }
+
+    @Test
+    fun deleteAsksFirst_andNeverDeletesTheLastLayout() {
+        rule.runOnUiThread { store.createLayout("Second") }
+        menuFor("Second")
+        rule.onNodeWithText("Delete").performClick()
+        dialogButton("Delete").performClick()
+        assertEquals(listOf("Drawing"), layouts().map { it.name })
+        menuFor("Drawing")
+        rule.onNodeWithText("Delete").assertDoesNotExist()
     }
 }

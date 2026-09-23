@@ -13,6 +13,9 @@ you draw with the other. Nothing needs to be installed on the tablet or laptop.
 - Separate layouts for different apps, with 2 to 6 columns and your own colours
 - About 110 drawing icons, or your own images
 - A fullscreen mode that shows only the buttons
+- A full keyboard (with Ctrl, Alt, arrows and F-keys), and a box for typing text with your
+  phone's own keyboard
+- Settings for how buttons look (icons only, text only…), vibration and spacing
 - Works with Android tablets, Windows, Mac, Linux and ChromeOS
 - Works with TalkBack
 
@@ -62,7 +65,8 @@ The app is split into small parts:
 - `core/data` saves layouts and custom icons
 - `core/bluetooth` makes the phone act as a keyboard
 - `core/designsystem` holds colours, icons and shared pieces of UI
-- `feature/pad`, `feature/editor` and `feature/connect` are the three parts of the screen
+- `feature/…` holds one part of the app each: the pad, the button editor, the connection
+  screen, the keyboard, the layouts list and the settings
 
 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) has more detail.
 

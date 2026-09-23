@@ -48,7 +48,15 @@ object Keys {
         add(Key(0x4E, "PgDn"))
         add(Key(0x49, "Insert"))
         (1..12).forEach { add(Key(0x39 + it, "F$it")) }
+        add(Key(0x39, "Caps Lock"))
+        add(Key(0x46, "Print Screen"))
+        add(Key(0x47, "Scroll Lock"))
+        add(Key(0x48, "Pause"))
+        add(Key(0x65, "Menu"))
     }
+
+    /** Usage of the key called [name]; for keys the app itself refers to. */
+    fun usage(name: String): Int = all.first { it.name == name }.usage
 
     private val byUsage = all.associateBy { it.usage }
 

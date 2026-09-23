@@ -22,11 +22,12 @@ class LayoutStore(context: Context) {
 
     fun select(id: String) = save(_state.value.copy(selectedId = id))
 
-    fun updateSelected(transform: (PadLayout) -> PadLayout) {
+    fun updateLayout(id: String, transform: (PadLayout) -> PadLayout) {
         val s = _state.value
-        val updated = transform(s.selected)
-        save(s.copy(layouts = s.layouts.map { if (it.id == updated.id) updated else it }))
+        save(s.copy(layouts = s.layouts.map { if (it.id == id) transform(it) else it }))
     }
+
+    fun updateSelected(transform: (PadLayout) -> PadLayout) = updateLayout(_state.value.selected.id, transform)
 
     fun upsertButton(button: PadButton) = updateSelected { layout ->
         val exists = layout.buttons.any { it.id == button.id }
@@ -50,25 +51,46 @@ class LayoutStore(context: Context) {
         l.copy(buttons = list)
     }
 
-    fun addLayout(name: String, copyCurrent: Boolean) {
-        val s = _state.value
-        val new = if (copyCurrent) {
-            s.selected.copy(
-                id = UUID.randomUUID().toString(),
-                name = name,
-                buttons = s.selected.buttons.map { it.copy(id = UUID.randomUUID().toString()) },
-            )
-        } else {
-            PadLayout(name = name, buttons = emptyList())
-        }
-        save(PadState(s.layouts + new, new.id))
+    /** Adds an empty layout and switches to it. */
+    fun createLayout(name: String) {
+        val new = PadLayout(name = name, buttons = emptyList())
+        save(PadState(_state.value.layouts + new, new.id))
     }
 
-    fun deleteSelected() {
+    /** Copies layout [id] (with fresh button ids) under a new name and switches to it. */
+    fun duplicateLayout(id: String, name: String) {
+        val s = _state.value
+        val source = s.layouts.firstOrNull { it.id == id } ?: return
+        val copy = source.copy(
+            id = UUID.randomUUID().toString(),
+            name = name,
+            buttons = source.buttons.map { it.copy(id = UUID.randomUUID().toString()) },
+        )
+        save(PadState(s.layouts + copy, copy.id))
+    }
+
+    /** Deletes layout [id]. The last layout is never deleted. */
+    fun deleteLayout(id: String) {
         val s = _state.value
         if (s.layouts.size <= 1) return
-        val rest = s.layouts.filterNot { it.id == s.selectedId }
-        save(PadState(rest, rest.first().id))
+        val rest = s.layouts.filterNot { it.id == id }
+        val selected = if (s.selectedId == id) rest.first().id else s.selectedId
+        save(PadState(rest, selected))
+    }
+
+    /**
+     * Adds fresh copies of the built-in layouts next to the user's own and switches to the
+     * first one. Nothing is deleted; copies get a new name if the old one is taken.
+     */
+    fun restoreDefaults() {
+        val s = _state.value
+        val taken = s.layouts.map { it.name }.toMutableSet()
+        val copies = defaultLayouts().map { layout ->
+            val name = uniqueName(layout.name, taken)
+            taken += name
+            layout.copy(name = name)
+        }
+        save(PadState(s.layouts + copies, copies.first().id))
     }
 
     /** Replaces everything with the built-in layouts (tests, or a future "reset" option). */
@@ -80,6 +102,13 @@ class LayoutStore(context: Context) {
     }
 
     private fun load(): PadState = prefs.getString("data", null)?.let(::decodeState) ?: defaultState()
+}
+
+/** [base], or "[base] (default)", "[base] (default 2)"… whichever isn't in [taken]. */
+internal fun uniqueName(base: String, taken: Set<String>): String {
+    if (base !in taken) return base
+    val candidates = sequenceOf("$base (default)") + generateSequence(2) { it + 1 }.map { "$base (default $it)" }
+    return candidates.first { it !in taken }
 }
 
 internal fun defaultState(): PadState {

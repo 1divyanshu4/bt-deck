@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
@@ -52,20 +51,27 @@ import androidx.compose.ui.unit.sp
 import dev.keyset.core.bluetooth.HidKeyboard
 import dev.keyset.core.designsystem.component.ButtonIcon
 import dev.keyset.core.designsystem.component.hasIcon
+import dev.keyset.core.designsystem.theme.KeySetShapes
 import dev.keyset.core.designsystem.theme.Palette
+import dev.keyset.core.model.ButtonStyle
+import dev.keyset.core.model.KeySetSettings
 import dev.keyset.core.model.PadButton
 import dev.keyset.core.model.PadLayout
 import dev.keyset.core.model.PressMode
 import dev.keyset.core.model.comboLabel
 
-private val KeyShape = RoundedCornerShape(18.dp)
+private val KeyShape = KeySetShapes.Medium
 
-/** The grid of shortcut keys for [layout]. In [editing] mode keys open the editor instead. */
+/**
+ * The grid of shortcut keys for [layout], drawn according to [settings]. In [editing] mode
+ * keys open the editor instead.
+ */
 @Composable
 fun Pad(
     layout: PadLayout,
     editing: Boolean,
     heldIds: Set<String>,
+    settings: KeySetSettings,
     onEdit: (PadButton) -> Unit,
     onAdd: () -> Unit,
     modifier: Modifier = Modifier,
@@ -76,16 +82,17 @@ fun Pad(
         EmptyPad(modifier)
         return
     }
-    Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+    val gap = settings.spacing.dp.dp
+    Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(gap)) {
         for (row in cells.chunked(layout.columns)) {
             val rowModifier = Modifier.fillMaxWidth().weight(1f).heightIn(max = 180.dp)
-            Row(rowModifier, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(rowModifier, horizontalArrangement = Arrangement.spacedBy(gap)) {
                 for (button in row) {
                     val cell = Modifier.weight(1f).fillMaxSize()
                     if (button == null) {
                         AddTile(onAdd, cell)
                     } else {
-                        PadKey(button, editing, held = button.id in heldIds, onEdit = { onEdit(button) }, cell)
+                        PadKey(button, editing, button.id in heldIds, settings, onEdit = { onEdit(button) }, cell)
                     }
                 }
                 // Keep a short last row aligned with the others.
@@ -104,7 +111,14 @@ private fun EmptyPad(modifier: Modifier) {
 
 /** One key. Lit while pressed, held or toggled on; outlined if it's a Hold or Toggle key. */
 @Composable
-private fun PadKey(button: PadButton, editing: Boolean, held: Boolean, onEdit: () -> Unit, modifier: Modifier) {
+private fun PadKey(
+    button: PadButton,
+    editing: Boolean,
+    held: Boolean,
+    settings: KeySetSettings,
+    onEdit: () -> Unit,
+    modifier: Modifier,
+) {
     var touching by remember { mutableStateOf(false) }
     val color = Palette.getOrElse(button.color) { Palette[0] }
     val background = if (held || touching) color else color.copy(alpha = 0.28f)
@@ -116,11 +130,11 @@ private fun PadKey(button: PadButton, editing: Boolean, held: Boolean, onEdit: (
             .background(background)
             .border(2.dp, outline, KeyShape)
             .keyAccessibility(button, editing, held, onEdit)
-            .keyTouch(button, editing, onEdit, onTouching = { touching = it })
+            .keyTouch(button, editing, settings.vibrate, onEdit, onTouching = { touching = it })
             .padding(8.dp),
         contentAlignment = Alignment.Center,
     ) {
-        KeyFace(button)
+        KeyFace(button, settings)
         if (editing) EditBadge()
     }
 }
@@ -145,6 +159,7 @@ private fun Modifier.keyAccessibility(button: PadButton, editing: Boolean, held:
 private fun Modifier.keyTouch(
     button: PadButton,
     editing: Boolean,
+    vibrate: Boolean,
     onEdit: () -> Unit,
     onTouching: (Boolean) -> Unit,
 ): Modifier {
@@ -152,6 +167,7 @@ private fun Modifier.keyTouch(
     // The gesture loop outlives recompositions; always act on the latest values.
     val currentButton by rememberUpdatedState(button)
     val currentOnEdit by rememberUpdatedState(onEdit)
+    val currentVibrate by rememberUpdatedState(vibrate)
     return pointerInput(editing) {
         awaitEachGesture {
             awaitFirstDown(requireUnconsumed = false)
@@ -160,7 +176,7 @@ private fun Modifier.keyTouch(
                 val lifted = waitForUpOrCancellation() != null
                 if (lifted) currentOnEdit()
             } else {
-                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                if (currentVibrate) view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                 pressKey(currentButton)
             }
             onTouching(false)
@@ -196,19 +212,25 @@ private fun toggleKey(button: PadButton) {
     }
 }
 
-/** Icon (with an optional small label) when one is picked, otherwise label + shortcut text. */
+/**
+ * What the key shows, following [settings]: its icon (with or without the label) or its
+ * text. Keys without an icon always show text.
+ */
 @Composable
-private fun KeyFace(button: PadButton) {
+private fun KeyFace(button: PadButton, settings: KeySetSettings) {
+    val showIcon = hasIcon(button.icon) && settings.buttonStyle != ButtonStyle.TEXT_ONLY
     BoxWithConstraints(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         val iconSize = (minOf(maxWidth, maxHeight) * 0.42f).coerceIn(22.dp, 64.dp)
-        val cellHeight = maxHeight
+        val roomForLabel = maxHeight > 72.dp
+        val roomForModeTag = maxHeight > 56.dp
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            if (hasIcon(button.icon)) {
-                IconFace(button, iconSize, showLabel = cellHeight > 72.dp)
+            if (showIcon) {
+                val showLabel = settings.buttonStyle == ButtonStyle.ICON_AND_LABEL && roomForLabel
+                IconFace(button, iconSize, showLabel)
             } else {
-                TextFace(button)
+                TextFace(button, settings.showShortcut)
             }
-            if (button.mode != PressMode.TAP && cellHeight > 56.dp) ModeTag(button.mode)
+            if (button.mode != PressMode.TAP && roomForModeTag) ModeTag(button.mode)
         }
     }
 }
@@ -222,7 +244,7 @@ private fun IconFace(button: PadButton, iconSize: Dp, showLabel: Boolean) {
 }
 
 @Composable
-private fun TextFace(button: PadButton) {
+private fun TextFace(button: PadButton, showShortcut: Boolean) {
     val shortcut = comboLabel(button.modifiers, button.key)
     Text(
         button.label.ifBlank { shortcut },
@@ -233,7 +255,7 @@ private fun TextFace(button: PadButton) {
         maxLines = 2,
         overflow = TextOverflow.Ellipsis,
     )
-    if (button.label.isNotBlank()) SmallText(shortcut, alpha = 0.6f)
+    if (showShortcut && button.label.isNotBlank()) SmallText(shortcut, alpha = 0.6f)
 }
 
 /** "HOLD" / "TOGGLE" under the key's text. */

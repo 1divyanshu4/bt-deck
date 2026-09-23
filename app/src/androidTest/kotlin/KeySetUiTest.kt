@@ -4,17 +4,23 @@ import android.Manifest
 import android.os.Build
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.SemanticsNodeInteraction
+import androidx.compose.ui.test.hasClickAction
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import dev.keyset.core.bluetooth.HidKeyboard
 import dev.keyset.core.bluetooth.HidStatus
 import dev.keyset.core.data.LayoutStore
+import dev.keyset.core.data.SettingsStore
+import dev.keyset.core.model.KeySetSettings
 import dev.keyset.core.model.Keys
 import dev.keyset.core.model.buildReport
 import java.util.concurrent.CopyOnWriteArrayList
+import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -41,11 +47,27 @@ abstract class KeySetUiTest {
         createAndroidComposeRule<MainActivity>()
 
     protected val reports = CopyOnWriteArrayList<ByteArray>()
-    protected val store: LayoutStore
-        get() = (InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as KeySetApp).layouts
+    private val app get() = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as KeySetApp
+    protected val store: LayoutStore get() = app.layouts
+    protected val settingsStore: SettingsStore get() = app.settings
+
+    /** Changes a setting and waits until the screen can see it. */
+    protected fun setSettings(transform: (KeySetSettings) -> KeySetSettings) {
+        runBlocking { settingsStore.edit(transform) }
+        val want = transform(settingsStore.settings.value)
+        rule.waitUntil(3_000) { settingsStore.settings.value == want }
+        rule.waitForIdle()
+    }
+
+    /** Switches tabs with the bottom bar. */
+    protected fun openTab(label: String) {
+        rule.onNode(hasText(label) and hasClickAction()).performClick()
+        rule.waitForIdle()
+    }
 
     @Before
     fun baseSetUp() {
+        setSettings { KeySetSettings() }
         rule.runOnUiThread {
             store.resetToDefaults()
             HidKeyboard.releaseAll()

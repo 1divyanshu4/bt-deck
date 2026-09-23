@@ -27,6 +27,16 @@ places, like the "?" help button.
 
 **`feature/connect`** is the connection screen and the status bar at the top.
 
+**`feature/keyboard`** is the full on-screen keyboard and the "type text" box.
+
+**`feature/layouts`** is the list of layouts, where you pick, rename, copy or delete them.
+
+**`feature/settings`** is the settings screen and the connection help page.
+
+The app has four tabs at the bottom (Pad, Layouts, Keyboard, Settings). `app/AppShell.kt`
+switches between them with a simple `tab` variable instead of a navigation library, because
+there's only one level of screens.
+
 ## A few rules
 
 - Feature modules never use each other. `app` puts them together.
@@ -37,6 +47,7 @@ places, like the "?" help button.
 
 - `HidKeyboard` knows whether the phone is connected, to what, and which keys are held down.
 - `LayoutStore` has the layouts and saves them whenever they change.
+- `SettingsStore` has the settings, saved with DataStore.
 - Screens only keep short-lived things, like which dialog is open.
 
 ## Folders

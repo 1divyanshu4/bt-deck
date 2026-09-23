@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilterChip
@@ -46,6 +44,7 @@ import dev.keyset.core.designsystem.component.ButtonIcon
 import dev.keyset.core.designsystem.component.HelpButton
 import dev.keyset.core.designsystem.component.hasIcon
 import dev.keyset.core.designsystem.theme.KeySetColors
+import dev.keyset.core.designsystem.theme.KeySetShapes
 import dev.keyset.core.designsystem.theme.Palette
 import dev.keyset.core.model.Keys
 import dev.keyset.core.model.Mod
@@ -74,7 +73,7 @@ fun ButtonEditor(
 
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
         Surface(
-            shape = RoundedCornerShape(24.dp),
+            shape = KeySetShapes.Medium,
             color = KeySetColors.Surface,
             modifier = Modifier.fillMaxWidth(0.94f).heightIn(max = 720.dp),
         ) {
@@ -178,7 +177,8 @@ private fun BehaviourPicker(mode: PressMode, onChange: (PressMode) -> Unit) {
             SegmentedButton(
                 selected = mode == m,
                 onClick = { onChange(m) },
-                shape = SegmentedButtonDefaults.itemShape(i, PressMode.entries.size),
+                shape = SegmentedButtonDefaults.itemShape(i, PressMode.entries.size, KeySetShapes.Small),
+                icon = {}, // no checkmark; the filled segment already shows the choice
             ) { Text(m.label) }
         }
     }
@@ -194,9 +194,9 @@ private fun ColorPicker(color: Int, onChange: (Int) -> Unit) {
             Box(
                 Modifier
                     .size(36.dp)
-                    .clip(CircleShape)
+                    .clip(KeySetShapes.Small)
                     .background(swatch)
-                    .border(3.dp, ring, CircleShape)
+                    .border(3.dp, ring, KeySetShapes.Small)
                     .clickable { onChange(i) },
             )
         }
@@ -207,8 +207,8 @@ private fun ColorPicker(color: Int, onChange: (Int) -> Unit) {
 private fun PositionButtons(onMove: (Int) -> Unit) {
     SectionTitle("Position")
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        OutlinedButton(onClick = { onMove(-1) }) { Text("◀ Earlier") }
-        OutlinedButton(onClick = { onMove(1) }) { Text("Later ▶") }
+        OutlinedButton(onClick = { onMove(-1) }, shape = KeySetShapes.Small) { Text("◀ Earlier") }
+        OutlinedButton(onClick = { onMove(1) }, shape = KeySetShapes.Small) { Text("Later ▶") }
     }
 }
 
@@ -225,7 +225,7 @@ private fun EditorFooter(
         if (!isNew) TextButton(onClick = onDelete) { Text("Delete", color = Palette[4]) }
         Spacer(Modifier.weight(1f))
         TextButton(onClick = onCancel) { Text("Cancel") }
-        Button(enabled = canSave, onClick = onSave) { Text("Save") }
+        Button(enabled = canSave, onClick = onSave, shape = KeySetShapes.Small) { Text("Save") }
     }
 }
 
