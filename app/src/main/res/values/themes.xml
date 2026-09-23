@@ -1,0 +1,7 @@
+<resources>
+    <style name="Theme.KeySet" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">#FF121214</item>
+        <item name="android:statusBarColor">#FF121214</item>
+        <item name="android:navigationBarColor">#FF121214</item>
+    </style>
+</resources>

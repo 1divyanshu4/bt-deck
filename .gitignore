@@ -1,0 +1,27 @@
+# Gradle / Kotlin build output (matches at any depth)
+.gradle/
+.kotlin/
+build/
+
+# Local machine config
+local.properties
+
+# Signing: never commit keys or their passwords
+*.jks
+*.keystore
+keystore.properties
+
+# Built apps copied outside build/
+*.apk
+*.aab
+
+# Android Studio captures and memory dumps
+captures/
+*.hprof
+
+# IDEs and OS files
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
