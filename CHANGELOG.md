@@ -2,7 +2,7 @@
 
 Notable changes to BTDeck, newest first.
 
-## 0.1.0 
+## 0.1.0 (24 September 2026)
 
 First release.
 

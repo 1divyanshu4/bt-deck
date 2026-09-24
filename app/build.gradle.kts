@@ -14,14 +14,25 @@ android {
         testInstrumentationRunner = "dev.btdeck.BTDeckTestRunner"
     }
 
+    // The release key lives outside the repository; its location and passwords come from
+    // ~/.gradle/gradle.properties (see docs/RELEASING.md). Without them, release builds are
+    // left unsigned rather than signed with a key users could never update from.
+    val releaseStore = providers.gradleProperty("BTDECK_RELEASE_STORE_FILE").orNull
+    if (releaseStore != null) {
+        signingConfigs.create("release") {
+            storeFile = file(releaseStore)
+            storePassword = providers.gradleProperty("BTDECK_RELEASE_STORE_PASSWORD").get()
+            keyAlias = providers.gradleProperty("BTDECK_RELEASE_KEY_ALIAS").get()
+            keyPassword = providers.gradleProperty("BTDECK_RELEASE_KEY_PASSWORD").get()
+        }
+    }
+
     buildTypes {
         release {
             // Shrinks the icon library down to the icons actually used.
             isMinifyEnabled = true
             isShrinkResources = true
-            // Signed with the debug key so it installs over test builds. Use a real
-            // keystore (see docs/RELEASING.md) before publishing anywhere.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.findByName("release")
         }
     }
 }
