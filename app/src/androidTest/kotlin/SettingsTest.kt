@@ -56,6 +56,18 @@ class SettingsTest : KeySetUiTest() {
     }
 
     @Test
+    fun settingsTab_alwaysOpensTheMainPage() {
+        openTab("Settings")
+        rule.onNodeWithText("Tutorials").performScrollTo().performClick()
+        openTab("Pad")
+        openTab("Settings")
+        rule.onNodeWithText("Vibrate on press").assertExists()
+        rule.onNodeWithText("Tutorials").performScrollTo().performClick()
+        openTab("Settings") // tapped again while on a Settings page
+        rule.onNodeWithText("Vibrate on press").assertExists()
+    }
+
+    @Test
     fun aboutPagesOpenAndGoBack() {
         openTab("Settings")
         rule.onNodeWithText("Tutorials").performScrollTo().performClick()

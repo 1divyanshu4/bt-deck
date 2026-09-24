@@ -94,6 +94,12 @@ fun AppShell(
     var showConnect by rememberSaveable { mutableStateOf(false) }
     val openConnect = { showConnect = true }
 
+    // Picking Settings in the bar always opens its main page, not the page last left open.
+    val selectTab = { picked: Tab ->
+        if (picked == Tab.Settings) settingsPage = SettingsPage.Main
+        tab = picked
+    }
+
     // A .keyset file opened from another app: show it on the Layouts tab and ask first.
     LaunchedEffect(incomingFile) {
         if (incomingFile != null) {
@@ -123,10 +129,10 @@ fun AppShell(
     Scaffold(
         containerColor = KeySetColors.Background,
         contentWindowInsets = WindowInsets.safeDrawing,
-        bottomBar = { if (showBottomBar) BottomBar(tab, onSelect = { tab = it }) },
+        bottomBar = { if (showBottomBar) BottomBar(tab, onSelect = selectTab) },
     ) { padding ->
         Row(Modifier.fillMaxSize().padding(padding)) {
-            if (showRail) SideRail(tab, onSelect = { tab = it })
+            if (showRail) SideRail(tab, onSelect = selectTab)
             val content = Modifier.weight(1f).fillMaxHeight()
             when (tab) {
                 Tab.Pad -> PadScreen(
