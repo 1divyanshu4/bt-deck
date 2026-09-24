@@ -47,6 +47,7 @@ fun SettingsScreen(
     settings: KeySetSettings,
     onChange: ((KeySetSettings) -> KeySetSettings) -> Unit,
     onOpenTutorials: () -> Unit,
+    onOpenPrivacy: () -> Unit,
     onOpenAbout: () -> Unit,
     modifier: Modifier = Modifier,
     status: @Composable () -> Unit = {},
@@ -70,6 +71,7 @@ fun SettingsScreen(
 
             Spacer(Modifier.height(16.dp))
             LinkRow("Tutorials", onOpenTutorials)
+            LinkRow("Privacy policy", onOpenPrivacy)
             LinkRow("About KeySet", onOpenAbout)
         }
     }

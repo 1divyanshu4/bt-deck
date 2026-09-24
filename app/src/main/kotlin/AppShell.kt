@@ -53,6 +53,7 @@ import dev.keyset.feature.layouts.ImportLayoutDialog
 import dev.keyset.feature.layouts.LayoutsScreen
 import dev.keyset.feature.pad.SystemBarsHidden
 import dev.keyset.feature.settings.AboutScreen
+import dev.keyset.feature.settings.PrivacyScreen
 import dev.keyset.feature.settings.SettingsScreen
 import dev.keyset.feature.settings.TutorialsScreen
 
@@ -64,8 +65,8 @@ enum class Tab(val label: String, val icon: ImageVector) {
     Settings("Settings", Icons.Default.Settings),
 }
 
-/** Pages inside the Settings tab. Tutorials and About open from Main; licenses from About. */
-private enum class SettingsPage { Main, Tutorials, About, Licenses }
+/** Pages inside the Settings tab. Tutorials, Privacy and About open from Main; licenses from About. */
+private enum class SettingsPage { Main, Tutorials, Privacy, About, Licenses }
 
 /**
  * The whole app: a bottom bar with Pad, Keyboard, Layouts and Settings. Also owns the
@@ -159,6 +160,7 @@ fun AppShell(
                         settings = settings,
                         onChange = settingsStore::update,
                         onOpenTutorials = { settingsPage = SettingsPage.Tutorials },
+                        onOpenPrivacy = { settingsPage = SettingsPage.Privacy },
                         onOpenAbout = { settingsPage = SettingsPage.About },
                         modifier = content,
                         status = { StatusChip(status, openConnect) },
@@ -170,6 +172,10 @@ fun AppShell(
                         modifier = content,
                     )
                     SettingsPage.Tutorials -> TutorialsScreen(
+                        onBack = { settingsPage = SettingsPage.Main },
+                        modifier = content,
+                    )
+                    SettingsPage.Privacy -> PrivacyScreen(
                         onBack = { settingsPage = SettingsPage.Main },
                         modifier = content,
                     )

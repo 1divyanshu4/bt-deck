@@ -25,8 +25,10 @@ Notable changes to KeySet, newest first.
   and import them from the Layouts tab or by opening the file from another app.
 - Settings: show icons with labels, icons only, or text only; show or hide shortcuts; button
   spacing; vibration; keep the screen on. Version and open-source licenses are under About.
-- Tutorials (in Settings): short step-by-step guides for connecting, making layouts, adding,
-  editing and rearranging buttons, the keyboard, sharing layouts and fixing connection problems.
+- Tutorials (in Settings): visual, swipeable guides with annotated screenshots, for
+  connecting, making layouts, adding and rearranging buttons, Tap/Hold/Toggle, the keyboard,
+  sharing layouts and fixing connection problems.
+- Privacy policy (in Settings): KeySet has no internet access and keeps everything on the phone.
 - Edit mode: drag a button by its dots to move it; ✕ cancels every change since editing
   started. The grid shows empty slots and an Add tile, and an empty layout shows Add straight away.
 - Less rounded look: corners are 8 dp for small parts and 12 dp for larger ones.

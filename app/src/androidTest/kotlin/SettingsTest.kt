@@ -59,10 +59,17 @@ class SettingsTest : KeySetUiTest() {
     fun aboutPagesOpenAndGoBack() {
         openTab("Settings")
         rule.onNodeWithText("Tutorials").performScrollTo().performClick()
-        // Tutorials open to show their steps.
-        rule.onNodeWithText("Connect your tablet or laptop").performClick()
-        rule.onNodeWithText("Tap Pair next to your device and accept on both screens.").assertExists()
+        // A tutorial opens on its first step; Next moves on, Back closes it.
+        rule.onNodeWithText("Connect a device").performClick()
+        rule.onNodeWithText("Tap the status to open Connect.").assertExists()
+        rule.onNodeWithText("Next").performClick()
+        rule.onNodeWithText("Open Bluetooth on your tablet or laptop, then tap Scan and Pair.").assertExists()
+        rule.onNodeWithContentDescription("Back").performClick() // tutorial → list
+        rule.onNodeWithText("Share a layout").assertExists()
         rule.onNodeWithContentDescription("Back").performClick() // Tutorials → Settings
+        rule.onNodeWithText("Privacy policy").performScrollTo().performClick()
+        rule.onNodeWithText("Bluetooth").assertExists()
+        rule.onNodeWithContentDescription("Back").performClick() // Privacy → Settings
         rule.onNodeWithText("About KeySet").performScrollTo().performClick()
         rule.onNodeWithText("Open-source licenses").performClick()
         // The list loads in the background; several entries mention Compose.
