@@ -1,17 +1,17 @@
 plugins {
-    alias(libs.plugins.keyset.android.application)
+    alias(libs.plugins.btdeck.android.application)
     // Generates the open-source licenses list shown in Settings.
     alias(libs.plugins.aboutlibraries)
 }
 
 android {
-    namespace = "dev.keyset"
+    namespace = "dev.btdeck"
 
     defaultConfig {
-        applicationId = "dev.keyset"
+        applicationId = "dev.btdeck"
         versionCode = 1
         versionName = "0.1.0"
-        testInstrumentationRunner = "dev.keyset.KeySetTestRunner"
+        testInstrumentationRunner = "dev.btdeck.BTDeckTestRunner"
     }
 
     buildTypes {
@@ -39,6 +39,7 @@ dependencies {
     implementation(projects.feature.settings)
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.compose.material.icons.extended)

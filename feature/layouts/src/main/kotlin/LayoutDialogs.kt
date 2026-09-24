@@ -1,4 +1,4 @@
-package dev.keyset.feature.layouts
+package dev.btdeck.feature.layouts
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,11 +23,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import dev.keyset.core.data.LayoutStore
-import dev.keyset.core.designsystem.component.CompactTextField
-import dev.keyset.core.designsystem.theme.KeySetShapes
-import dev.keyset.core.designsystem.theme.Palette
-import dev.keyset.core.model.PadLayout
+import dev.btdeck.core.data.LayoutStore
+import dev.btdeck.core.designsystem.component.CompactTextField
+import dev.btdeck.core.designsystem.theme.BTDeckShapes
+import dev.btdeck.core.designsystem.theme.Palette
+import dev.btdeck.core.model.PadLayout
 
 /** The dialogs the Layouts screen can open. */
 internal sealed interface LayoutDialog {
@@ -58,7 +58,7 @@ internal fun LayoutDialogHost(dialog: LayoutDialog, store: LayoutStore, onClose:
                 Button(onClick = {
                     store.restoreDefaults()
                     onClose()
-                }, shape = KeySetShapes.Small) { Text("Restore") }
+                }, shape = BTDeckShapes.Small) { Text("Restore") }
             },
             dismissButton = { TextButton(onClick = onClose) { Text("Cancel") } },
         )
@@ -91,7 +91,7 @@ private fun NamePrompt(title: String, initial: String, onDismiss: () -> Unit, on
             CompactTextField(name, { name = it }, placeholder = "Name", modifier = Modifier.fillMaxWidth())
         },
         confirmButton = {
-            Button(enabled = name.isNotBlank(), onClick = { onDone(name.trim()) }, shape = KeySetShapes.Small) {
+            Button(enabled = name.isNotBlank(), onClick = { onDone(name.trim()) }, shape = BTDeckShapes.Small) {
                 Text("OK")
             }
         },
@@ -108,7 +108,7 @@ private fun ConfirmDelete(name: String, onDismiss: () -> Unit, onConfirm: () -> 
         confirmButton = {
             Button(
                 onClick = onConfirm,
-                shape = KeySetShapes.Small,
+                shape = BTDeckShapes.Small,
                 colors = ButtonDefaults.buttonColors(containerColor = Palette[4]),
             ) {
                 Text("Delete")
@@ -130,7 +130,7 @@ internal fun ColumnsPicker(columns: Int, onChange: (Int) -> Unit) {
                 Modifier
                     .padding(2.dp)
                     .size(36.dp)
-                    .clip(KeySetShapes.Small)
+                    .clip(BTDeckShapes.Small)
                     .background(background)
                     .clickable { onChange(n) },
                 contentAlignment = Alignment.Center,

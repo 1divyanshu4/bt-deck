@@ -1,4 +1,4 @@
-package dev.keyset.core.designsystem.theme
+package dev.btdeck.core.designsystem.theme
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 /** Fixed dark palette: the pad sits next to a drawing tablet, often in a dim room. */
-object KeySetColors {
+object BTDeckColors {
     val Background = Color(0xFF121214)
     val Surface = Color(0xFF1C1C20)
     val SurfaceHigh = Color(0xFF26262C)
@@ -25,7 +25,7 @@ object KeySetColors {
  * surfaces (pad keys, cards, dialogs, sheets) get [Medium], and badges that sit inside a
  * key or card get [XSmall], so they're squarer than what they sit on.
  */
-object KeySetShapes {
+object BTDeckShapes {
     val XSmall = RoundedCornerShape(6.dp)
     val Small = RoundedCornerShape(8.dp)
     val Medium = RoundedCornerShape(12.dp)
@@ -42,22 +42,22 @@ val Palette = listOf(
 )
 
 @Composable
-fun KeySetTheme(content: @Composable () -> Unit) {
+fun BTDeckTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = darkColorScheme(
-            primary = KeySetColors.Primary,
-            background = KeySetColors.Background,
-            surface = KeySetColors.Surface,
-            surfaceContainer = KeySetColors.Surface,
-            surfaceContainerHigh = KeySetColors.SurfaceHigh,
+            primary = BTDeckColors.Primary,
+            background = BTDeckColors.Background,
+            surface = BTDeckColors.Surface,
+            surfaceContainer = BTDeckColors.Surface,
+            surfaceContainerHigh = BTDeckColors.SurfaceHigh,
         ),
         // Material components pick from these; nothing is rounder than Medium.
         shapes = Shapes(
-            extraSmall = KeySetShapes.Small,
-            small = KeySetShapes.Small,
-            medium = KeySetShapes.Medium,
-            large = KeySetShapes.Medium,
-            extraLarge = KeySetShapes.Medium,
+            extraSmall = BTDeckShapes.Small,
+            small = BTDeckShapes.Small,
+            medium = BTDeckShapes.Medium,
+            large = BTDeckShapes.Medium,
+            extraLarge = BTDeckShapes.Medium,
         ),
         content = content,
     )

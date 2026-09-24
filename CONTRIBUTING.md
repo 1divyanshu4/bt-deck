@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping out. Bug reports, notes about how KeySet works on your devices, and pull
+Thanks for helping out. Bug reports, notes about how BTDeck works on your devices, and pull
 requests are all welcome.
 
 ## Reporting a bug
@@ -8,7 +8,7 @@ requests are all welcome.
 Open an issue using the bug report form. Bluetooth problems depend a lot on the exact
 devices, so please tell us:
 
-- which phone runs KeySet, and its Android version
+- which phone runs BTDeck, and its Android version
 - which tablet or computer you're connecting to
 - what you did, what you expected, and what happened instead
 
@@ -40,7 +40,7 @@ adb logcat -s HidKeyboard HidDeviceService BTIF_HD bt_hid
   which device or log message made it necessary.
 - Features don't depend on each other. Shared code goes in `core`.
 - Put new files straight into the module's `src/main/kotlin/` folder. Don't create
-  `dev/keyset/...` folders.
+  `dev/btdeck/...` folders.
 - Add tests: logic gets unit tests in `src/test`, screen behaviour gets UI tests in
   `app/src/androidTest`.
 

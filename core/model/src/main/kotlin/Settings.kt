@@ -1,4 +1,4 @@
-package dev.keyset.core.model
+package dev.btdeck.core.model
 
 /** What a pad button shows. */
 enum class ButtonStyle(val label: String) {
@@ -20,7 +20,7 @@ enum class ButtonSpacing(val label: String, val dp: Int) {
 }
 
 /** User preferences from the Settings screen. */
-data class KeySetSettings(
+data class BTDeckSettings(
     val buttonStyle: ButtonStyle = ButtonStyle.ICON_AND_LABEL,
     /** Show the key combination (e.g. "Ctrl+Z") on text buttons. */
     val showShortcut: Boolean = true,

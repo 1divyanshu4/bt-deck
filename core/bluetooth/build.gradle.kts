@@ -1,9 +1,9 @@
 plugins {
-    alias(libs.plugins.keyset.android.library)
+    alias(libs.plugins.btdeck.android.library)
 }
 
 android {
-    namespace = "dev.keyset.core.bluetooth"
+    namespace = "dev.btdeck.core.bluetooth"
 }
 
 dependencies {

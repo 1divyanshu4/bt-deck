@@ -1,4 +1,4 @@
-package dev.keyset.feature.layouts
+package dev.btdeck.feature.layouts
 
 import android.net.Uri
 import android.widget.Toast
@@ -14,9 +14,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import dev.keyset.core.data.LayoutArchive
-import dev.keyset.core.data.LayoutTransfer
-import dev.keyset.core.designsystem.theme.KeySetShapes
+import dev.btdeck.core.data.LayoutArchive
+import dev.btdeck.core.data.LayoutTransfer
+import dev.btdeck.core.designsystem.theme.BTDeckShapes
 import kotlinx.coroutines.launch
 
 /**
@@ -55,7 +55,7 @@ fun ImportLayoutDialog(uri: Uri, transfer: LayoutTransfer, onDone: () -> Unit) {
                         Toast.makeText(context, "Imported \"$name\"", Toast.LENGTH_SHORT).show()
                         onDone()
                     }
-                }, shape = KeySetShapes.Small) { Text("Import") }
+                }, shape = BTDeckShapes.Small) { Text("Import") }
             },
             dismissButton = { TextButton(onClick = onDone) { Text("Cancel") } },
         )

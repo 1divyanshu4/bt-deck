@@ -1,4 +1,4 @@
-package dev.keyset
+package dev.btdeck
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,28 +22,28 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import dev.keyset.core.bluetooth.HidKeyboard
-import dev.keyset.core.bluetooth.HidStatus
-import dev.keyset.core.data.LayoutStore
-import dev.keyset.core.designsystem.component.TopBar
-import dev.keyset.core.model.KeySetSettings
-import dev.keyset.core.model.Mod
-import dev.keyset.core.model.PadButton
-import dev.keyset.core.model.PadLayout
-import dev.keyset.core.model.PadState
-import dev.keyset.feature.connect.StatusBanner
-import dev.keyset.feature.connect.StatusChip
-import dev.keyset.feature.editor.ButtonEditor
-import dev.keyset.feature.pad.DisconnectedStrip
-import dev.keyset.feature.pad.FullscreenHint
-import dev.keyset.feature.pad.Pad
+import dev.btdeck.core.bluetooth.HidKeyboard
+import dev.btdeck.core.bluetooth.HidStatus
+import dev.btdeck.core.data.LayoutStore
+import dev.btdeck.core.designsystem.component.TopBar
+import dev.btdeck.core.model.BTDeckSettings
+import dev.btdeck.core.model.Mod
+import dev.btdeck.core.model.PadButton
+import dev.btdeck.core.model.PadLayout
+import dev.btdeck.core.model.PadState
+import dev.btdeck.feature.connect.StatusBanner
+import dev.btdeck.feature.connect.StatusChip
+import dev.btdeck.feature.editor.ButtonEditor
+import dev.btdeck.feature.pad.DisconnectedStrip
+import dev.btdeck.feature.pad.FullscreenHint
+import dev.btdeck.feature.pad.Pad
 
 /** The Pad tab: top bar, connection status, the button grid, and the button editor. */
 @Composable
 fun PadScreen(
     state: PadState,
     store: LayoutStore,
-    settings: KeySetSettings,
+    settings: BTDeckSettings,
     status: HidStatus,
     fullscreen: Boolean,
     onFullscreenChange: (Boolean) -> Unit,

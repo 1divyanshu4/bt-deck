@@ -1,6 +1,6 @@
-package dev.keyset.feature.editor
+package dev.btdeck.feature.editor
 
-import dev.keyset.core.model.Keys
+import dev.btdeck.core.model.Keys
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

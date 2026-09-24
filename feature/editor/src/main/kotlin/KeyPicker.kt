@@ -1,4 +1,4 @@
-package dev.keyset.feature.editor
+package dev.btdeck.feature.editor
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -23,9 +23,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.keyset.core.designsystem.theme.KeySetShapes
-import dev.keyset.core.model.Key
-import dev.keyset.core.model.Keys
+import dev.btdeck.core.designsystem.theme.BTDeckShapes
+import dev.btdeck.core.model.Key
+import dev.btdeck.core.model.Keys
 
 /** Every key the pad can send, in the groups the editor shows them in. */
 internal val KeyGroups: List<Pair<String, List<Key>>> = listOf(
@@ -78,7 +78,7 @@ private fun GroupTab(name: String, selected: Boolean, onClick: () -> Unit) {
         color = if (selected) primary else Color.Gray,
         fontSize = 13.sp,
         modifier = Modifier
-            .clip(KeySetShapes.Small)
+            .clip(BTDeckShapes.Small)
             .background(if (selected) primary.copy(alpha = 0.16f) else Color.Transparent)
             .selectable(selected = selected, role = Role.Tab, onClick = onClick)
             .padding(horizontal = 10.dp, vertical = 6.dp),

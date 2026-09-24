@@ -1,4 +1,4 @@
-package dev.keyset
+package dev.btdeck
 
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.assertIsNotEnabled
@@ -21,11 +21,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class LayoutsTest : KeySetUiTest() {
+class LayoutsTest : BTDeckUiTest() {
 
     private fun layouts() = store.state.value.layouts
     private fun selected() = store.state.value.selected
     private fun nameField() = rule.onNode(hasSetTextAction())
+
     // A click action, not a tap: on small screens the "New layout" button can sit over a card's ⋮.
     private fun menuFor(name: String) =
         rule.onNodeWithContentDescription("Options for $name").performSemanticsAction(SemanticsActions.OnClick)

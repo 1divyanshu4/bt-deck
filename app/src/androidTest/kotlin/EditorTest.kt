@@ -1,4 +1,4 @@
-package dev.keyset
+package dev.btdeck
 
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.SemanticsProperties
@@ -19,8 +19,8 @@ import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.performTouchInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import dev.keyset.core.model.Mod
-import dev.keyset.core.model.PressMode
+import dev.btdeck.core.model.Mod
+import dev.btdeck.core.model.PressMode
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -28,7 +28,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class EditorTest : KeySetUiTest() {
+class EditorTest : BTDeckUiTest() {
 
     private fun enterEdit() = rule.onNodeWithContentDescription("Edit layout").performClick()
     private fun exitEdit() = rule.onNodeWithContentDescription("Done editing").performClick()
@@ -37,6 +37,7 @@ class EditorTest : KeySetUiTest() {
         rule.onNodeWithContentDescription(label).performClick()
         rule.onNodeWithText("Edit button").assertExists()
     }
+
     // The Display tab's text fields, in order: the label, then the icon search.
     private fun labelField() = rule.onAllNodes(hasSetTextAction() and inDialog())[0]
     private fun searchField() = rule.onAllNodes(hasSetTextAction() and inDialog())[1]

@@ -1,9 +1,9 @@
 plugins {
-    alias(libs.plugins.keyset.android.library)
+    alias(libs.plugins.btdeck.android.library)
 }
 
 android {
-    namespace = "dev.keyset.core.data"
+    namespace = "dev.btdeck.core.data"
 }
 
 dependencies {

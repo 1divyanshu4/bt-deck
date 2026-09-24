@@ -1,4 +1,4 @@
-package dev.keyset
+package dev.btdeck
 
 import android.content.Intent
 import android.graphics.Bitmap
@@ -14,9 +14,9 @@ import androidx.compose.ui.test.performSemanticsAction
 import androidx.core.content.FileProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import dev.keyset.core.data.CustomIcons
-import dev.keyset.core.data.LayoutTransfer
-import dev.keyset.core.model.PadButton
+import dev.btdeck.core.data.CustomIcons
+import dev.btdeck.core.data.LayoutTransfer
+import dev.btdeck.core.model.PadButton
 import java.io.ByteArrayOutputStream
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -26,9 +26,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class LayoutTransferTest : KeySetUiTest() {
+class LayoutTransferTest : BTDeckUiTest() {
     private val context get() = InstrumentationRegistry.getInstrumentation().targetContext
-    private val transfer get() = (context.applicationContext as KeySetApp).transfer
+    private val transfer get() = (context.applicationContext as BTDeckApp).transfer
 
     /** Adds a button with a freshly imported custom image to the current layout. */
     private fun addCustomImageButton(): String {

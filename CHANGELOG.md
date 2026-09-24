@@ -1,56 +1,52 @@
 # Changelog
 
-Notable changes to KeySet, newest first.
+Notable changes to BTDeck, newest first.
 
-## Unreleased
-
-### New
-
-- Tabs at the bottom: Pad, Layouts, Keyboard and Settings.
-- Keyboard tab: a full keyboard with sticky Ctrl, Shift, Alt and Meta (tap once for the next
-  key, twice to lock, or hold one down while pressing another key), F-keys and navigation
-  keys. Tap the text box to write there with the same keys (the phone's own keyboard stays
-  closed), then Send or Enter types it on the other device. On a phone held upright the
-  keyboard tab lays itself out sideways, while the tab bar stays put.
-- Caps Lock lights up while it's on and the letter keys show capitals. KeySet reads the
-  Caps Lock light from the tablet or laptop, so it stays right (re-pair devices paired with
-  older versions to get this).
-- Bluetooth on/off and Restart in the Connect sheet, without leaving the app. Android asks
-  to confirm each one. "Restart Bluetooth" in the status bar now does it directly.
-- In landscape (and on tablets) the tabs move to a rail on the left, so screens keep their height.
-- Layouts tab: every layout as a card with a preview; rename, duplicate, change columns or
-  delete (with a confirmation).
-- "Restore defaults" on the Layouts tab adds the built-in layouts back, keeping your own.
-- Share layouts as `.keyset` files (the layout plus any custom images), save them to a file,
-  and import them from the Layouts tab or by opening the file from another app.
-- Settings: show icons with labels, icons only, or text only; show or hide shortcuts; button
-  spacing; vibration; keep the screen on. Version and open-source licenses are under About.
-- Tutorials (in Settings): visual, swipeable guides with annotated screenshots, for
-  connecting, making layouts, adding and rearranging buttons, Tap/Hold/Toggle, the keyboard,
-  sharing layouts and fixing connection problems.
-- Privacy policy (in Settings): KeySet has no internet access and keeps everything on the phone.
-- Edit mode: drag a button by its dots to move it; ✕ cancels every change since editing
-  started. The grid shows empty slots and an Add tile, and an empty layout shows Add straight away.
-- Less rounded look: corners are 8 dp for small parts and 12 dp for larger ones.
-
-## 0.1.0 (24 September 2026)
+## 0.1.0 
 
 First release.
 
-### New
+### The pad
 
-- Your phone works as a Bluetooth keyboard. Nothing needs to be installed on the other
-  device.
-- A pad of buttons that tap, hold or toggle. You can press several at once.
-- Layouts with 2 to 6 columns and colours, starting with a drawing layout.
-- About 110 drawing icons, icon search, and your own images as icons.
-- Fullscreen mode.
-- Scan, pair and connect from inside the app. It reconnects to the last device by itself.
-- Stays connected while you use other apps.
+- Your phone works as a Bluetooth keyboard for your tablet or laptop (Android, Windows, Mac,
+  Linux, ChromeOS). Nothing needs to be installed on the other device.
+- A grid of big buttons that tap, hold or toggle a shortcut. Press several at once, like
+  holding Space to pan while tapping Undo.
+- About 110 drawing icons with search, or your own images. Each button shows its shortcut
+  in a corner badge, which Settings can hide.
+- Edit mode: add, edit and delete buttons, drag them by their dots to rearrange them, and
+  ✕ to undo everything since editing started.
+- Fullscreen mode, which shows only the buttons.
+
+### Layouts
+
+- Separate layouts for different apps, with 2 to 6 columns and your own colours, starting
+  with a drawing layout.
+- A Layouts tab with a preview of each; rename, duplicate, change columns or delete.
+  "Restore defaults" adds the built-in layouts back and keeps yours.
+- Share layouts as `.keyset` files (custom icons included), save them to a file, and import
+  them from the Layouts tab or by opening the file from another app.
+
+### Keyboard
+
+- A full keyboard with Ctrl, Shift, Alt and Meta (tap once for the next key, twice to lock,
+  or hold one while pressing another), Caps Lock, F-keys and navigation keys. On a phone
+  held upright it lays itself out sideways.
+- Caps Lock follows the tablet or laptop's own Caps Lock light.
+- A text box to write a whole sentence with the same keys, then send it in one go.
+
+### Connecting
+
+- Scan, pair and connect from inside the app. BTDeck reconnects to the last device by
+  itself and stays connected while you use other apps.
+- Turn Bluetooth on or off, or restart it, from the Connect sheet.
+- Works around Bluetooth quirks on Xiaomi and Redmi phones, and on tablets and laptops that
+  refuse the first connection right after pairing.
+
+### Settings and help
+
+- Show icons with labels, icons only or text only; show or hide shortcuts; button spacing;
+  vibration; keep the screen on.
+- Visual tutorials with annotated screenshots, a privacy policy, and open-source licenses.
+- A dark look throughout, with the tabs in a side rail in landscape and on tablets.
 - Every button works with TalkBack and switch access.
-
-### Fixed
-
-- Connecting on Xiaomi and Redmi phones.
-- Disconnecting and switching devices on Xiaomi and Redmi phones.
-- The first connection right after pairing, on some tablets and laptops.

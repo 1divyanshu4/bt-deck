@@ -1,4 +1,4 @@
-package dev.keyset.feature.layouts
+package dev.btdeck.feature.layouts
 
 import android.net.Uri
 import android.widget.Toast
@@ -50,18 +50,18 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import dev.keyset.core.data.LayoutStore
-import dev.keyset.core.data.LayoutTransfer
-import dev.keyset.core.designsystem.component.ButtonIcon
-import dev.keyset.core.designsystem.component.CornerBadge
-import dev.keyset.core.designsystem.component.TopBar
-import dev.keyset.core.designsystem.component.hasIcon
-import dev.keyset.core.designsystem.component.softCircles
-import dev.keyset.core.designsystem.theme.KeySetColors
-import dev.keyset.core.designsystem.theme.KeySetShapes
-import dev.keyset.core.designsystem.theme.Palette
-import dev.keyset.core.model.PadLayout
-import dev.keyset.core.model.PadState
+import dev.btdeck.core.data.LayoutStore
+import dev.btdeck.core.data.LayoutTransfer
+import dev.btdeck.core.designsystem.component.ButtonIcon
+import dev.btdeck.core.designsystem.component.CornerBadge
+import dev.btdeck.core.designsystem.component.TopBar
+import dev.btdeck.core.designsystem.component.hasIcon
+import dev.btdeck.core.designsystem.component.softCircles
+import dev.btdeck.core.designsystem.theme.BTDeckColors
+import dev.btdeck.core.designsystem.theme.BTDeckShapes
+import dev.btdeck.core.designsystem.theme.Palette
+import dev.btdeck.core.model.PadLayout
+import dev.btdeck.core.model.PadState
 import kotlinx.coroutines.launch
 
 /**
@@ -172,9 +172,9 @@ private fun LayoutCard(
 ) {
     // Same surface as the pad keys; the layout in use is tinted with the accent colour.
     val surface = if (selected) {
-        MaterialTheme.colorScheme.primary.copy(alpha = 0.16f).compositeOver(KeySetColors.Surface)
+        MaterialTheme.colorScheme.primary.copy(alpha = 0.16f).compositeOver(BTDeckColors.Surface)
     } else {
-        KeySetColors.Surface
+        BTDeckColors.Surface
     }
     Card(
         onClick = onOpen,
@@ -222,7 +222,7 @@ private fun LayoutPreview(layout: PadLayout, modifier: Modifier) {
     if (rows.isEmpty()) {
         // A dark panel where the buttons would be, so an empty card still has a picture.
         Box(
-            modifier.clip(KeySetShapes.Small).background(Color.Black.copy(alpha = 0.25f)),
+            modifier.clip(BTDeckShapes.Small).background(Color.Black.copy(alpha = 0.25f)),
             contentAlignment = Alignment.Center,
         ) { Text("Empty", color = Color.Gray) }
         return
@@ -239,9 +239,9 @@ private fun LayoutPreview(layout: PadLayout, modifier: Modifier) {
                         Modifier
                             .weight(1f)
                             .fillMaxSize()
-                            .clip(KeySetShapes.Small)
+                            .clip(BTDeckShapes.Small)
                             .background(color.copy(alpha = 0.62f))
-                            .border(1.dp, edge, KeySetShapes.Small),
+                            .border(1.dp, edge, BTDeckShapes.Small),
                         contentAlignment = Alignment.Center,
                     ) {
                         if (hasIcon(button.icon)) {

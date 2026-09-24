@@ -1,4 +1,4 @@
-package dev.keyset.core.model
+package dev.btdeck.core.model
 
 /** Max simultaneous non-modifier keys in a boot keyboard report. */
 const val MAX_KEYS = 6

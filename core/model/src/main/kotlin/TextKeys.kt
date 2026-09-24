@@ -1,4 +1,4 @@
-package dev.keyset.core.model
+package dev.btdeck.core.model
 
 /**
  * How to type [c] on a US keyboard layout: the modifiers and key to press, or null if the

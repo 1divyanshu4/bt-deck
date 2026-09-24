@@ -1,4 +1,4 @@
-package dev.keyset.core.designsystem.component
+package dev.btdeck.core.designsystem.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.defaultMinSize
@@ -13,8 +13,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.keyset.core.designsystem.theme.KeySetColors
-import dev.keyset.core.designsystem.theme.KeySetShapes
+import dev.btdeck.core.designsystem.theme.BTDeckColors
+import dev.btdeck.core.designsystem.theme.BTDeckShapes
 
 /**
  * A small badge that floats over a corner, like a button's shortcut or a layout's button
@@ -24,7 +24,7 @@ import dev.keyset.core.designsystem.theme.KeySetShapes
 fun CornerBadge(
     text: String,
     modifier: Modifier = Modifier,
-    background: Color = KeySetColors.Background.copy(alpha = 0.85f),
+    background: Color = BTDeckColors.Background.copy(alpha = 0.85f),
     color: Color = Color.White,
 ) {
     Text(
@@ -38,7 +38,7 @@ fun CornerBadge(
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
         modifier = modifier
-            .clip(KeySetShapes.XSmall)
+            .clip(BTDeckShapes.XSmall)
             .background(background)
             .defaultMinSize(minWidth = 16.dp)
             .padding(horizontal = 6.dp, vertical = 2.dp),

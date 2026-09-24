@@ -1,4 +1,4 @@
-package dev.keyset
+package dev.btdeck
 
 import android.content.res.Configuration
 import android.net.Uri
@@ -37,25 +37,25 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
-import dev.keyset.core.bluetooth.HidKeyboard
-import dev.keyset.core.bluetooth.HidStatus
-import dev.keyset.core.data.LayoutStore
-import dev.keyset.core.data.LayoutTransfer
-import dev.keyset.core.data.SettingsStore
-import dev.keyset.core.designsystem.theme.KeySetColors
-import dev.keyset.feature.connect.BluetoothAction
-import dev.keyset.feature.connect.ConnectSheet
-import dev.keyset.feature.connect.StatusBanner
-import dev.keyset.feature.connect.StatusChip
-import dev.keyset.feature.keyboard.KeyboardScreen
-import dev.keyset.feature.keyboard.sidewaysWhenTall
-import dev.keyset.feature.layouts.ImportLayoutDialog
-import dev.keyset.feature.layouts.LayoutsScreen
-import dev.keyset.feature.pad.SystemBarsHidden
-import dev.keyset.feature.settings.AboutScreen
-import dev.keyset.feature.settings.PrivacyScreen
-import dev.keyset.feature.settings.SettingsScreen
-import dev.keyset.feature.settings.TutorialsScreen
+import dev.btdeck.core.bluetooth.HidKeyboard
+import dev.btdeck.core.bluetooth.HidStatus
+import dev.btdeck.core.data.LayoutStore
+import dev.btdeck.core.data.LayoutTransfer
+import dev.btdeck.core.data.SettingsStore
+import dev.btdeck.core.designsystem.theme.BTDeckColors
+import dev.btdeck.feature.connect.BluetoothAction
+import dev.btdeck.feature.connect.ConnectSheet
+import dev.btdeck.feature.connect.StatusBanner
+import dev.btdeck.feature.connect.StatusChip
+import dev.btdeck.feature.keyboard.KeyboardScreen
+import dev.btdeck.feature.keyboard.sidewaysWhenTall
+import dev.btdeck.feature.layouts.ImportLayoutDialog
+import dev.btdeck.feature.layouts.LayoutsScreen
+import dev.btdeck.feature.pad.SystemBarsHidden
+import dev.btdeck.feature.settings.AboutScreen
+import dev.btdeck.feature.settings.PrivacyScreen
+import dev.btdeck.feature.settings.SettingsScreen
+import dev.btdeck.feature.settings.TutorialsScreen
 
 /** The four tabs, in the order they appear in the bottom bar / side rail. */
 enum class Tab(val label: String, val icon: ImageVector) {
@@ -127,7 +127,7 @@ fun AppShell(
     val showRail = !fullscreen && landscape
 
     Scaffold(
-        containerColor = KeySetColors.Background,
+        containerColor = BTDeckColors.Background,
         contentWindowInsets = WindowInsets.safeDrawing,
         bottomBar = { if (showBottomBar) BottomBar(tab, onSelect = selectTab) },
     ) { padding ->
@@ -200,7 +200,7 @@ fun AppShell(
 
 @Composable
 private fun BottomBar(selected: Tab, onSelect: (Tab) -> Unit) {
-    NavigationBar(containerColor = KeySetColors.Surface) {
+    NavigationBar(containerColor = BTDeckColors.Surface) {
         for (tab in Tab.entries) {
             NavigationBarItem(
                 selected = tab == selected,
@@ -214,7 +214,7 @@ private fun BottomBar(selected: Tab, onSelect: (Tab) -> Unit) {
 
 @Composable
 private fun SideRail(selected: Tab, onSelect: (Tab) -> Unit) {
-    NavigationRail(containerColor = KeySetColors.Surface) {
+    NavigationRail(containerColor = BTDeckColors.Surface) {
         Spacer(Modifier.weight(1f))
         for (tab in Tab.entries) {
             NavigationRailItem(
@@ -228,7 +228,7 @@ private fun SideRail(selected: Tab, onSelect: (Tab) -> Unit) {
     }
 }
 
-/** Keeps the phone awake while KeySet is on screen, if the setting is on. */
+/** Keeps the phone awake while BTDeck is on screen, if the setting is on. */
 @Composable
 private fun KeepScreenOn(enabled: Boolean) {
     val view = LocalView.current

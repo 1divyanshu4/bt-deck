@@ -2,7 +2,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "dev.keyset.buildlogic"
+group = "dev.btdeck.buildlogic"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -22,24 +22,24 @@ dependencies {
 gradlePlugin {
     plugins {
         register("androidApplication") {
-            id = libs.plugins.keyset.android.application.get().pluginId
-            implementationClass = "dev.keyset.buildlogic.AndroidApplicationConventionPlugin"
+            id = libs.plugins.btdeck.android.application.get().pluginId
+            implementationClass = "dev.btdeck.buildlogic.AndroidApplicationConventionPlugin"
         }
         register("androidLibrary") {
-            id = libs.plugins.keyset.android.library.get().pluginId
-            implementationClass = "dev.keyset.buildlogic.AndroidLibraryConventionPlugin"
+            id = libs.plugins.btdeck.android.library.get().pluginId
+            implementationClass = "dev.btdeck.buildlogic.AndroidLibraryConventionPlugin"
         }
         register("androidCompose") {
-            id = libs.plugins.keyset.android.compose.get().pluginId
-            implementationClass = "dev.keyset.buildlogic.AndroidComposeConventionPlugin"
+            id = libs.plugins.btdeck.android.compose.get().pluginId
+            implementationClass = "dev.btdeck.buildlogic.AndroidComposeConventionPlugin"
         }
         register("androidFeature") {
-            id = libs.plugins.keyset.android.feature.get().pluginId
-            implementationClass = "dev.keyset.buildlogic.AndroidFeatureConventionPlugin"
+            id = libs.plugins.btdeck.android.feature.get().pluginId
+            implementationClass = "dev.btdeck.buildlogic.AndroidFeatureConventionPlugin"
         }
         register("jvmLibrary") {
-            id = libs.plugins.keyset.jvm.library.get().pluginId
-            implementationClass = "dev.keyset.buildlogic.JvmLibraryConventionPlugin"
+            id = libs.plugins.btdeck.jvm.library.get().pluginId
+            implementationClass = "dev.btdeck.buildlogic.JvmLibraryConventionPlugin"
         }
     }
 }

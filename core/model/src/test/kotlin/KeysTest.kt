@@ -1,4 +1,4 @@
-package dev.keyset.core.model
+package dev.btdeck.core.model
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue

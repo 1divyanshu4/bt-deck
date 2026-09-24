@@ -1,9 +1,9 @@
 plugins {
-    alias(libs.plugins.keyset.android.feature)
+    alias(libs.plugins.btdeck.android.feature)
 }
 
 android {
-    namespace = "dev.keyset.feature.pad"
+    namespace = "dev.btdeck.feature.pad"
 }
 
 dependencies {

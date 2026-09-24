@@ -1,4 +1,4 @@
-package dev.keyset.core.designsystem.icon
+package dev.btdeck.core.designsystem.icon
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Backspace
@@ -92,7 +92,7 @@ import androidx.compose.material.icons.filled.ZoomIn
 import androidx.compose.material.icons.filled.ZoomOut
 import androidx.compose.material.icons.filled.ZoomOutMap
 import androidx.compose.ui.graphics.vector.ImageVector
-import dev.keyset.core.designsystem.theme.Palette
+import dev.btdeck.core.designsystem.theme.Palette
 
 data class PadIcon(val key: String, val name: String, val vector: ImageVector)
 

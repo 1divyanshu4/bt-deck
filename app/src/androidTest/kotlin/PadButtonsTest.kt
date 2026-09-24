@@ -1,4 +1,4 @@
-package dev.keyset
+package dev.btdeck
 
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertHasClickAction
@@ -9,17 +9,17 @@ import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.performTouchInput
 import androidx.lifecycle.Lifecycle
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import dev.keyset.core.bluetooth.HidKeyboard
-import dev.keyset.core.model.Mod
-import dev.keyset.core.model.PadButton
-import dev.keyset.core.model.PressMode
+import dev.btdeck.core.bluetooth.HidKeyboard
+import dev.btdeck.core.model.Mod
+import dev.btdeck.core.model.PadButton
+import dev.btdeck.core.model.PressMode
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class PadButtonsTest : KeySetUiTest() {
+class PadButtonsTest : BTDeckUiTest() {
 
     private fun pad(label: String) = rule.onNodeWithContentDescription(label, useUnmergedTree = false)
 

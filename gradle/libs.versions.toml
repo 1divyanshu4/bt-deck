@@ -4,6 +4,7 @@ kotlin = "2.2.20"
 composeBom = "2025.09.00"
 activityCompose = "1.10.1"
 coreKtx = "1.16.0"
+coreSplashscreen = "1.2.0"
 lifecycle = "2.9.2"
 coroutines = "1.8.1"
 junit = "4.13.2"
@@ -25,6 +26,7 @@ minSdk = "28"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
@@ -61,8 +63,8 @@ spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin.android", version.ref = "aboutLibraries" }
 
 # Convention plugins from build-logic.
-keyset-android-application = { id = "keyset.android.application" }
-keyset-android-library = { id = "keyset.android.library" }
-keyset-android-compose = { id = "keyset.android.compose" }
-keyset-android-feature = { id = "keyset.android.feature" }
-keyset-jvm-library = { id = "keyset.jvm.library" }
+btdeck-android-application = { id = "btdeck.android.application" }
+btdeck-android-library = { id = "btdeck.android.library" }
+btdeck-android-compose = { id = "btdeck.android.compose" }
+btdeck-android-feature = { id = "btdeck.android.feature" }
+btdeck-jvm-library = { id = "btdeck.jvm.library" }

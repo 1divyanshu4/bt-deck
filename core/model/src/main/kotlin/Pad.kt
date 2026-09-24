@@ -1,4 +1,4 @@
-package dev.keyset.core.model
+package dev.btdeck.core.model
 
 import java.util.UUID
 

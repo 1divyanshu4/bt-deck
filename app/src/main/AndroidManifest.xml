@@ -22,15 +22,16 @@
     <uses-feature android:name="android.hardware.bluetooth" android:required="true" />
 
     <application
-        android:name=".KeySetApp"
+        android:name=".BTDeckApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.KeySet">
+        android:theme="@style/Theme.BTDeck">
         <activity
             android:name=".MainActivity"
+            android:theme="@style/Theme.BTDeck.Starting"
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="fullUser"
@@ -41,7 +42,7 @@
             </intent-filter>
             <!--
                 Opening or sharing a .keyset layout file. Apps rarely know the extension, so the
-                file arrives as generic binary or zip; KeySet checks the contents itself.
+                file arrives as generic binary or zip; BTDeck checks the contents itself.
             -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

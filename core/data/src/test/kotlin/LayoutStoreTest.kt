@@ -1,11 +1,11 @@
-package dev.keyset.core.data
+package dev.btdeck.core.data
 
-import dev.keyset.core.model.Keys
-import dev.keyset.core.model.Mod
-import dev.keyset.core.model.PadButton
-import dev.keyset.core.model.PadLayout
-import dev.keyset.core.model.PadState
-import dev.keyset.core.model.PressMode
+import dev.btdeck.core.model.Keys
+import dev.btdeck.core.model.Mod
+import dev.btdeck.core.model.PadButton
+import dev.btdeck.core.model.PadLayout
+import dev.btdeck.core.model.PadState
+import dev.btdeck.core.model.PressMode
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue

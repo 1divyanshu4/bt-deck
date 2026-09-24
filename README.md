@@ -1,6 +1,6 @@
-# KeySet
+# BTDeck
 
-KeySet turns your Android phone into a shortcut pad for drawing.
+BTDeck turns your Android phone into a shortcut pad for drawing.
 
 Your phone connects to your tablet or laptop as a normal Bluetooth keyboard. You fill the
 screen with big buttons like Undo, Brush, Eraser or Pan, and tap them with one hand while
@@ -13,8 +13,8 @@ you draw with the other. Nothing needs to be installed on the tablet or laptop.
 - Separate layouts for different apps, with 2 to 6 columns and your own colours
 - About 110 drawing icons, or your own images
 - A fullscreen mode that shows only the buttons
-- A full keyboard (with Ctrl, Alt, arrows and F-keys), and a box for typing text with your
-  phone's own keyboard
+- A full keyboard (with Ctrl, Alt, arrows and F-keys), and a box for writing a whole
+  sentence before sending it
 - Settings for how buttons look (icons only, text only…), vibration and spacing
 - Works with Android tablets, Windows, Mac, Linux and ChromeOS
 - Works with TalkBack
@@ -24,20 +24,20 @@ you draw with the other. Nothing needs to be installed on the tablet or laptop.
 - A phone with Android 9 or newer
 - A tablet or computer with Bluetooth
 
-A few phone makers switch off the Bluetooth keyboard feature. If yours has, KeySet will
+A few phone makers switch off the Bluetooth keyboard feature. If yours has, BTDeck will
 tell you.
 
 ## How to use it
 
-1. Install KeySet on your phone (download it from [Releases](../../releases)).
+1. Install BTDeck on your phone (download it from [Releases](../../releases)).
 2. Open it and allow Bluetooth access.
 3. On your tablet or laptop, open the Bluetooth settings page.
-4. In KeySet, tap the status button in the top right, then **Scan**, then **Pair** next to
+4. In BTDeck, tap the status button in the top left, then **Scan**, then **Pair** next to
    your device.
-5. Start drawing. Next time, KeySet reconnects on its own.
+5. Start drawing. Next time, BTDeck reconnects on its own.
 
 If the first connection fails, connect once from the tablet or laptop's Bluetooth settings.
-After that it works from KeySet too. [docs/BLUETOOTH.md](docs/BLUETOOTH.md) explains why and
+After that it works from BTDeck too. [docs/BLUETOOTH.md](docs/BLUETOOTH.md) explains why and
 lists known device quirks.
 
 ## Building it yourself

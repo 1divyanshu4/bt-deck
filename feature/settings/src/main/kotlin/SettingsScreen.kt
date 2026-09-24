@@ -1,4 +1,4 @@
-package dev.keyset.feature.settings
+package dev.btdeck.feature.settings
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -32,11 +32,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import dev.keyset.core.designsystem.component.TopBar
 import androidx.compose.ui.unit.sp
-import dev.keyset.core.model.ButtonSpacing
-import dev.keyset.core.model.ButtonStyle
-import dev.keyset.core.model.KeySetSettings
+import dev.btdeck.core.designsystem.component.TopBar
+import dev.btdeck.core.model.BTDeckSettings
+import dev.btdeck.core.model.ButtonSpacing
+import dev.btdeck.core.model.ButtonStyle
 
 /**
  * App settings. Each row is one line: choices open a small menu, on/off settings are switches.
@@ -44,8 +44,8 @@ import dev.keyset.core.model.KeySetSettings
  */
 @Composable
 fun SettingsScreen(
-    settings: KeySetSettings,
-    onChange: ((KeySetSettings) -> KeySetSettings) -> Unit,
+    settings: BTDeckSettings,
+    onChange: ((BTDeckSettings) -> BTDeckSettings) -> Unit,
     onOpenTutorials: () -> Unit,
     onOpenPrivacy: () -> Unit,
     onOpenAbout: () -> Unit,
@@ -72,7 +72,7 @@ fun SettingsScreen(
             Spacer(Modifier.height(16.dp))
             LinkRow("Tutorials", onOpenTutorials)
             LinkRow("Privacy policy", onOpenPrivacy)
-            LinkRow("About KeySet", onOpenAbout)
+            LinkRow("About BTDeck", onOpenAbout)
         }
     }
 }

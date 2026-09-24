@@ -14,7 +14,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "KeySet"
+rootProject.name = "BTDeck"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":app")

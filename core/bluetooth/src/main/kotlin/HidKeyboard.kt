@@ -1,4 +1,4 @@
-package dev.keyset.core.bluetooth
+package dev.btdeck.core.bluetooth
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
@@ -10,9 +10,9 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.content.Context
 import android.util.Log
-import dev.keyset.core.model.Mod
-import dev.keyset.core.model.buildReport
-import dev.keyset.core.model.keystrokeFor
+import dev.btdeck.core.model.Mod
+import dev.btdeck.core.model.buildReport
+import dev.btdeck.core.model.keystrokeFor
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +43,7 @@ sealed interface HidStatus {
     data class ConnectFailed(val name: String) : HidStatus
 
     /**
-     * The stack is stuck holding an old keyboard session (e.g. KeySet was killed while
+     * The stack is stuck holding an old keyboard session (e.g. BTDeck was killed while
      * connected and the phone never finished releasing it). Only a Bluetooth restart clears it.
      */
     data object NeedsBluetoothRestart : HidStatus
@@ -118,9 +118,9 @@ object HidKeyboard {
     )
 
     private val SDP = BluetoothHidDeviceAppSdpSettings(
-        "KeySet",
-        "KeySet shortcut pad",
-        "KeySet",
+        "BTDeck",
+        "BTDeck shortcut pad",
+        "BTDeck",
         BluetoothHidDevice.SUBCLASS1_KEYBOARD,
         DESCRIPTOR,
     )
@@ -179,7 +179,7 @@ object HidKeyboard {
 
     /**
      * Whether Caps Lock is on. The host reports it through the LED byte; [toggleCapsLock]
-     * guesses ahead for hosts that don't (ones that paired before KeySet sent LEDs).
+     * guesses ahead for hosts that don't (ones that paired before BTDeck sent LEDs).
      */
     val capsLock: StateFlow<Boolean> = _capsLock.asStateFlow()
 
@@ -318,7 +318,7 @@ object HidKeyboard {
         }
         registerAttempts = 0
         // Usually our own old session the stack never released, occasionally another
-        // keyboard app. A Bluetooth restart fixes the first and KeySet re-registers itself.
+        // keyboard app. A Bluetooth restart fixes the first and BTDeck re-registers itself.
         _status.value = HidStatus.NeedsBluetoothRestart
     }
 

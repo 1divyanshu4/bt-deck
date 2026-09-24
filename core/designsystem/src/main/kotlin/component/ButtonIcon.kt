@@ -1,4 +1,4 @@
-package dev.keyset.core.designsystem.component
+package dev.btdeck.core.designsystem.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.material3.Icon
@@ -9,8 +9,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import dev.keyset.core.data.CustomIcons
-import dev.keyset.core.designsystem.icon.PadIcons
+import dev.btdeck.core.data.CustomIcons
+import dev.btdeck.core.designsystem.icon.PadIcons
 
 /** True if [key] names a built-in icon or a stored custom image. */
 fun hasIcon(key: String?): Boolean =

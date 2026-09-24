@@ -1,7 +1,7 @@
-package dev.keyset.feature.keyboard
+package dev.btdeck.feature.keyboard
 
-import dev.keyset.core.model.Keys
-import dev.keyset.core.model.Mod
+import dev.btdeck.core.model.Keys
+import dev.btdeck.core.model.Mod
 
 /**
  * One key on the on-screen keyboard.

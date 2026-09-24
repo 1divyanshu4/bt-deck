@@ -1,4 +1,4 @@
-package dev.keyset.core.bluetooth
+package dev.btdeck.core.bluetooth
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothClass

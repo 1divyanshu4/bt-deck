@@ -1,4 +1,4 @@
-package dev.keyset.feature.editor
+package dev.btdeck.feature.editor
 
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -39,13 +39,13 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.keyset.core.data.CustomIcons
-import dev.keyset.core.designsystem.component.ButtonIcon
-import dev.keyset.core.designsystem.component.CompactTextField
-import dev.keyset.core.designsystem.icon.PadIcon
-import dev.keyset.core.designsystem.icon.PadIcons
-import dev.keyset.core.designsystem.theme.KeySetShapes
-import dev.keyset.core.designsystem.theme.Palette
+import dev.btdeck.core.data.CustomIcons
+import dev.btdeck.core.designsystem.component.ButtonIcon
+import dev.btdeck.core.designsystem.component.CompactTextField
+import dev.btdeck.core.designsystem.icon.PadIcon
+import dev.btdeck.core.designsystem.icon.PadIcons
+import dev.btdeck.core.designsystem.theme.BTDeckShapes
+import dev.btdeck.core.designsystem.theme.Palette
 import kotlinx.coroutines.launch
 
 private val GroupTitleColor = Color(0xFF9999A4)
@@ -184,7 +184,7 @@ private fun IconTile(
     onClick: () -> Unit,
     content: @Composable () -> Unit,
 ) {
-    val shape = KeySetShapes.Small
+    val shape = BTDeckShapes.Small
     val background = if (selected) tint else Color.White.copy(alpha = 0.06f)
     val outline = if (selected) Color.White else Color.Transparent
     Box(

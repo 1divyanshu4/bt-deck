@@ -1,4 +1,4 @@
-package dev.keyset.buildlogic
+package dev.btdeck.buildlogic
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -11,7 +11,7 @@ import org.gradle.kotlin.dsl.project
  */
 class AndroidFeatureConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) = with(target) {
-        pluginManager.apply("keyset.android.compose")
+        pluginManager.apply("btdeck.android.compose")
         dependencies {
             add("implementation", project(":core:model"))
             add("implementation", project(":core:designsystem"))

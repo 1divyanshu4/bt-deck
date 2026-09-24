@@ -1,4 +1,4 @@
-package dev.keyset.core.designsystem.component
+package dev.btdeck.core.designsystem.component
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons

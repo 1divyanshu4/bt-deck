@@ -1,4 +1,4 @@
-package dev.keyset.feature.connect
+package dev.btdeck.feature.connect
 
 import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothDevice
@@ -52,16 +52,16 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.keyset.core.bluetooth.DeviceScanner
-import dev.keyset.core.bluetooth.HidKeyboard
-import dev.keyset.core.bluetooth.HidStatus
-import dev.keyset.core.bluetooth.ScanState
-import dev.keyset.core.bluetooth.bluetoothClassOrNull
-import dev.keyset.core.bluetooth.displayName
-import dev.keyset.core.designsystem.component.HelpButton
-import dev.keyset.core.designsystem.theme.KeySetColors
-import dev.keyset.core.designsystem.theme.KeySetShapes
-import dev.keyset.core.designsystem.theme.Palette
+import dev.btdeck.core.bluetooth.DeviceScanner
+import dev.btdeck.core.bluetooth.HidKeyboard
+import dev.btdeck.core.bluetooth.HidStatus
+import dev.btdeck.core.bluetooth.ScanState
+import dev.btdeck.core.bluetooth.bluetoothClassOrNull
+import dev.btdeck.core.bluetooth.displayName
+import dev.btdeck.core.designsystem.component.HelpButton
+import dev.btdeck.core.designsystem.theme.BTDeckColors
+import dev.btdeck.core.designsystem.theme.BTDeckShapes
+import dev.btdeck.core.designsystem.theme.Palette
 
 /** What the Bluetooth controls ask the app to do. Android shows its own confirm dialog for each. */
 enum class BluetoothAction { TurnOn, TurnOff, Restart }
@@ -86,7 +86,7 @@ fun ConnectSheet(
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
-        containerColor = KeySetColors.Surface,
+        containerColor = BTDeckColors.Surface,
         // Half-open hides Scan/Pair on landscape tablets.
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     ) {
@@ -124,14 +124,14 @@ private fun BluetoothControls(status: HidStatus, onBluetooth: (BluetoothAction) 
     SheetHeader(
         "Bluetooth",
         help = "Restart turns Bluetooth off and on again. It fixes most connection problems; " +
-            "KeySet reconnects by itself afterwards.",
+            "BTDeck reconnects by itself afterwards.",
     ) {
         if (on) TextButton(onClick = { onBluetooth(BluetoothAction.Restart) }) { Text("Restart") }
     }
     Row(
         Modifier
             .fillMaxWidth()
-            .clip(KeySetShapes.Small)
+            .clip(BTDeckShapes.Small)
             .toggleable(value = on, role = Role.Switch) {
                 onBluetooth(if (on) BluetoothAction.TurnOff else BluetoothAction.TurnOn)
             }
@@ -221,7 +221,7 @@ private fun NearbyDevices(scan: ScanState, onScan: () -> Unit) {
 private fun DiscoverableFallback(onMakeDiscoverable: () -> Unit) {
     Spacer(Modifier.size(16.dp))
     Row(verticalAlignment = Alignment.CenterVertically) {
-        OutlinedButton(onClick = onMakeDiscoverable, shape = KeySetShapes.Small, modifier = Modifier.weight(1f)) {
+        OutlinedButton(onClick = onMakeDiscoverable, shape = BTDeckShapes.Small, modifier = Modifier.weight(1f)) {
             Text("Make phone discoverable")
         }
         HelpButton(
@@ -261,7 +261,7 @@ private fun DeviceRow(
     Row(
         Modifier
             .fillMaxWidth()
-            .clip(KeySetShapes.Small)
+            .clip(BTDeckShapes.Small)
             .background(if (highlighted) Palette[2].copy(alpha = 0.18f) else Color.Transparent)
             .clickable(onClick = onClick)
             .padding(vertical = 12.dp, horizontal = 8.dp),

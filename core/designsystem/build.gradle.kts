@@ -1,9 +1,9 @@
 plugins {
-    alias(libs.plugins.keyset.android.compose)
+    alias(libs.plugins.btdeck.android.compose)
 }
 
 android {
-    namespace = "dev.keyset.core.designsystem"
+    namespace = "dev.btdeck.core.designsystem"
 }
 
 dependencies {

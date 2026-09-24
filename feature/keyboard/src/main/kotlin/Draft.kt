@@ -1,9 +1,9 @@
-package dev.keyset.feature.keyboard
+package dev.btdeck.feature.keyboard
 
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
-import dev.keyset.core.model.Keys
-import dev.keyset.core.model.keystrokeFor
+import dev.btdeck.core.model.Keys
+import dev.btdeck.core.model.keystrokeFor
 
 /**
  * What an on-screen key does to the text box while it's being written in. [text] is what the

@@ -1,4 +1,4 @@
-package dev.keyset.feature.pad
+package dev.btdeck.feature.pad
 
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.BorderStroke
@@ -62,21 +62,21 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.keyset.core.bluetooth.HidKeyboard
-import dev.keyset.core.designsystem.component.ButtonIcon
-import dev.keyset.core.designsystem.component.CornerBadge
-import dev.keyset.core.designsystem.component.hasIcon
-import dev.keyset.core.designsystem.component.softCircles
-import dev.keyset.core.designsystem.theme.KeySetShapes
-import dev.keyset.core.designsystem.theme.Palette
-import dev.keyset.core.model.ButtonStyle
-import dev.keyset.core.model.KeySetSettings
-import dev.keyset.core.model.PadButton
-import dev.keyset.core.model.PadLayout
-import dev.keyset.core.model.PressMode
-import dev.keyset.core.model.comboLabel
+import dev.btdeck.core.bluetooth.HidKeyboard
+import dev.btdeck.core.designsystem.component.ButtonIcon
+import dev.btdeck.core.designsystem.component.CornerBadge
+import dev.btdeck.core.designsystem.component.hasIcon
+import dev.btdeck.core.designsystem.component.softCircles
+import dev.btdeck.core.designsystem.theme.BTDeckShapes
+import dev.btdeck.core.designsystem.theme.Palette
+import dev.btdeck.core.model.BTDeckSettings
+import dev.btdeck.core.model.ButtonStyle
+import dev.btdeck.core.model.PadButton
+import dev.btdeck.core.model.PadLayout
+import dev.btdeck.core.model.PressMode
+import dev.btdeck.core.model.comboLabel
 
-private val KeyShape = KeySetShapes.Medium
+private val KeyShape = BTDeckShapes.Medium
 
 /**
  * The grid of shortcut keys for [layout], drawn according to [settings]. In [editing] mode
@@ -87,7 +87,7 @@ fun Pad(
     layout: PadLayout,
     editing: Boolean,
     heldIds: Set<String>,
-    settings: KeySetSettings,
+    settings: BTDeckSettings,
     onEdit: (PadButton) -> Unit,
     onAdd: () -> Unit,
     modifier: Modifier = Modifier,
@@ -169,7 +169,7 @@ private fun PadKey(
     button: PadButton,
     editing: Boolean,
     held: Boolean,
-    settings: KeySetSettings,
+    settings: BTDeckSettings,
     onEdit: () -> Unit,
     dropTarget: Boolean,
     arrange: DragActions,
@@ -285,15 +285,17 @@ private fun toggleKey(button: PadButton) {
  * text. Keys without an icon always show text.
  */
 @Composable
-private fun KeyFace(button: PadButton, settings: KeySetSettings, color: Color) {
+private fun KeyFace(button: PadButton, settings: BTDeckSettings, color: Color) {
     val showIcon = hasIcon(button.icon) && settings.buttonStyle != ButtonStyle.TEXT_ONLY
     BoxWithConstraints(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         // On short keys the label comes first, then the mode tag; the icon gets what's left.
         val labelHeight = 26.dp
         val tagHeight = 19.dp
         val faceHeight = if (showIcon) 18.dp else 24.dp
-        val showLabel = showIcon && settings.buttonStyle == ButtonStyle.ICON_AND_LABEL &&
-            button.label.isNotBlank() && maxHeight >= faceHeight + labelHeight
+        val showLabel = showIcon &&
+            settings.buttonStyle == ButtonStyle.ICON_AND_LABEL &&
+            button.label.isNotBlank() &&
+            maxHeight >= faceHeight + labelHeight
         val textHeight = if (showLabel) labelHeight else 0.dp
         val showModeTag = button.mode != PressMode.TAP && maxHeight >= faceHeight + textHeight + tagHeight
         val iconSize = minOf(maxWidth * 0.42f, (maxHeight - textHeight - (if (showModeTag) tagHeight else 0.dp)) * 0.8f)
@@ -337,7 +339,7 @@ private fun TextFace(button: PadButton) {
 
 /** The key's shortcut (e.g. Ctrl+Z) in its top-right corner. */
 @Composable
-private fun ShortcutBadge(button: PadButton, settings: KeySetSettings) {
+private fun ShortcutBadge(button: PadButton, settings: BTDeckSettings) {
     // A text key without a label already shows its shortcut as its text.
     val showsShortcutAlready = button.label.isBlank() &&
         (!hasIcon(button.icon) || settings.buttonStyle == ButtonStyle.TEXT_ONLY)

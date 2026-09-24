@@ -1,9 +1,9 @@
-package dev.keyset.core.data
+package dev.btdeck.core.data
 
-import dev.keyset.core.model.Mod
-import dev.keyset.core.model.PadButton
-import dev.keyset.core.model.PadLayout
-import dev.keyset.core.model.PressMode
+import dev.btdeck.core.model.Mod
+import dev.btdeck.core.model.PadButton
+import dev.btdeck.core.model.PadLayout
+import dev.btdeck.core.model.PressMode
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.util.zip.ZipEntry

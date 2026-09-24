@@ -1,4 +1,4 @@
-package dev.keyset.feature.settings
+package dev.btdeck.feature.settings
 
 import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
@@ -45,10 +45,10 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.keyset.core.designsystem.component.PageTitle
-import dev.keyset.core.designsystem.component.softCircles
-import dev.keyset.core.designsystem.theme.KeySetColors
-import dev.keyset.core.designsystem.theme.KeySetShapes
+import dev.btdeck.core.designsystem.component.PageTitle
+import dev.btdeck.core.designsystem.component.softCircles
+import dev.btdeck.core.designsystem.theme.BTDeckColors
+import dev.btdeck.core.designsystem.theme.BTDeckShapes
 import kotlinx.coroutines.launch
 
 /**
@@ -83,7 +83,7 @@ private val tutorials = listOf(
             Step(
                 "Connect sheet",
                 "After that, just tap Connect.",
-                "KeySet also reconnects by itself. If the very first connect fails, connect once from " +
+                "BTDeck also reconnects by itself. If the very first connect fails, connect once from " +
                     "the tablet or laptop's Bluetooth settings.",
                 R.drawable.tutorial_connect_3,
             ),
@@ -103,7 +103,7 @@ private val tutorials = listOf(
             Step(
                 "Layouts tab",
                 "The tinted card is the layout in use.",
-                "Tap another card to switch to it; KeySet takes you straight to the Pad.",
+                "Tap another card to switch to it; BTDeck takes you straight to the Pad.",
                 R.drawable.tutorial_layout_3,
             ),
             Step(
@@ -232,18 +232,18 @@ private val tutorials = listOf(
             Step(
                 "Connect sheet",
                 "Restart Bluetooth.",
-                "Fixes most stuck connections. KeySet reconnects by itself afterwards.",
+                "Fixes most stuck connections. BTDeck reconnects by itself afterwards.",
                 R.drawable.tutorial_fix_1,
             ),
             Step(
                 "Your tablet or laptop",
-                "Run KeySet on the phone only.",
+                "Run BTDeck on the phone only.",
                 "A device that's acting as a keyboard can't receive keys from another one.",
             ),
             Step(
                 "Your tablet or laptop",
                 "Odd characters? Use a US keyboard layout.",
-                "KeySet types as a US keyboard, so the other device should be set to that layout.",
+                "BTDeck types as a US keyboard, so the other device should be set to that layout.",
             ),
         ),
     ),
@@ -283,10 +283,10 @@ private fun TutorialCard(tutorial: Tutorial, onClick: () -> Unit) {
     Row(
         Modifier
             .fillMaxWidth()
-            .clip(KeySetShapes.Medium)
-            .background(KeySetColors.Surface)
+            .clip(BTDeckShapes.Medium)
+            .background(BTDeckColors.Surface)
             .softCircles()
-            .border(1.dp, Color.White.copy(alpha = 0.06f), KeySetShapes.Medium)
+            .border(1.dp, Color.White.copy(alpha = 0.06f), BTDeckShapes.Medium)
             .clickable(role = Role.Button, onClick = onClick)
             .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -297,7 +297,7 @@ private fun TutorialCard(tutorial: Tutorial, onClick: () -> Unit) {
                 painterResource(thumbnail),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.size(64.dp).clip(KeySetShapes.Small),
+                modifier = Modifier.size(64.dp).clip(BTDeckShapes.Small),
             )
         }
         Column(Modifier.padding(start = 14.dp).weight(1f)) {
@@ -327,7 +327,7 @@ private fun TutorialSteps(tutorial: Tutorial, onDone: () -> Unit) {
             PageDots(count = tutorial.steps.size, current = pager.currentPage, modifier = Modifier.weight(1f))
             Button(
                 onClick = { if (last) onDone() else scope.launch { pager.animateScrollToPage(pager.currentPage + 1) } },
-                shape = KeySetShapes.Small,
+                shape = BTDeckShapes.Small,
             ) { Text(if (last) "Done" else "Next") }
         }
     }
@@ -354,8 +354,8 @@ private fun StepPage(step: Step, number: Int) = BoxWithConstraints(Modifier.fill
                     .widthIn(max = 480.dp)
                     .heightIn(max = pictureHeight)
                     .aspectRatio(picture.intrinsicSize.width / picture.intrinsicSize.height)
-                    .clip(KeySetShapes.Medium)
-                    .border(1.dp, Color.White.copy(alpha = 0.08f), KeySetShapes.Medium),
+                    .clip(BTDeckShapes.Medium)
+                    .border(1.dp, Color.White.copy(alpha = 0.08f), BTDeckShapes.Medium),
             )
         }
         Column(Modifier.fillMaxWidth().padding(top = 16.dp)) {

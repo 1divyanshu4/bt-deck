@@ -1,4 +1,4 @@
-package dev.keyset
+package dev.btdeck
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothManager
@@ -6,14 +6,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import dev.keyset.core.bluetooth.DeviceScanner
-import dev.keyset.core.bluetooth.HidKeyboard
-import dev.keyset.core.model.comboLabel
+import dev.btdeck.core.bluetooth.DeviceScanner
+import dev.btdeck.core.bluetooth.HidKeyboard
+import dev.btdeck.core.model.comboLabel
 
 /**
- * Debug builds only. Drive the keyboard from adb and read results from logcat (tag KeySetDebug):
+ * Debug builds only. Drive the keyboard from adb and read results from logcat (tag BTDeckDebug):
  *
- *   adb shell am broadcast -n dev.keyset/.DebugReceiver --es cmd status
+ *   adb shell am broadcast -n dev.btdeck/.DebugReceiver --es cmd status
  *   ... --es cmd connect --es addr AA:BB:CC:DD:EE:FF
  *   ... --es cmd disconnect
  *   ... --es cmd button --es label Undo        (acts like tapping the pad key)
@@ -23,7 +23,7 @@ import dev.keyset.core.model.comboLabel
 class DebugReceiver : BroadcastReceiver() {
     @SuppressLint("MissingPermission")
     override fun onReceive(context: Context, intent: Intent) {
-        val app = context.applicationContext as KeySetApp
+        val app = context.applicationContext as BTDeckApp
         val out = when (val cmd = intent.getStringExtra("cmd")) {
             "status" -> "status=${HidKeyboard.status.value} host=${HidKeyboard.connectedAddress()}"
             "connect" -> {
@@ -68,6 +68,6 @@ class DebugReceiver : BroadcastReceiver() {
     }
 
     private fun log(msg: String) {
-        Log.i("KeySetDebug", msg)
+        Log.i("BTDeckDebug", msg)
     }
 }

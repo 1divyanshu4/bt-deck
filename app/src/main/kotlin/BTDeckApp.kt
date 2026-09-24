@@ -1,14 +1,14 @@
-package dev.keyset
+package dev.btdeck
 
 import android.app.Application
-import dev.keyset.core.bluetooth.DeviceScanner
-import dev.keyset.core.bluetooth.HidKeyboard
-import dev.keyset.core.data.CustomIcons
-import dev.keyset.core.data.LayoutStore
-import dev.keyset.core.data.LayoutTransfer
-import dev.keyset.core.data.SettingsStore
+import dev.btdeck.core.bluetooth.DeviceScanner
+import dev.btdeck.core.bluetooth.HidKeyboard
+import dev.btdeck.core.data.CustomIcons
+import dev.btdeck.core.data.LayoutStore
+import dev.btdeck.core.data.LayoutTransfer
+import dev.btdeck.core.data.SettingsStore
 
-class KeySetApp : Application() {
+class BTDeckApp : Application() {
     lateinit var layouts: LayoutStore
         private set
     lateinit var settings: SettingsStore

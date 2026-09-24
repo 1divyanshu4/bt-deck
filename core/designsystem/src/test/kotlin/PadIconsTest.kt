@@ -1,8 +1,8 @@
-package dev.keyset.core.designsystem
+package dev.btdeck.core.designsystem
 
-import dev.keyset.core.data.CustomIcons
-import dev.keyset.core.data.defaultLayouts
-import dev.keyset.core.designsystem.icon.PadIcons
+import dev.btdeck.core.data.CustomIcons
+import dev.btdeck.core.data.defaultLayouts
+import dev.btdeck.core.designsystem.icon.PadIcons
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull

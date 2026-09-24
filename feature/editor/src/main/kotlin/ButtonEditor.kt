@@ -1,4 +1,4 @@
-package dev.keyset.feature.editor
+package dev.btdeck.feature.editor
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -43,17 +43,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import dev.keyset.core.designsystem.component.ButtonIcon
-import dev.keyset.core.designsystem.component.CompactTextField
-import dev.keyset.core.designsystem.component.HelpButton
-import dev.keyset.core.designsystem.component.hasIcon
-import dev.keyset.core.designsystem.theme.KeySetColors
-import dev.keyset.core.designsystem.theme.KeySetShapes
-import dev.keyset.core.designsystem.theme.Palette
-import dev.keyset.core.model.Mod
-import dev.keyset.core.model.PadButton
-import dev.keyset.core.model.PressMode
-import dev.keyset.core.model.comboLabel
+import dev.btdeck.core.designsystem.component.ButtonIcon
+import dev.btdeck.core.designsystem.component.CompactTextField
+import dev.btdeck.core.designsystem.component.HelpButton
+import dev.btdeck.core.designsystem.component.hasIcon
+import dev.btdeck.core.designsystem.theme.BTDeckColors
+import dev.btdeck.core.designsystem.theme.BTDeckShapes
+import dev.btdeck.core.designsystem.theme.Palette
+import dev.btdeck.core.model.Mod
+import dev.btdeck.core.model.PadButton
+import dev.btdeck.core.model.PressMode
+import dev.btdeck.core.model.comboLabel
 
 private const val ICON_HELP =
     "Shown on the button instead of the shortcut. None shows the label and shortcut. " +
@@ -81,8 +81,8 @@ fun ButtonEditor(
 
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
         Surface(
-            shape = KeySetShapes.Medium,
-            color = KeySetColors.Surface,
+            shape = BTDeckShapes.Medium,
+            color = BTDeckColors.Surface,
             modifier = Modifier.fillMaxWidth(0.94f).heightIn(max = 720.dp),
         ) {
             Column(Modifier.padding(16.dp)) {
@@ -137,7 +137,7 @@ private fun EditorHeader(draft: PadButton, isNew: Boolean) {
         )
         Row(
             Modifier
-                .clip(KeySetShapes.Small)
+                .clip(BTDeckShapes.Small)
                 .background(primary.copy(alpha = 0.16f))
                 .padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -200,7 +200,7 @@ private fun BehaviourPicker(mode: PressMode, onChange: (PressMode) -> Unit) {
             SegmentedButton(
                 selected = mode == m,
                 onClick = { onChange(m) },
-                shape = SegmentedButtonDefaults.itemShape(i, PressMode.entries.size, KeySetShapes.Small),
+                shape = SegmentedButtonDefaults.itemShape(i, PressMode.entries.size, BTDeckShapes.Small),
                 icon = {}, // no checkmark; the filled segment already shows the choice
             ) { Text(m.label) }
         }
@@ -217,9 +217,9 @@ private fun ColorPicker(color: Int, onChange: (Int) -> Unit) {
             Box(
                 Modifier
                     .size(36.dp)
-                    .clip(KeySetShapes.Small)
+                    .clip(BTDeckShapes.Small)
                     .background(swatch)
-                    .border(3.dp, ring, KeySetShapes.Small)
+                    .border(3.dp, ring, BTDeckShapes.Small)
                     .clickable { onChange(i) },
             )
         }
@@ -230,8 +230,8 @@ private fun ColorPicker(color: Int, onChange: (Int) -> Unit) {
 private fun PositionButtons(onMove: (Int) -> Unit) {
     SectionTitle("Position")
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        OutlinedButton(onClick = { onMove(-1) }, shape = KeySetShapes.Small) { Text("◀ Earlier") }
-        OutlinedButton(onClick = { onMove(1) }, shape = KeySetShapes.Small) { Text("Later ▶") }
+        OutlinedButton(onClick = { onMove(-1) }, shape = BTDeckShapes.Small) { Text("◀ Earlier") }
+        OutlinedButton(onClick = { onMove(1) }, shape = BTDeckShapes.Small) { Text("Later ▶") }
     }
 }
 
@@ -248,7 +248,7 @@ private fun EditorFooter(
         if (!isNew) TextButton(onClick = onDelete) { Text("Delete", color = Palette[4]) }
         Spacer(Modifier.weight(1f))
         TextButton(onClick = onCancel) { Text("Cancel") }
-        Button(enabled = canSave, onClick = onSave, shape = KeySetShapes.Small) { Text("Save") }
+        Button(enabled = canSave, onClick = onSave, shape = BTDeckShapes.Small) { Text("Save") }
     }
 }
 

@@ -1,6 +1,6 @@
 # How the code is organised
 
-KeySet is split into small modules so each part is easy to find and change on its own. The
+BTDeck is split into small modules so each part is easy to find and change on its own. The
 layout follows Google's [modularization guide](https://developer.android.com/topic/modularization/patterns),
 kept small to match the size of the app.
 
@@ -57,7 +57,7 @@ there's only one level of screens.
 Files go straight into each module's `src/main/kotlin/` folder, as the
 [Kotlin style guide](https://kotlinlang.org/docs/coding-conventions.html#directory-structure)
 recommends. For example, `feature/editor/src/main/kotlin/ButtonEditor.kt` belongs to the
-`dev.keyset.feature.editor` package. Only smaller groups inside a module get their own
+`dev.btdeck.feature.editor` package. Only smaller groups inside a module get their own
 folder, like `theme/` and `icon/` in the design system.
 
 ## Build setup

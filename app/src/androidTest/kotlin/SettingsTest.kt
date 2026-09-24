@@ -1,4 +1,4 @@
-package dev.keyset
+package dev.btdeck
 
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -6,15 +6,15 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import dev.keyset.core.model.ButtonSpacing
-import dev.keyset.core.model.ButtonStyle
+import dev.btdeck.core.model.ButtonSpacing
+import dev.btdeck.core.model.ButtonStyle
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class SettingsTest : KeySetUiTest() {
+class SettingsTest : BTDeckUiTest() {
 
     @Test
     fun iconOnly_hidesLabelsButKeepsNamesForScreenReaders() {
@@ -82,7 +82,7 @@ class SettingsTest : KeySetUiTest() {
         rule.onNodeWithText("Privacy policy").performScrollTo().performClick()
         rule.onNodeWithText("Bluetooth").assertExists()
         rule.onNodeWithContentDescription("Back").performClick() // Privacy → Settings
-        rule.onNodeWithText("About KeySet").performScrollTo().performClick()
+        rule.onNodeWithText("About BTDeck").performScrollTo().performClick()
         rule.onNodeWithText("Open-source licenses").performClick()
         // The list loads in the background; several entries mention Compose.
         rule.waitUntil(5_000) {

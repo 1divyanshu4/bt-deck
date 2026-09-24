@@ -1,4 +1,4 @@
-package dev.keyset
+package dev.btdeck
 
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.accessibility.enableAccessibilityChecks
@@ -11,13 +11,13 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.tryPerformAccessibilityChecks
 import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import dev.keyset.core.bluetooth.HidKeyboard
-import dev.keyset.core.bluetooth.HidStatus
+import dev.btdeck.core.bluetooth.HidKeyboard
+import dev.btdeck.core.bluetooth.HidStatus
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class ScreensTest : KeySetUiTest() {
+class ScreensTest : BTDeckUiTest() {
 
     private fun status(s: HidStatus) {
         rule.runOnUiThread { HidKeyboard.setStatusForTest(s) }

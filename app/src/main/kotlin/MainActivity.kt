@@ -1,4 +1,4 @@
-package dev.keyset
+package dev.btdeck
 
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
@@ -9,6 +9,7 @@ import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
 import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -20,12 +21,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
-import dev.keyset.core.bluetooth.DeviceScanner
-import dev.keyset.core.bluetooth.HidKeyboard
-import dev.keyset.core.bluetooth.HidStatus
-import dev.keyset.core.designsystem.theme.KeySetTheme
-import dev.keyset.feature.connect.BluetoothAction
+import dev.btdeck.core.bluetooth.DeviceScanner
+import dev.btdeck.core.bluetooth.HidKeyboard
+import dev.btdeck.core.bluetooth.HidStatus
+import dev.btdeck.core.designsystem.theme.BTDeckTheme
+import dev.btdeck.feature.connect.BluetoothAction
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
@@ -86,12 +88,19 @@ class MainActivity : ComponentActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Before super.onCreate: swaps the splash theme for the app's own as the first screen draws.
+        // It stays up until the saved settings are read, so the first screen doesn't flicker from
+        // the defaults to them; a second at most, in case reading ever stalls.
+        val app = application as BTDeckApp
+        val started = SystemClock.uptimeMillis()
+        installSplashScreen().setKeepOnScreenCondition {
+            !app.settings.loaded.value && SystemClock.uptimeMillis() - started < 1_000
+        }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val app = application as KeySetApp
         incomingFile = layoutFileFrom(intent)
         setContent {
-            KeySetTheme {
+            BTDeckTheme {
                 AppShell(
                     layouts = app.layouts,
                     settingsStore = app.settings,
@@ -155,7 +164,7 @@ class MainActivity : ComponentActivity() {
 
     /**
      * Since Android 13 apps can't switch Bluetooth themselves, but they can ask: Android shows
-     * a small "allow?" dialog over KeySet. Turning off uses Settings' own request, which isn't
+     * a small "allow?" dialog over BTDeck. Turning off uses Settings' own request, which isn't
      * in the public SDK; phones without it get the Bluetooth settings screen instead.
      */
     private fun controlBluetooth(action: BluetoothAction) {

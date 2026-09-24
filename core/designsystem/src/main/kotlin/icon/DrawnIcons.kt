@@ -1,4 +1,4 @@
-package dev.keyset.core.designsystem.icon
+package dev.btdeck.core.designsystem.icon
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType

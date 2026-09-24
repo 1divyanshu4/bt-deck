@@ -1,4 +1,4 @@
-package dev.keyset.feature.keyboard
+package dev.btdeck.feature.keyboard
 
 import android.view.HapticFeedbackConstants
 import android.widget.Toast
@@ -55,12 +55,12 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.keyset.core.bluetooth.HidKeyboard
-import dev.keyset.core.designsystem.component.CompactTextField
-import dev.keyset.core.designsystem.theme.KeySetColors
-import dev.keyset.core.designsystem.theme.KeySetShapes
-import dev.keyset.core.model.Keys
-import dev.keyset.core.model.Mod
+import dev.btdeck.core.bluetooth.HidKeyboard
+import dev.btdeck.core.designsystem.component.CompactTextField
+import dev.btdeck.core.designsystem.theme.BTDeckColors
+import dev.btdeck.core.designsystem.theme.BTDeckShapes
+import dev.btdeck.core.model.Keys
+import dev.btdeck.core.model.Mod
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -171,7 +171,7 @@ private fun TextSender(
         }
         FilledIconButton(
             onClick = onSend,
-            shape = KeySetShapes.Small,
+            shape = BTDeckShapes.Small,
             enabled = draft.text.isNotEmpty() && !sending,
             modifier = Modifier.padding(start = 8.dp).size(44.dp),
         ) {
@@ -269,7 +269,9 @@ private fun FullKeyboard(vibrate: Boolean, writeKey: ((KeySpec, String) -> Unit)
                         else -> null
                     }
                     val locked = stateOf(spec.modifier) == ModifierState.LOCKED || (spec.isCapsLock && capsLock)
-                    val on = spec.isModifier && (stateOf(spec.modifier) != ModifierState.OFF || spec.modifier in heldModifiers)
+                    val on =
+                        spec.isModifier &&
+                            (stateOf(spec.modifier) != ModifierState.OFF || spec.modifier in heldModifiers)
                     KeyboardKey(
                         spec = spec,
                         label = spec.labelFor(shift = shiftOn, capsLock = capsLock),
@@ -320,11 +322,17 @@ private fun KeyboardKey(
     val currentOnUp by rememberUpdatedState(onUp)
     val currentVibrate by rememberUpdatedState(vibrate)
 
-    val background = if (pressed || lit) MaterialTheme.colorScheme.primary.copy(alpha = 0.55f) else KeySetColors.SurfaceHigh
+    val background = if (pressed ||
+        lit
+    ) {
+        MaterialTheme.colorScheme.primary.copy(alpha = 0.55f)
+    } else {
+        BTDeckColors.SurfaceHigh
+    }
 
     Box(
         modifier
-            .clip(KeySetShapes.Small)
+            .clip(BTDeckShapes.Small)
             .background(background)
             .semantics(mergeDescendants = true) {
                 contentDescription = spec.description
@@ -378,7 +386,7 @@ private fun KeyboardKey(
 @Composable
 private fun LockMark() {
     Box(Modifier.fillMaxSize().padding(bottom = 4.dp), contentAlignment = Alignment.BottomCenter) {
-        Box(Modifier.size(width = 14.dp, height = 3.dp).clip(KeySetShapes.Small).background(Color.White))
+        Box(Modifier.size(width = 14.dp, height = 3.dp).clip(BTDeckShapes.Small).background(Color.White))
     }
 }
 

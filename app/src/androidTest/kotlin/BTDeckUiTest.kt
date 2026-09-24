@@ -1,4 +1,4 @@
-package dev.keyset
+package dev.btdeck
 
 import android.Manifest
 import android.os.Build
@@ -12,13 +12,13 @@ import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
-import dev.keyset.core.bluetooth.HidKeyboard
-import dev.keyset.core.bluetooth.HidStatus
-import dev.keyset.core.data.LayoutStore
-import dev.keyset.core.data.SettingsStore
-import dev.keyset.core.model.KeySetSettings
-import dev.keyset.core.model.Keys
-import dev.keyset.core.model.buildReport
+import dev.btdeck.core.bluetooth.HidKeyboard
+import dev.btdeck.core.bluetooth.HidStatus
+import dev.btdeck.core.data.LayoutStore
+import dev.btdeck.core.data.SettingsStore
+import dev.btdeck.core.model.BTDeckSettings
+import dev.btdeck.core.model.Keys
+import dev.btdeck.core.model.buildReport
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -29,7 +29,7 @@ import org.junit.Rule
  * Shared setup: Bluetooth permissions granted, layouts reset to the defaults, and every HID
  * report the app builds is recorded in [reports] (test mode never sends them anywhere).
  */
-abstract class KeySetUiTest {
+abstract class BTDeckUiTest {
     @get:Rule(order = 0)
     val permissions: GrantPermissionRule = GrantPermissionRule.grant(
         *buildList {
@@ -47,12 +47,12 @@ abstract class KeySetUiTest {
         createAndroidComposeRule<MainActivity>()
 
     protected val reports = CopyOnWriteArrayList<ByteArray>()
-    private val app get() = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as KeySetApp
+    private val app get() = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as BTDeckApp
     protected val store: LayoutStore get() = app.layouts
     protected val settingsStore: SettingsStore get() = app.settings
 
     /** Changes a setting and waits until the screen can see it. */
-    protected fun setSettings(transform: (KeySetSettings) -> KeySetSettings) {
+    protected fun setSettings(transform: (BTDeckSettings) -> BTDeckSettings) {
         runBlocking { settingsStore.edit(transform) }
         val want = transform(settingsStore.settings.value)
         rule.waitUntil(3_000) { settingsStore.settings.value == want }
@@ -67,7 +67,7 @@ abstract class KeySetUiTest {
 
     @Before
     fun baseSetUp() {
-        setSettings { KeySetSettings() }
+        setSettings { BTDeckSettings() }
         rule.runOnUiThread {
             store.resetToDefaults()
             HidKeyboard.releaseAll()

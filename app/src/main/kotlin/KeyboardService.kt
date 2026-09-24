@@ -1,4 +1,4 @@
-package dev.keyset
+package dev.btdeck
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -15,8 +15,8 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import androidx.core.content.ContextCompat
-import dev.keyset.core.bluetooth.HidKeyboard
-import dev.keyset.core.bluetooth.HidStatus
+import dev.btdeck.core.bluetooth.HidKeyboard
+import dev.btdeck.core.bluetooth.HidStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -82,7 +82,7 @@ class KeyboardService : Service() {
 
     /**
      * Swiped away from recents while not connected: release keyboard mode. A device registered
-     * as a keyboard can't accept one, so a tablet with KeySet idling would reject the phone.
+     * as a keyboard can't accept one, so a tablet with BTDeck idling would reject the phone.
      */
     override fun onTaskRemoved(rootIntent: Intent?) {
         if (HidKeyboard.connectedAddress() == null) {
@@ -105,7 +105,7 @@ class KeyboardService : Service() {
                 is HidStatus.Connected -> "Connected to ${status.name}"
                 is HidStatus.Connecting -> "Connecting to ${status.name}…"
                 HidStatus.Ready -> "Keyboard ready — not connected"
-                else -> "KeySet keyboard"
+                else -> "BTDeck keyboard"
             },
         )
         .setContentText("Tap to open the shortcut pad")
@@ -134,7 +134,7 @@ class KeyboardService : Service() {
     companion object {
         private const val CHANNEL = "keyboard"
         private const val NOTIFICATION_ID = 1
-        private const val ACTION_STOP = "dev.keyset.STOP"
+        private const val ACTION_STOP = "dev.btdeck.STOP"
 
         fun start(context: Context) {
             ContextCompat.startForegroundService(context, Intent(context, KeyboardService::class.java))

@@ -1,4 +1,4 @@
-package dev.keyset
+package dev.btdeck
 
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsProperties
@@ -17,7 +17,7 @@ import androidx.compose.ui.test.performTouchInput
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import dev.keyset.core.model.Mod
+import dev.btdeck.core.model.Mod
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -27,7 +27,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class KeyboardTest : KeySetUiTest() {
+class KeyboardTest : BTDeckUiTest() {
 
     /** The key with this accessibility name (the left one, for keys that appear twice like Shift). */
     private fun keyNode(description: String) = rule.onAllNodesWithContentDescription(description)[0]

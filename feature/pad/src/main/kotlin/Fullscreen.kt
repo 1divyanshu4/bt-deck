@@ -1,4 +1,4 @@
-package dev.keyset.feature.pad
+package dev.btdeck.feature.pad
 
 import android.app.Activity
 import androidx.compose.foundation.background
@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import dev.keyset.core.designsystem.theme.KeySetShapes
-import dev.keyset.core.designsystem.theme.Palette
+import dev.btdeck.core.designsystem.theme.BTDeckShapes
+import dev.btdeck.core.designsystem.theme.Palette
 import kotlinx.coroutines.delay
 
 /** Immersive mode: hides status and navigation bars; an edge swipe shows them briefly. */
@@ -65,7 +65,7 @@ fun BoxScope.FullscreenHint() {
         modifier = Modifier
             .align(Alignment.BottomCenter)
             .padding(bottom = 24.dp, start = 16.dp, end = 16.dp)
-            .clip(KeySetShapes.Small)
+            .clip(BTDeckShapes.Small)
             .background(Color(0xE6202026))
             .padding(horizontal = 14.dp, vertical = 8.dp),
     )
@@ -78,7 +78,7 @@ fun DisconnectedStrip(onExit: () -> Unit) {
         Modifier
             .fillMaxWidth()
             .padding(top = 8.dp)
-            .clip(KeySetShapes.Medium)
+            .clip(BTDeckShapes.Medium)
             .background(Palette[4])
             .clickable(onClick = onExit)
             .padding(horizontal = 14.dp, vertical = 8.dp),

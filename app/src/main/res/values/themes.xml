@@ -1,5 +1,17 @@
 <resources>
-    <style name="Theme.KeySet" parent="android:Theme.Material.NoActionBar">
+    <!--
+        Shown while BTDeck starts (Android's SplashScreen, via the compat library): the app icon
+        on the app's own opaque dark background, so it hands over to the first screen without a
+        flash. No icon backdrop, since the keys contrast well with the background, and no
+        branding image, per Android's splash screen guidance.
+    -->
+    <style name="Theme.BTDeck.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#FF121214</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.BTDeck</item>
+    </style>
+
+    <style name="Theme.BTDeck" parent="android:Theme.Material.NoActionBar">
         <item name="android:windowBackground">#FF121214</item>
         <item name="android:statusBarColor">#FF121214</item>
         <item name="android:navigationBarColor">#FF121214</item>

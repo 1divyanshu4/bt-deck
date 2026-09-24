@@ -1,4 +1,4 @@
-package dev.keyset.buildlogic
+package dev.btdeck.buildlogic
 
 import com.android.build.api.dsl.ApplicationExtension
 import org.gradle.api.Plugin

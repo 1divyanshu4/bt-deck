@@ -1,4 +1,4 @@
-package dev.keyset.core.model
+package dev.btdeck.core.model
 
 /** Modifier bits in byte 0 of a HID boot keyboard report. */
 object Mod {

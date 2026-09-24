@@ -1,4 +1,4 @@
-package dev.keyset.buildlogic
+package dev.btdeck.buildlogic
 
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin

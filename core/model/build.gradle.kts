@@ -1,3 +1,3 @@
 plugins {
-    alias(libs.plugins.keyset.jvm.library)
+    alias(libs.plugins.btdeck.jvm.library)
 }

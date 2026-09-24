@@ -1,4 +1,4 @@
-package dev.keyset.core.designsystem.component
+package dev.btdeck.core.designsystem.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -24,7 +24,11 @@ import androidx.compose.ui.unit.dp
  * Actions are icon buttons.
  */
 @Composable
-fun TopBar(leading: @Composable () -> Unit, modifier: Modifier = Modifier, actions: @Composable RowScope.() -> Unit = {}) {
+fun TopBar(
+    leading: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    actions: @Composable RowScope.() -> Unit = {},
+) {
     Row(
         modifier.fillMaxWidth().padding(start = 12.dp, end = 12.dp, top = 8.dp, bottom = 4.dp).heightIn(min = 48.dp),
         verticalAlignment = Alignment.CenterVertically,
