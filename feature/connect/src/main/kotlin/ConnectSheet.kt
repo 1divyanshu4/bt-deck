@@ -13,8 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material.icons.filled.BluetoothDisabled
 import androidx.compose.material.icons.filled.Computer
 import androidx.compose.material.icons.filled.Devices
 import androidx.compose.material.icons.filled.Headphones
@@ -31,6 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -44,6 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,10 +63,19 @@ import dev.keyset.core.designsystem.theme.KeySetColors
 import dev.keyset.core.designsystem.theme.KeySetShapes
 import dev.keyset.core.designsystem.theme.Palette
 
-/** Bottom sheet for pairing and connecting to a host (tablet or laptop). */
+/** What the Bluetooth controls ask the app to do. Android shows its own confirm dialog for each. */
+enum class BluetoothAction { TurnOn, TurnOff, Restart }
+
+/** Bottom sheet for Bluetooth itself, and for pairing and connecting to a host (tablet or laptop). */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConnectSheet(status: HidStatus, onMakeDiscoverable: () -> Unit, onScan: () -> Unit, onDismiss: () -> Unit) {
+fun ConnectSheet(
+    status: HidStatus,
+    onBluetooth: (BluetoothAction) -> Unit,
+    onMakeDiscoverable: () -> Unit,
+    onScan: () -> Unit,
+    onDismiss: () -> Unit,
+) {
     val scan by DeviceScanner.state.collectAsState()
 
     // Paired list is fresh on open; discovery must not keep running once the sheet is gone.
@@ -83,6 +97,7 @@ fun ConnectSheet(status: HidStatus, onMakeDiscoverable: () -> Unit, onScan: () -
                 .verticalScroll(rememberScrollState()),
         ) {
             SheetTitle()
+            BluetoothControls(status, onBluetooth)
             PairedDevices(scan.paired, status)
             NearbyDevices(scan, onScan)
             DiscoverableFallback(onMakeDiscoverable)
@@ -98,6 +113,41 @@ private fun SheetTitle() {
             "Works with tablets and laptops (Android, Windows, Mac, Linux, ChromeOS). " +
                 "Open Bluetooth settings on that device so it can be found, then Scan and tap Pair.",
         )
+    }
+}
+
+/** Turn Bluetooth on or off, or restart it, without leaving the app. */
+@Composable
+private fun BluetoothControls(status: HidStatus, onBluetooth: (BluetoothAction) -> Unit) {
+    if (status == HidStatus.NoBluetooth) return
+    val on = status != HidStatus.BluetoothOff
+    SheetHeader(
+        "Bluetooth",
+        help = "Restart turns Bluetooth off and on again. It fixes most connection problems; " +
+            "KeySet reconnects by itself afterwards.",
+    ) {
+        if (on) TextButton(onClick = { onBluetooth(BluetoothAction.Restart) }) { Text("Restart") }
+    }
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clip(KeySetShapes.Small)
+            .toggleable(value = on, role = Role.Switch) {
+                onBluetooth(if (on) BluetoothAction.TurnOff else BluetoothAction.TurnOn)
+            }
+            .padding(vertical = 8.dp, horizontal = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(
+            if (on) Icons.Filled.Bluetooth else Icons.Filled.BluetoothDisabled,
+            contentDescription = null,
+            tint = Color.Gray,
+            modifier = Modifier.size(22.dp),
+        )
+        Spacer(Modifier.width(12.dp))
+        Text(if (on) "On" else "Off", Modifier.weight(1f), color = Color.White)
+        // The row handles the toggle, so the switch itself is display only.
+        Switch(checked = on, onCheckedChange = null)
     }
 }
 

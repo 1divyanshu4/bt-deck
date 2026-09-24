@@ -86,9 +86,9 @@ fun StatusBanner(
         HidStatus.NeedsBluetoothRestart -> Banner(
             "Restart Bluetooth",
             "The phone's Bluetooth is still holding an old keyboard session (this happens after " +
-                "KeySet is updated or closed while connected). Turn Bluetooth off and on — KeySet " +
-                "reconnects by itself.",
-            "Open",
+                "KeySet is updated or closed while connected). Restart turns Bluetooth off and on; " +
+                "KeySet reconnects by itself.",
+            "Restart",
         )
         else -> return
     }

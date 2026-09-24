@@ -21,11 +21,12 @@ object KeySetColors {
 }
 
 /**
- * Corner radii. Only two sizes are used anywhere in the app: small parts (buttons, chips,
- * tiles, keyboard keys) get [Small], larger surfaces (pad keys, cards, dialogs, sheets) get
- * [Medium].
+ * Corner radii. Small parts (buttons, chips, tiles, keyboard keys) get [Small], larger
+ * surfaces (pad keys, cards, dialogs, sheets) get [Medium], and badges that sit inside a
+ * key or card get [XSmall], so they're squarer than what they sit on.
  */
 object KeySetShapes {
+    val XSmall = RoundedCornerShape(6.dp)
     val Small = RoundedCornerShape(8.dp)
     val Medium = RoundedCornerShape(12.dp)
 }

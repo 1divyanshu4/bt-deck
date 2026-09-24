@@ -121,10 +121,10 @@ class ScreensTest : KeySetUiTest() {
     }
 
     @Test
-    fun accessibility_help() {
+    fun accessibility_tutorials() {
         openTab("Settings")
-        rule.onNodeWithText("About KeySet").performScrollTo().performClick()
-        rule.onNodeWithText("Connection help").performClick()
+        rule.onNodeWithText("Tutorials").performScrollTo().performClick()
+        rule.onNodeWithText("Make a layout").performClick() // one open, one closed
         rule.enableAccessibilityChecks()
         rule.onRoot().tryPerformAccessibilityChecks()
     }

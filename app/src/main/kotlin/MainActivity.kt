@@ -2,9 +2,11 @@ package dev.keyset
 
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -13,11 +15,23 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
+import androidx.core.content.IntentCompat
+import androidx.lifecycle.lifecycleScope
 import dev.keyset.core.bluetooth.DeviceScanner
 import dev.keyset.core.bluetooth.HidKeyboard
 import dev.keyset.core.bluetooth.HidStatus
 import dev.keyset.core.designsystem.theme.KeySetTheme
+import dev.keyset.feature.connect.BluetoothAction
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
+
+/** Settings' "turn Bluetooth off?" dialog; the constant is hidden in the SDK. */
+private const val ACTION_REQUEST_DISABLE = "android.bluetooth.adapter.action.REQUEST_DISABLE"
 
 class MainActivity : ComponentActivity() {
 
@@ -42,6 +56,16 @@ class MainActivity : ComponentActivity() {
     private val enableBtLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { startKeyboard() }
 
+    /** Restart asked for: turn Bluetooth back on once the "turn off" dialog has done its job. */
+    private var restartingBluetooth = false
+
+    private val disableBtLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (!restartingBluetooth) return@registerForActivityResult
+            restartingBluetooth = false
+            if (result.resultCode == RESULT_OK) turnBluetoothOnWhenOff()
+        }
+
     private val scanPermissions =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             arrayOf(Manifest.permission.BLUETOOTH_SCAN)
@@ -65,18 +89,38 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val app = application as KeySetApp
+        incomingFile = layoutFileFrom(intent)
         setContent {
             KeySetTheme {
                 AppShell(
                     layouts = app.layouts,
                     settingsStore = app.settings,
+                    transfer = app.transfer,
+                    incomingFile = incomingFile,
+                    onIncomingFileHandled = { incomingFile = null },
                     onFixStatus = ::fixStatus,
+                    onBluetooth = ::controlBluetooth,
                     onMakeDiscoverable = ::makeDiscoverable,
                     onScan = ::scanForDevices,
                 )
             }
         }
         if (hasPermissions()) startKeyboard() else permissionLauncher.launch(requested)
+    }
+
+    /** A .keyset file another app asked us to open, waiting for the user to confirm. */
+    private var incomingFile by mutableStateOf<Uri?>(null)
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        layoutFileFrom(intent)?.let { incomingFile = it }
+    }
+
+    /** The file in an "open with" (VIEW) or "share to" (SEND) intent, if any. */
+    private fun layoutFileFrom(intent: Intent?): Uri? = when (intent?.action) {
+        Intent.ACTION_VIEW -> intent.data
+        Intent.ACTION_SEND -> IntentCompat.getParcelableExtra(intent, Intent.EXTRA_STREAM, Uri::class.java)
+        else -> null
     }
 
     override fun onResume() {
@@ -103,13 +147,46 @@ class MainActivity : ComponentActivity() {
     private fun fixStatus(status: HidStatus) {
         when (status) {
             HidStatus.NeedsPermission -> permissionLauncher.launch(requested)
-            HidStatus.NeedsBluetoothRestart -> runCatching {
-                startActivity(Intent(Settings.ACTION_BLUETOOTH_SETTINGS))
-            }
-            HidStatus.BluetoothOff -> runCatching {
+            HidStatus.NeedsBluetoothRestart -> controlBluetooth(BluetoothAction.Restart)
+            HidStatus.BluetoothOff -> controlBluetooth(BluetoothAction.TurnOn)
+            else -> startKeyboard()
+        }
+    }
+
+    /**
+     * Since Android 13 apps can't switch Bluetooth themselves, but they can ask: Android shows
+     * a small "allow?" dialog over KeySet. Turning off uses Settings' own request, which isn't
+     * in the public SDK; phones without it get the Bluetooth settings screen instead.
+     */
+    private fun controlBluetooth(action: BluetoothAction) {
+        when (action) {
+            BluetoothAction.TurnOn -> runCatching {
                 enableBtLauncher.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
             }
-            else -> startKeyboard()
+            BluetoothAction.TurnOff -> requestBluetoothOff()
+            BluetoothAction.Restart -> {
+                restartingBluetooth = true
+                requestBluetoothOff()
+            }
+        }
+    }
+
+    private fun requestBluetoothOff() {
+        val asked = runCatching { disableBtLauncher.launch(Intent(ACTION_REQUEST_DISABLE)) }.isSuccess
+        if (asked) return
+        restartingBluetooth = false
+        Toast.makeText(this, "Turn Bluetooth off and on here", Toast.LENGTH_LONG).show()
+        runCatching { startActivity(Intent(Settings.ACTION_BLUETOOTH_SETTINGS)) }
+    }
+
+    /** Turning off takes a moment after the dialog closes; ask to turn on once it's done. */
+    private fun turnBluetoothOnWhenOff() {
+        val adapter = getSystemService(BluetoothManager::class.java)?.adapter ?: return
+        lifecycleScope.launch {
+            val off = withTimeoutOrNull(10_000) {
+                while (adapter.state != BluetoothAdapter.STATE_OFF) delay(200)
+            } != null
+            if (off) controlBluetooth(BluetoothAction.TurnOn)
         }
     }
 

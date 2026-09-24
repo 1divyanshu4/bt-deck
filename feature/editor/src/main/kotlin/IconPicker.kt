@@ -20,7 +20,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -36,10 +35,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.keyset.core.data.CustomIcons
 import dev.keyset.core.designsystem.component.ButtonIcon
+import dev.keyset.core.designsystem.component.CompactTextField
 import dev.keyset.core.designsystem.icon.PadIcon
 import dev.keyset.core.designsystem.icon.PadIcons
 import dev.keyset.core.designsystem.theme.KeySetShapes
@@ -65,15 +67,10 @@ internal fun IconPicker(
     val groups = filterIcons(search)
 
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        OutlinedTextField(
-            value = query,
-            onValueChange = { query = it },
-            label = { Text("Search icons") },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-        )
+        CompactTextField(query, { query = it }, placeholder = "Search icons", modifier = Modifier.fillMaxWidth())
         if (search.isEmpty()) {
-            IconTile(selected = selected == null, tint = tint, onClick = { onPick(null) }) {
+            // Its text is its label.
+            IconTile(description = null, selected = selected == null, tint = tint, onClick = { onPick(null) }) {
                 Text("None", fontSize = 11.sp, color = Color.White)
             }
             CustomImages(selected, tint, tintImage, onTintImage, onPick)
@@ -108,18 +105,19 @@ private fun CustomImages(
 
     Text("Custom", fontSize = 12.sp, color = GroupTitleColor)
     FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        IconTile(selected = false, tint = tint, onClick = { if (!importing) pickImage() }) {
+        IconTile("Add image", selected = false, tint = tint, onClick = { if (!importing) pickImage() }) {
             if (importing) {
                 CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp)
             } else {
-                Icon(Icons.Default.Add, contentDescription = "Add image", tint = Color.White)
+                Icon(Icons.Default.Add, contentDescription = null, tint = Color.White)
             }
         }
-        for (name in customNames) {
+        customNames.forEachIndexed { i, name ->
             val key = CustomIcons.key(name)
             val isSelected = selected == key
-            IconTile(selected = isSelected, tint = tint, onClick = { onPick(key) }) {
-                ButtonIcon(key, tintImage && isSelected, Color.White, Modifier.size(30.dp))
+            // Images have no names of their own; number them for screen readers.
+            IconTile("Custom image ${i + 1}", selected = isSelected, tint = tint, onClick = { onPick(key) }) {
+                ButtonIcon(key, tintImage && isSelected, Color.White, Modifier.size(30.dp), description = null)
             }
         }
     }
@@ -167,16 +165,25 @@ private fun IconGroup(title: String, icons: List<PadIcon>, selected: String?, ti
     Text(title, fontSize = 12.sp, color = GroupTitleColor)
     FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
         for (icon in icons) {
-            IconTile(selected = selected == icon.key, tint = tint, onClick = { onPick(icon.key) }) {
-                Icon(icon.vector, contentDescription = icon.name, tint = Color.White, modifier = Modifier.size(24.dp))
+            IconTile(icon.name, selected = selected == icon.key, tint = tint, onClick = { onPick(icon.key) }) {
+                Icon(icon.vector, contentDescription = null, tint = Color.White, modifier = Modifier.size(24.dp))
             }
         }
     }
 }
 
-/** A 48dp square choice; the selected one is filled with [tint] and outlined. */
+/**
+ * A 48dp square choice; the selected one is filled with [tint] and outlined. [description] is
+ * its name for screen readers, on the tile itself so it holds even if the picture doesn't load.
+ */
 @Composable
-private fun IconTile(selected: Boolean, tint: Color, onClick: () -> Unit, content: @Composable () -> Unit) {
+private fun IconTile(
+    description: String?,
+    selected: Boolean,
+    tint: Color,
+    onClick: () -> Unit,
+    content: @Composable () -> Unit,
+) {
     val shape = KeySetShapes.Small
     val background = if (selected) tint else Color.White.copy(alpha = 0.06f)
     val outline = if (selected) Color.White else Color.Transparent
@@ -186,7 +193,8 @@ private fun IconTile(selected: Boolean, tint: Color, onClick: () -> Unit, conten
             .clip(shape)
             .background(background)
             .border(2.dp, outline, shape)
-            .clickable(onClick = onClick),
+            .clickable(onClick = onClick)
+            .semantics { if (description != null) contentDescription = description },
         contentAlignment = Alignment.Center,
     ) { content() }
 }

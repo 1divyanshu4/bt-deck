@@ -10,6 +10,7 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.content.Context
 import android.util.Log
+import dev.keyset.core.model.Mod
 import dev.keyset.core.model.buildReport
 import dev.keyset.core.model.keystrokeFor
 import kotlinx.coroutines.CompletableDeferred
@@ -75,7 +76,11 @@ object HidKeyboard {
     private const val TYPING = "typing"
     private const val KEY_GAP_MS = 12L
 
-    // Standard boot keyboard: 1 byte modifiers, 1 reserved, 6 key slots.
+    /** Caps Lock bit in the LED byte the host sends. */
+    private const val LED_CAPS_LOCK = 0x02
+
+    // Standard boot keyboard: 1 byte modifiers, 1 reserved, 6 key slots, plus the LED byte
+    // the host sends back (so the keyboard knows when Caps Lock is on).
     private val DESCRIPTOR = byteArrayOf(
         0x05, 0x01, // Usage Page (Generic Desktop)
         0x09, 0x06, // Usage (Keyboard)
@@ -100,6 +105,15 @@ object HidKeyboard {
         0x19, 0x00, //   Usage Minimum (0)
         0x29, 0x65, //   Usage Maximum (101)
         0x81.toByte(), 0x00, //   Input (Data, Array) — keys
+        0x95.toByte(), 0x05, //   Report Count (5)
+        0x75, 0x01, //   Report Size (1)
+        0x05, 0x08, //   Usage Page (LEDs)
+        0x19, 0x01, //   Usage Minimum (Num Lock)
+        0x29, 0x05, //   Usage Maximum (Kana)
+        0x91.toByte(), 0x02, //   Output (Data, Variable, Absolute) — LEDs
+        0x95.toByte(), 0x01, //   Report Count (1)
+        0x75, 0x03, //   Report Size (3)
+        0x91.toByte(), 0x01, //   Output (Constant) — padding
         0xC0.toByte(), // End Collection
     )
 
@@ -160,6 +174,19 @@ object HidKeyboard {
 
     /** Button ids whose keys are currently down, for lighting up held/toggled buttons. */
     val heldIds: StateFlow<Set<String>> = _heldIds.asStateFlow()
+
+    private val _capsLock = MutableStateFlow(false)
+
+    /**
+     * Whether Caps Lock is on. The host reports it through the LED byte; [toggleCapsLock]
+     * guesses ahead for hosts that don't (ones that paired before KeySet sent LEDs).
+     */
+    val capsLock: StateFlow<Boolean> = _capsLock.asStateFlow()
+
+    /** Called when the Caps Lock key is pressed. The host's own LED report, if any, wins. */
+    fun toggleCapsLock() {
+        _capsLock.value = !_capsLock.value
+    }
 
     /**
      * Set by the instrumentation runner: Bluetooth is never touched, so UI tests can't type
@@ -354,9 +381,15 @@ object HidKeyboard {
             }
         }
 
-        // e.g. Caps/Num Lock LED state. Nothing to show, but it must be acknowledged.
+        // Caps/Num Lock LED state, sent over the control channel. It must be acknowledged.
         override fun onSetReport(device: BluetoothDevice, type: Byte, id: Byte, data: ByteArray) {
+            if (type == BluetoothHidDevice.REPORT_TYPE_OUTPUT) onLeds(data)
             hid?.reportError(device, BluetoothHidDevice.ERROR_RSP_SUCCESS)
+        }
+
+        // The same LED state, sent over the interrupt channel (Linux and most hosts).
+        override fun onInterruptData(device: BluetoothDevice, reportId: Byte, data: ByteArray) {
+            onLeds(data)
         }
 
         // The host removed this keyboard (unpaired it): forget it as the auto-reconnect target.
@@ -365,6 +398,12 @@ object HidKeyboard {
             if (lastHostAddress() == device.address) saveLastHost(null)
             if (host?.address == device.address) dropHost()
         }
+    }
+
+    /** The stack strips the report id, so the LED byte comes first. */
+    private fun onLeds(data: ByteArray) {
+        val leds = data.firstOrNull()?.toInt() ?: return
+        _capsLock.value = leds and LED_CAPS_LOCK != 0
     }
 
     private fun onHostConnected(device: BluetoothDevice) {
@@ -541,7 +580,9 @@ object HidKeyboard {
                 skipped++
                 continue
             }
-            val (modifiers, key) = keystroke
+            // With Caps Lock on, the host flips letters; flip Shift to get the case asked for.
+            val (shift, key) = keystroke
+            val modifiers = if (_capsLock.value && c.isLetter()) shift xor Mod.SHIFT else shift
             press(TYPING, modifiers, key)
             delay(KEY_GAP_MS)
             release(TYPING)

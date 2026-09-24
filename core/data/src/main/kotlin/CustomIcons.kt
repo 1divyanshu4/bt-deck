@@ -7,6 +7,7 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.util.LruCache
 import java.io.File
+import java.nio.ByteBuffer
 import java.util.UUID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,9 +40,21 @@ object CustomIcons {
     fun nameOf(key: String) = key.removePrefix(PREFIX)
 
     /** Decodes, downsizes and stores the picked image. Returns its icon key, or null if unreadable. */
-    suspend fun import(context: Context, uri: Uri): String? = withContext(Dispatchers.IO) {
+    suspend fun import(context: Context, uri: Uri): String? =
+        store(ImageDecoder.createSource(context.contentResolver, uri))
+
+    /** Stores image [bytes] (e.g. from a shared layout file) the same way as a picked image. */
+    suspend fun importBytes(bytes: ByteArray): String? = store(ImageDecoder.createSource(ByteBuffer.wrap(bytes)))
+
+    /** The stored PNG for [key], or null if there isn't one. */
+    fun readBytes(key: String): ByteArray? = File(dir, nameOf(key)).takeIf { it.exists() }?.readBytes()
+
+    /**
+     * Decodes, downsizes and saves an image under a new name. Re-encoding means whatever was in
+     * the original file (metadata, odd formats) never ends up in app storage as-is.
+     */
+    private suspend fun store(source: ImageDecoder.Source): String? = withContext(Dispatchers.IO) {
         runCatching {
-            val source = ImageDecoder.createSource(context.contentResolver, uri)
             val bitmap = ImageDecoder.decodeBitmap(source) { decoder, info, _ ->
                 val w = info.size.width
                 val h = info.size.height
@@ -55,7 +68,6 @@ object CustomIcons {
             key(name)
         }.getOrNull()
     }
-
     fun delete(key: String) {
         val name = nameOf(key)
         File(dir, name).delete()

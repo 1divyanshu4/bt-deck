@@ -30,8 +30,11 @@ fun HelpButton(text: String, title: String? = null) {
             RichTooltip(title = title?.let { { Text(it) } }) { Text(text) }
         },
         state = state,
+        // The anchor and the button are both sized explicitly: left to itself the anchor came
+        // out shorter than the button's 48dp touch area, which then spilled onto its neighbours.
+        modifier = Modifier.size(48.dp),
     ) {
-        IconButton(onClick = { scope.launch { state.show() } }) {
+        IconButton(onClick = { scope.launch { state.show() } }, modifier = Modifier.size(48.dp)) {
             Icon(
                 Icons.AutoMirrored.Outlined.HelpOutline,
                 contentDescription = "Help",

@@ -71,6 +71,7 @@ abstract class KeySetUiTest {
         rule.runOnUiThread {
             store.resetToDefaults()
             HidKeyboard.releaseAll()
+            if (HidKeyboard.capsLock.value) HidKeyboard.toggleCapsLock()
             HidKeyboard.setStatusForTest(HidStatus.Ready)
         }
         rule.waitForIdle()

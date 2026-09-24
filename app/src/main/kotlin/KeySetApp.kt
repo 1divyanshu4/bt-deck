@@ -5,6 +5,7 @@ import dev.keyset.core.bluetooth.DeviceScanner
 import dev.keyset.core.bluetooth.HidKeyboard
 import dev.keyset.core.data.CustomIcons
 import dev.keyset.core.data.LayoutStore
+import dev.keyset.core.data.LayoutTransfer
 import dev.keyset.core.data.SettingsStore
 
 class KeySetApp : Application() {
@@ -12,11 +13,14 @@ class KeySetApp : Application() {
         private set
     lateinit var settings: SettingsStore
         private set
+    lateinit var transfer: LayoutTransfer
+        private set
 
     override fun onCreate() {
         super.onCreate()
         layouts = LayoutStore(this)
         settings = SettingsStore(this)
+        transfer = LayoutTransfer(this, layouts)
         HidKeyboard.init(this)
         DeviceScanner.init(this)
         CustomIcons.init(this)

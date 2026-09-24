@@ -4,13 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import dev.keyset.core.data.LayoutStore
+import dev.keyset.core.designsystem.component.CompactTextField
 import dev.keyset.core.designsystem.theme.KeySetShapes
 import dev.keyset.core.designsystem.theme.Palette
 import dev.keyset.core.model.PadLayout
@@ -87,7 +88,7 @@ private fun NamePrompt(title: String, initial: String, onDismiss: () -> Unit, on
         onDismissRequest = onDismiss,
         title = { Text(title) },
         text = {
-            OutlinedTextField(value = name, onValueChange = { name = it }, singleLine = true, label = { Text("Name") })
+            CompactTextField(name, { name = it }, placeholder = "Name", modifier = Modifier.fillMaxWidth())
         },
         confirmButton = {
             Button(enabled = name.isNotBlank(), onClick = { onDone(name.trim()) }, shape = KeySetShapes.Small) {

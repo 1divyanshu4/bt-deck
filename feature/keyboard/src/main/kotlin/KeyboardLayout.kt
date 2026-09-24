@@ -24,6 +24,11 @@ internal data class KeySpec(
 
     /** The Fn key, which switches between the two layers. */
     val isLayerSwitch get() = usage == 0 && modifier == 0
+
+    /** Letters follow Caps Lock; other keys only follow Shift. */
+    val isLetter get() = label.length == 1 && label[0].isLetter()
+
+    val isCapsLock get() = usage == Keys.usage("Caps Lock")
 }
 
 private fun key(

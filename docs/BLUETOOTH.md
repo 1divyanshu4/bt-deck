@@ -26,8 +26,14 @@ nobody has to figure it out again.
 - **"Connect from … once"**: the tablet or laptop hasn't accepted the phone as a keyboard
   yet. See the first-connection note above.
 - **"Restart Bluetooth"**: the phone is still holding on to an old connection, usually
-  because KeySet was closed or updated while connected. Turn Bluetooth off and on. KeySet
-  reconnects by itself.
+  because KeySet was closed or updated while connected. Tap Restart (or use Restart in the
+  Connect sheet). KeySet reconnects by itself.
+- **Turning Bluetooth on and off**: since Android 13 apps can't do this silently.
+  KeySet asks Android, which shows a small confirm dialog. Turning off uses Settings' hidden
+  `REQUEST_DISABLE` request; phones without it open Bluetooth settings instead.
+- **Caps Lock light**: the keyboard asks the host for its LED state (standard boot-keyboard
+  output report). Hosts cache this when pairing, so devices paired before this was added
+  need to be paired again to send it. Until then KeySet just flips Caps Lock itself.
 - **Disconnect doesn't stick**: some tablets reconnect straight away. KeySet ignores those
   reconnects for 15 seconds, and doesn't reconnect by itself until you tap Connect again.
 

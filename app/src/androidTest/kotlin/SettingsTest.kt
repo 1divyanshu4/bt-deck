@@ -25,11 +25,19 @@ class SettingsTest : KeySetUiTest() {
     }
 
     @Test
+    fun shortcutBadge_followsTheSetting() {
+        // Default style has icons, and the shortcut still shows as a badge.
+        rule.onNodeWithText("Ctrl + Z", useUnmergedTree = true).assertExists()
+        setSettings { it.copy(showShortcut = false) }
+        rule.onNodeWithText("Ctrl + Z", useUnmergedTree = true).assertDoesNotExist()
+    }
+
+    @Test
     fun textOnly_showsLabelAndShortcut() {
         setSettings { it.copy(buttonStyle = ButtonStyle.TEXT_ONLY) }
-        rule.onNodeWithText("Ctrl+Z", useUnmergedTree = true).assertExists()
+        rule.onNodeWithText("Ctrl + Z", useUnmergedTree = true).assertExists()
         setSettings { it.copy(showShortcut = false) }
-        rule.onNodeWithText("Ctrl+Z", useUnmergedTree = true).assertDoesNotExist()
+        rule.onNodeWithText("Ctrl + Z", useUnmergedTree = true).assertDoesNotExist()
     }
 
     @Test
@@ -50,10 +58,12 @@ class SettingsTest : KeySetUiTest() {
     @Test
     fun aboutPagesOpenAndGoBack() {
         openTab("Settings")
+        rule.onNodeWithText("Tutorials").performScrollTo().performClick()
+        // Tutorials open to show their steps.
+        rule.onNodeWithText("Connect your tablet or laptop").performClick()
+        rule.onNodeWithText("Tap Pair next to your device and accept on both screens.").assertExists()
+        rule.onNodeWithContentDescription("Back").performClick() // Tutorials → Settings
         rule.onNodeWithText("About KeySet").performScrollTo().performClick()
-        rule.onNodeWithText("Connection help").performClick()
-        rule.onNodeWithText("First time connecting").assertExists()
-        rule.onNodeWithContentDescription("Back").performClick()
         rule.onNodeWithText("Open-source licenses").performClick()
         // The list loads in the background; several entries mention Compose.
         rule.waitUntil(5_000) {

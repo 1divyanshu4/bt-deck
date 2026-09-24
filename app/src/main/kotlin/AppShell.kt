@@ -1,6 +1,7 @@
 package dev.keyset
 
 import android.content.res.Configuration
+import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +25,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,17 +40,21 @@ import androidx.compose.ui.unit.dp
 import dev.keyset.core.bluetooth.HidKeyboard
 import dev.keyset.core.bluetooth.HidStatus
 import dev.keyset.core.data.LayoutStore
+import dev.keyset.core.data.LayoutTransfer
 import dev.keyset.core.data.SettingsStore
 import dev.keyset.core.designsystem.theme.KeySetColors
+import dev.keyset.feature.connect.BluetoothAction
 import dev.keyset.feature.connect.ConnectSheet
 import dev.keyset.feature.connect.StatusBanner
 import dev.keyset.feature.connect.StatusChip
 import dev.keyset.feature.keyboard.KeyboardScreen
+import dev.keyset.feature.keyboard.sidewaysWhenTall
+import dev.keyset.feature.layouts.ImportLayoutDialog
 import dev.keyset.feature.layouts.LayoutsScreen
 import dev.keyset.feature.pad.SystemBarsHidden
 import dev.keyset.feature.settings.AboutScreen
-import dev.keyset.feature.settings.HelpScreen
 import dev.keyset.feature.settings.SettingsScreen
+import dev.keyset.feature.settings.TutorialsScreen
 
 /** The four tabs, in the order they appear in the bottom bar / side rail. */
 enum class Tab(val label: String, val icon: ImageVector) {
@@ -58,8 +64,8 @@ enum class Tab(val label: String, val icon: ImageVector) {
     Settings("Settings", Icons.Default.Settings),
 }
 
-/** Pages inside the Settings tab. Help and licenses open from About. */
-private enum class SettingsPage { Main, About, Help, Licenses }
+/** Pages inside the Settings tab. Tutorials and About open from Main; licenses from About. */
+private enum class SettingsPage { Main, Tutorials, About, Licenses }
 
 /**
  * The whole app: a bottom bar with Pad, Keyboard, Layouts and Settings. Also owns the
@@ -69,7 +75,11 @@ private enum class SettingsPage { Main, About, Help, Licenses }
 fun AppShell(
     layouts: LayoutStore,
     settingsStore: SettingsStore,
+    transfer: LayoutTransfer,
+    incomingFile: Uri?,
+    onIncomingFileHandled: () -> Unit,
     onFixStatus: (HidStatus) -> Unit,
+    onBluetooth: (BluetoothAction) -> Unit,
     onMakeDiscoverable: () -> Unit,
     onScan: () -> Unit,
 ) {
@@ -83,16 +93,23 @@ fun AppShell(
     var showConnect by rememberSaveable { mutableStateOf(false) }
     val openConnect = { showConnect = true }
 
+    // A .keyset file opened from another app: show it on the Layouts tab and ask first.
+    LaunchedEffect(incomingFile) {
+        if (incomingFile != null) {
+            fullscreen = false
+            tab = Tab.Layouts
+        }
+    }
+    incomingFile?.let { ImportLayoutDialog(it, transfer, onDone = onIncomingFileHandled) }
+
     KeepScreenOn(settings.keepScreenOn)
     SystemBarsHidden(fullscreen)
     // Back leaves fullscreen, then closes a settings page, then returns to the pad.
     BackHandler(enabled = fullscreen || tab != Tab.Pad) {
         when {
             fullscreen -> fullscreen = false
-            settingsPage == SettingsPage.Help || settingsPage == SettingsPage.Licenses ->
-                settingsPage =
-                    SettingsPage.About
-            settingsPage == SettingsPage.About -> settingsPage = SettingsPage.Main
+            settingsPage == SettingsPage.Licenses -> settingsPage = SettingsPage.About
+            settingsPage != SettingsPage.Main -> settingsPage = SettingsPage.Main
             else -> tab = Tab.Pad
         }
     }
@@ -122,29 +139,40 @@ fun AppShell(
                     onFixStatus = onFixStatus,
                     modifier = content,
                 )
-                Tab.Keyboard -> Column(content) {
+                Tab.Keyboard -> Column(content.sidewaysWhenTall()) {
                     // Shows only when something needs fixing; the chip covers "not connected".
                     StatusBanner(status, onFixStatus, openConnect, Modifier.padding(horizontal = 12.dp))
                     KeyboardScreen(vibrate = settings.vibrate, modifier = Modifier.weight(1f)) {
                         StatusChip(status, openConnect)
                     }
                 }
-                Tab.Layouts -> LayoutsScreen(state, layouts, onOpen = { tab = Tab.Pad }, modifier = content)
+                Tab.Layouts -> LayoutsScreen(
+                    state = state,
+                    store = layouts,
+                    transfer = transfer,
+                    onOpen = { tab = Tab.Pad },
+                    modifier = content,
+                    status = { StatusChip(status, openConnect) },
+                )
                 Tab.Settings -> when (settingsPage) {
                     SettingsPage.Main -> SettingsScreen(
                         settings = settings,
                         onChange = settingsStore::update,
+                        onOpenTutorials = { settingsPage = SettingsPage.Tutorials },
                         onOpenAbout = { settingsPage = SettingsPage.About },
                         modifier = content,
+                        status = { StatusChip(status, openConnect) },
                     )
                     SettingsPage.About -> AboutScreen(
                         appVersion = appVersion(),
                         onBack = { settingsPage = SettingsPage.Main },
-                        onOpenHelp = { settingsPage = SettingsPage.Help },
                         onOpenLicenses = { settingsPage = SettingsPage.Licenses },
                         modifier = content,
                     )
-                    SettingsPage.Help -> HelpScreen(onBack = { settingsPage = SettingsPage.About }, modifier = content)
+                    SettingsPage.Tutorials -> TutorialsScreen(
+                        onBack = { settingsPage = SettingsPage.Main },
+                        modifier = content,
+                    )
                     SettingsPage.Licenses -> LicensesScreen(onBack = {
                         settingsPage = SettingsPage.About
                     }, modifier = content)
@@ -153,7 +181,9 @@ fun AppShell(
         }
     }
 
-    if (showConnect) ConnectSheet(status, onMakeDiscoverable, onScan, onDismiss = { showConnect = false })
+    if (showConnect) {
+        ConnectSheet(status, onBluetooth, onMakeDiscoverable, onScan, onDismiss = { showConnect = false })
+    }
 }
 
 @Composable

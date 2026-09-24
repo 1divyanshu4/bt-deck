@@ -93,6 +93,20 @@ class LayoutStore(context: Context) {
         save(PadState(s.layouts + copies, copies.first().id))
     }
 
+    /**
+     * Adds [layout] (e.g. an imported one) with fresh ids and switches to it. Its name gets
+     * " (imported)" if the user already has a layout with that name.
+     */
+    fun addImported(layout: PadLayout) {
+        val s = _state.value
+        val copy = layout.copy(
+            id = UUID.randomUUID().toString(),
+            name = uniqueName(layout.name, s.layouts.map { it.name }.toSet(), tag = "imported"),
+            buttons = layout.buttons.map { it.copy(id = UUID.randomUUID().toString()) },
+        )
+        save(PadState(s.layouts + copy, copy.id))
+    }
+
     /** Replaces everything with the built-in layouts (tests, or a future "reset" option). */
     fun resetToDefaults() = save(defaultState())
 
@@ -104,10 +118,10 @@ class LayoutStore(context: Context) {
     private fun load(): PadState = prefs.getString("data", null)?.let(::decodeState) ?: defaultState()
 }
 
-/** [base], or "[base] (default)", "[base] (default 2)"… whichever isn't in [taken]. */
-internal fun uniqueName(base: String, taken: Set<String>): String {
+/** [base], or "[base] ([tag])", "[base] ([tag] 2)"… whichever isn't in [taken]. */
+internal fun uniqueName(base: String, taken: Set<String>, tag: String = "default"): String {
     if (base !in taken) return base
-    val candidates = sequenceOf("$base (default)") + generateSequence(2) { it + 1 }.map { "$base (default $it)" }
+    val candidates = sequenceOf("$base ($tag)") + generateSequence(2) { it + 1 }.map { "$base ($tag $it)" }
     return candidates.first { it !in taken }
 }
 
@@ -131,7 +145,7 @@ internal fun decodeState(raw: String): PadState? = runCatching {
     PadState(layouts, selected)
 }.getOrNull()
 
-private fun PadLayout.toJson() = JSONObject()
+internal fun PadLayout.toJson(): JSONObject = JSONObject()
     .put("id", id).put("name", name).put("columns", columns)
     .put(
         "buttons",
@@ -144,7 +158,7 @@ private fun PadLayout.toJson() = JSONObject()
         ),
     )
 
-private fun JSONObject.toLayout(): PadLayout {
+internal fun JSONObject.toLayout(): PadLayout {
     val arr = getJSONArray("buttons")
     return PadLayout(
         id = getString("id"),

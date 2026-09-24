@@ -13,7 +13,9 @@ Bluetooth connection alive, and the UI tests.
 to the other device when a key is pressed. It's plain Kotlin with no Android code, so it's
 quick to test.
 
-**`core/data`** saves layouts and the user's custom icon images.
+**`core/data`** saves layouts and the user's custom icon images. `LayoutArchive` reads and
+writes `.keyset` files (a zip with `layout.json` and the layout's images), and
+`LayoutTransfer` saves, shares and imports them.
 
 **`core/bluetooth`** does the Bluetooth work. `HidKeyboard` makes the phone act as a
 keyboard, and `DeviceScanner` finds and pairs tablets and laptops.
@@ -31,7 +33,7 @@ places, like the "?" help button.
 
 **`feature/layouts`** is the list of layouts, where you pick, rename, copy or delete them.
 
-**`feature/settings`** is the settings screen and the connection help page.
+**`feature/settings`** is the settings screen, the tutorials and the About page.
 
 The app has four tabs at the bottom (Pad, Layouts, Keyboard, Settings). `app/AppShell.kt`
 switches between them with a simple `tab` variable instead of a navigation library, because

@@ -10,6 +10,7 @@ import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDialog
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -22,6 +23,7 @@ import dev.keyset.core.model.Mod
 import dev.keyset.core.model.PressMode
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -35,13 +37,17 @@ class EditorTest : KeySetUiTest() {
         rule.onNodeWithContentDescription(label).performClick()
         rule.onNodeWithText("Edit button").assertExists()
     }
-    private fun labelField() = rule.onNode(hasSetTextAction() and hasText("Label (optional)"))
-    private fun searchField() = rule.onNode(hasSetTextAction() and hasText("Search icons"))
+    // The Display tab's text fields, in order: the label, then the icon search.
+    private fun labelField() = rule.onAllNodes(hasSetTextAction() and inDialog())[0]
+    private fun searchField() = rule.onAllNodes(hasSetTextAction() and inDialog())[1]
     private fun inDialog() = hasAnyAncestor(isDialog())
     private fun role(r: Role) = SemanticsMatcher.expectValue(SemanticsProperties.Role, r)
 
     /** A modifier or key chip in the editor. */
     private fun chip(text: String) = rule.onNode(hasText(text) and role(Role.Checkbox) and inDialog())
+
+    /** The editor's Display or Shortcut tab. */
+    private fun tab(title: String) = rule.onNode(hasText(title) and role(Role.Tab) and inDialog()).performClick()
 
     /** Save / Cancel / Delete at the bottom of the editor. */
     private fun dialogButton(text: String) = rule.onNode(hasText(text) and role(Role.Button) and inDialog())
@@ -52,10 +58,12 @@ class EditorTest : KeySetUiTest() {
         enterEdit()
         rule.onNodeWithContentDescription("Add button").performClick()
         rule.onNodeWithText("New button").assertExists()
-        labelField().performTextInput("Stamp")
+        // A new button opens on Shortcut: behaviour, modifiers, then keys by group.
+        rule.onNodeWithText("Hold").performScrollTo().performClick()
         chip("Alt").performScrollTo().performClick() // Ctrl is preselected
         chip("K").performScrollTo().performClick()
-        rule.onNodeWithText("Hold").performScrollTo().performClick()
+        tab("Display")
+        labelField().performTextInput("Stamp")
         searchField().performScrollTo().performTextInput("clone")
         rule.onNodeWithContentDescription("Clone stamp").performScrollTo().performClick()
         dialogButton("Save").performClick()
@@ -83,6 +91,17 @@ class EditorTest : KeySetUiTest() {
         dialogButton("Save").assertIsNotEnabled()
         chip("E").performScrollTo().performClick()
         dialogButton("Save").assertIsEnabled()
+    }
+
+    @Test
+    fun keysAreGrouped_andOpenOnTheCurrentKeysGroup() {
+        openEditor("Undo") // Ctrl + Z
+        tab("Shortcut")
+        chip("Z").assertExists() // Letters, the group Z is in
+        rule.onNode(hasText("Function") and role(Role.Tab) and inDialog()).performScrollTo().performClick()
+        chip("F5").performScrollTo().performClick()
+        dialogButton("Save").performClick()
+        assertEquals(key("F5"), buttons().first().key)
     }
 
     @Test
@@ -121,6 +140,45 @@ class EditorTest : KeySetUiTest() {
     }
 
     @Test
+    fun draggingTheHandle_movesTheButtonWhereItsDropped() {
+        enterEdit()
+        // Undo is first; drop it on Save, the third button.
+        val handle = rule.onAllNodesWithContentDescription("Drag to move", useUnmergedTree = true)[0]
+        val from = handle.centerInRoot()
+        val to = rule.onNodeWithContentDescription("Save").centerInRoot()
+        handle.performTouchInput {
+            down(center)
+            // Several steps, so it moves past the touch slop like a finger.
+            repeat(10) { moveBy((to - from) / 10f) }
+            up()
+        }
+        rule.waitForIdle()
+        assertEquals(listOf("Redo", "Save", "Undo"), buttons().take(3).map { it.label })
+        assertTrue("arranging sends no keys", reports.none { it.toList() != released })
+    }
+
+    @Test
+    fun emptyLayout_offersAddWithoutEditMode() {
+        rule.runOnUiThread { store.updateSelected { it.copy(buttons = emptyList()) } }
+        rule.onNodeWithContentDescription("Add button").performClick()
+        rule.onNodeWithText("New button").assertExists()
+    }
+
+    @Test
+    fun cancelEditing_putsTheLayoutBackAsItWas() {
+        val before = buttons()
+        enterEdit()
+        rule.runOnUiThread {
+            store.moveButton(before[0].id, 2)
+            store.deleteButton(before[1].id)
+        }
+        rule.onNodeWithContentDescription("Cancel editing").performClick()
+        rule.waitForIdle()
+        assertEquals(before, buttons())
+        rule.onNodeWithContentDescription("Edit layout").assertExists() // out of edit mode
+    }
+
+    @Test
     fun iconSearch_filtersAndReportsNoMatch() {
         openEditor("Undo")
         searchField().performScrollTo().performTextInput("lasso")
@@ -139,12 +197,13 @@ class EditorTest : KeySetUiTest() {
             .performScrollTo().performClick()
         dialogButton("Save").performClick()
         exitEdit()
-        rule.onNodeWithText("Ctrl+Z").assertExists()
+        rule.onNodeWithText("Ctrl + Z").assertExists()
     }
 
     @Test
     fun behaviourHelp_explainsAllModes() {
         openEditor("Undo")
+        tab("Shortcut")
         rule.onAllNodes(hasContentDescription("Help") and inDialog())[0].performScrollTo().performClick()
         rule.onNode(hasText("Hold:", substring = true)).assertExists()
     }

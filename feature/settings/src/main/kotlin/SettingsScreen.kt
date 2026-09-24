@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import dev.keyset.core.designsystem.component.TopBar
 import androidx.compose.ui.unit.sp
 import dev.keyset.core.model.ButtonSpacing
 import dev.keyset.core.model.ButtonStyle
@@ -45,27 +46,32 @@ import dev.keyset.core.model.KeySetSettings
 fun SettingsScreen(
     settings: KeySetSettings,
     onChange: ((KeySetSettings) -> KeySetSettings) -> Unit,
+    onOpenTutorials: () -> Unit,
     onOpenAbout: () -> Unit,
     modifier: Modifier = Modifier,
+    status: @Composable () -> Unit = {},
 ) {
-    Column(modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 16.dp)) {
-        Text("Settings", style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(vertical = 16.dp))
+    Column(modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+        TopBar(leading = status)
+        // Same edge as the status above it, like the Pad.
+        Column(Modifier.padding(horizontal = 12.dp)) {
+            SectionTitle("Buttons")
+            ChoiceRow("Show on buttons", ButtonStyle.entries, settings.buttonStyle, { it.label }) { style ->
+                onChange { it.copy(buttonStyle = style) }
+            }
+            SwitchRow("Show shortcut", settings.showShortcut) { on -> onChange { it.copy(showShortcut = on) } }
+            ChoiceRow("Spacing", ButtonSpacing.entries, settings.spacing, { it.label }) { spacing ->
+                onChange { it.copy(spacing = spacing) }
+            }
 
-        SectionTitle("Buttons")
-        ChoiceRow("Show on buttons", ButtonStyle.entries, settings.buttonStyle, { it.label }) { style ->
-            onChange { it.copy(buttonStyle = style) }
+            SectionTitle("Feel")
+            SwitchRow("Vibrate on press", settings.vibrate) { on -> onChange { it.copy(vibrate = on) } }
+            SwitchRow("Keep screen on", settings.keepScreenOn) { on -> onChange { it.copy(keepScreenOn = on) } }
+
+            Spacer(Modifier.height(16.dp))
+            LinkRow("Tutorials", onOpenTutorials)
+            LinkRow("About KeySet", onOpenAbout)
         }
-        SwitchRow("Show shortcut", settings.showShortcut) { on -> onChange { it.copy(showShortcut = on) } }
-        ChoiceRow("Spacing", ButtonSpacing.entries, settings.spacing, { it.label }) { spacing ->
-            onChange { it.copy(spacing = spacing) }
-        }
-
-        SectionTitle("Feel")
-        SwitchRow("Vibrate on press", settings.vibrate) { on -> onChange { it.copy(vibrate = on) } }
-        SwitchRow("Keep screen on", settings.keepScreenOn) { on -> onChange { it.copy(keepScreenOn = on) } }
-
-        Spacer(Modifier.height(16.dp))
-        LinkRow("About KeySet", onOpenAbout)
     }
 }
 

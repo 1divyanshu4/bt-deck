@@ -63,9 +63,9 @@ object Keys {
     fun name(usage: Int): String = byUsage[usage]?.name ?: "0x%02X".format(usage)
 }
 
-/** Human-readable combo, e.g. "Ctrl+Shift+Z". */
-fun comboLabel(modifiers: Int, key: Int): String {
+/** Human-readable combo, e.g. "Ctrl+Shift+Z" (or "Ctrl + Shift + Z" with a spaced [separator]). */
+fun comboLabel(modifiers: Int, key: Int, separator: String = "+"): String {
     val parts = Mod.all.filter { modifiers and it.first != 0 }.map { it.second }.toMutableList()
     if (key != 0) parts += Keys.name(key)
-    return parts.joinToString("+").ifEmpty { "—" }
+    return parts.joinToString(separator).ifEmpty { "—" }
 }
