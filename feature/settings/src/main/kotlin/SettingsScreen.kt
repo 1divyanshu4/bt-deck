@@ -46,6 +46,7 @@ import dev.btdeck.core.model.ButtonStyle
 fun SettingsScreen(
     settings: BTDeckSettings,
     onChange: ((BTDeckSettings) -> BTDeckSettings) -> Unit,
+    onOpenWalkthrough: () -> Unit = {},
     onOpenTutorials: () -> Unit,
     onOpenPrivacy: () -> Unit,
     onOpenAbout: () -> Unit,
@@ -70,6 +71,7 @@ fun SettingsScreen(
             SwitchRow("Keep screen on", settings.keepScreenOn) { on -> onChange { it.copy(keepScreenOn = on) } }
 
             Spacer(Modifier.height(16.dp))
+            LinkRow("App walkthrough", onOpenWalkthrough)
             LinkRow("Tutorials", onOpenTutorials)
             LinkRow("Privacy policy", onOpenPrivacy)
             LinkRow("About BTDeck", onOpenAbout)

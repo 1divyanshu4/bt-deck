@@ -114,7 +114,8 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
-        if (hasPermissions()) startKeyboard() else permissionLauncher.launch(requested)
+        // onStart starts the keyboard once permissions are in place.
+        if (!hasPermissions()) permissionLauncher.launch(requested)
     }
 
     /** A .keyset file another app asked us to open, waiting for the user to confirm. */
@@ -132,8 +133,13 @@ class MainActivity : ComponentActivity() {
         else -> null
     }
 
-    override fun onResume() {
-        super.onResume()
+    /**
+     * Coming back to BTDeck turns the keyboard on, even after Stop in the notification.
+     * onStart, not onResume: the shade pulled over the app never stops it, so Stop pressed
+     * there sticks until the user leaves and returns.
+     */
+    override fun onStart() {
+        super.onStart()
         if (hasPermissions()) startKeyboard()
     }
 

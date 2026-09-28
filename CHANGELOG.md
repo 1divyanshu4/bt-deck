@@ -2,6 +2,15 @@
 
 Notable changes to BTDeck, newest first.
 
+## 0.1.1 (28 September 2026)
+
+- A walkthrough on first launch, which Settings and Tutorials can open again.
+- Stop in the notification now releases the keyboard cleanly. Before, pressing it with
+  BTDeck closed could leave the phone and the other device half-connected, so connecting
+  again stayed stuck on "Connecting".
+- Opening BTDeck turns the keyboard back on after Stop; no need to tap Start.
+- The notification goes away when the keyboard is stopped.
+
 ## 0.1.0 (24 September 2026)
 
 First release.

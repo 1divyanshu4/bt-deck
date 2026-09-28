@@ -50,7 +50,10 @@ class KeyboardService : Service() {
             },
         )
         scope.launch {
-            HidKeyboard.status.collect { nm.notify(NOTIFICATION_ID, notification(it)) }
+            HidKeyboard.status.collect { status ->
+                if (status is HidStatus.Stopped) return@collect
+                nm.notify(NOTIFICATION_ID, notification(status))
+            }
         }
         ContextCompat.registerReceiver(
             this,
@@ -72,8 +75,7 @@ class KeyboardService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action == ACTION_STOP) {
-            HidKeyboard.stop()
-            stopSelf()
+            stopKeyboard()
             return START_NOT_STICKY
         }
         HidKeyboard.start()
@@ -85,17 +87,32 @@ class KeyboardService : Service() {
      * as a keyboard can't accept one, so a tablet with BTDeck idling would reject the phone.
      */
     override fun onTaskRemoved(rootIntent: Intent?) {
-        if (HidKeyboard.connectedAddress() == null) {
-            HidKeyboard.stop()
+        if (HidKeyboard.connectedAddress() == null) stopKeyboard()
+        super.onTaskRemoved(rootIntent)
+    }
+
+    /**
+     * Releases keyboard mode while still a foreground service, and only then leaves the
+     * foreground: in the background Android can drop the app mid-release, leaving the stack
+     * and the host half-connected so later connects hang.
+     */
+    private fun stopKeyboard() {
+        HidKeyboard.stop {
+            stopForegroundAndDismiss()
             stopSelf()
         }
-        super.onTaskRemoved(rootIntent)
     }
 
     override fun onDestroy() {
         runCatching { unregisterReceiver(bluetoothState) }
-        scope.cancel()
+        stopForegroundAndDismiss()
         super.onDestroy()
+    }
+
+    private fun stopForegroundAndDismiss() {
+        scope.cancel()
+        ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
+        getSystemService(NotificationManager::class.java)?.cancel(NOTIFICATION_ID)
     }
 
     private fun notification(status: HidStatus) = NotificationCompat.Builder(this, CHANNEL)
@@ -126,7 +143,7 @@ class KeyboardService : Service() {
                 this,
                 1,
                 Intent(this, KeyboardService::class.java).setAction(ACTION_STOP),
-                PendingIntent.FLAG_IMMUTABLE,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
             ),
         )
         .build()

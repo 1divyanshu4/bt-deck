@@ -47,6 +47,7 @@ class SettingsStore(context: Context) {
             prefs[VIBRATE] = new.vibrate
             prefs[KEEP_SCREEN_ON] = new.keepScreenOn
             prefs[SPACING] = new.spacing.name
+            prefs[HAS_SEEN_WALKTHROUGH] = new.hasSeenWalkthrough
         }
     }
 
@@ -58,6 +59,7 @@ class SettingsStore(context: Context) {
             vibrate = prefs[VIBRATE] ?: defaults.vibrate,
             keepScreenOn = prefs[KEEP_SCREEN_ON] ?: defaults.keepScreenOn,
             spacing = enumOrDefault(prefs[SPACING], defaults.spacing),
+            hasSeenWalkthrough = prefs[HAS_SEEN_WALKTHROUGH] ?: defaults.hasSeenWalkthrough,
         )
     }
 
@@ -70,5 +72,6 @@ class SettingsStore(context: Context) {
         val VIBRATE = booleanPreferencesKey("vibrate")
         val KEEP_SCREEN_ON = booleanPreferencesKey("keep_screen_on")
         val SPACING = stringPreferencesKey("spacing")
+        val HAS_SEEN_WALKTHROUGH = booleanPreferencesKey("has_seen_walkthrough")
     }
 }

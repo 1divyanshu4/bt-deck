@@ -55,7 +55,7 @@ import kotlinx.coroutines.launch
  * One step: where in the app it happens, the instruction, a line of extra detail, and a
  * screenshot with the thing to tap highlighted (or no picture).
  */
-private class Step(val where: String, val text: String, val detail: String, @DrawableRes val image: Int? = null)
+private class Step(val where: String, val text: String, val detail: String, @param:DrawableRes val image: Int? = null)
 
 private class Tutorial(val title: String, val summary: String, val steps: List<Step>)
 
@@ -251,7 +251,7 @@ private val tutorials = listOf(
 
 /** Visual mini tutorials: pick one, then swipe through its steps. */
 @Composable
-fun TutorialsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
+fun TutorialsScreen(onBack: () -> Unit, onOpenWalkthrough: (() -> Unit)? = null, modifier: Modifier = Modifier) {
     var open by rememberSaveable { mutableStateOf<Int?>(null) }
     // Back closes an open tutorial before it leaves the page.
     BackHandler(enabled = open != null) { open = null }
@@ -260,7 +260,7 @@ fun TutorialsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     Column(modifier.fillMaxSize()) {
         PageTitle(tutorial?.title ?: "Tutorials", onBack = { if (tutorial != null) open = null else onBack() })
         if (tutorial == null) {
-            TutorialList(onOpen = { open = it })
+            TutorialList(onOpenWalkthrough = onOpenWalkthrough, onOpen = { open = it })
         } else {
             TutorialSteps(tutorial, onDone = { open = null })
         }
@@ -268,11 +268,43 @@ fun TutorialsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun TutorialList(onOpen: (Int) -> Unit) {
+private fun TutorialList(onOpenWalkthrough: (() -> Unit)?, onOpen: (Int) -> Unit) {
     Column(
         Modifier.verticalScroll(rememberScrollState()).padding(start = 12.dp, end = 12.dp, top = 12.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
+        if (onOpenWalkthrough != null) {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .clip(BTDeckShapes.Medium)
+                    .background(BTDeckColors.SurfaceHigh)
+                    .softCircles()
+                    .border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f), BTDeckShapes.Medium)
+                    .clickable(role = Role.Button, onClick = onOpenWalkthrough)
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Image(
+                    painterResource(R.drawable.tutorial_connect_2),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(64.dp).clip(BTDeckShapes.Small),
+                )
+                Column(Modifier.padding(start = 14.dp).weight(1f)) {
+                    Text(
+                        "Getting started walkthrough",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                    Text(
+                        "Quick introduction to pairing, shortcuts and layouts",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.LightGray,
+                    )
+                }
+            }
+        }
         tutorials.forEachIndexed { i, tutorial -> TutorialCard(tutorial, onClick = { onOpen(i) }) }
     }
 }

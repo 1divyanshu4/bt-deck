@@ -27,4 +27,5 @@ data class BTDeckSettings(
     val vibrate: Boolean = true,
     val keepScreenOn: Boolean = true,
     val spacing: ButtonSpacing = ButtonSpacing.NORMAL,
+    val hasSeenWalkthrough: Boolean = false,
 )

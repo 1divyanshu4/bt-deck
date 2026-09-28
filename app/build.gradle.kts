@@ -9,8 +9,8 @@ android {
 
     defaultConfig {
         applicationId = "dev.btdeck"
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 3
+        versionName = "0.1.1"
         testInstrumentationRunner = "dev.btdeck.BTDeckTestRunner"
     }
 
@@ -32,6 +32,8 @@ android {
             // Shrinks the icon library down to the icons actually used.
             isMinifyEnabled = true
             isShrinkResources = true
+            // Without this, R8 uses proguard-android.txt, which turns optimisation off.
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
             signingConfig = signingConfigs.findByName("release")
         }
     }

@@ -67,7 +67,7 @@ abstract class BTDeckUiTest {
 
     @Before
     fun baseSetUp() {
-        setSettings { BTDeckSettings() }
+        setSettings { BTDeckSettings(hasSeenWalkthrough = true) }
         rule.runOnUiThread {
             store.resetToDefaults()
             HidKeyboard.releaseAll()

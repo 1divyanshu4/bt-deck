@@ -158,6 +158,36 @@ class ScreensTest : BTDeckUiTest() {
     }
 
     @Test
+    fun walkthrough_canBeNavigatedAndDismissed() {
+        setSettings { it.copy(hasSeenWalkthrough = false) }
+        rule.onNodeWithText("Your Wireless Shortcut Pad").assertExists()
+        rule.onNodeWithText("Next").performClick()
+        rule.onNodeWithText("Pair Once, Connect Anytime").assertExists()
+        rule.onNodeWithText("Next").performClick()
+        rule.onNodeWithText("Customize Your Buttons").assertExists()
+        rule.onNodeWithText("Next").performClick()
+        rule.onNodeWithText("Profiles for Every App").assertExists()
+        rule.onNodeWithText("Explore Pad First").performClick()
+        rule.onNodeWithText("Your Wireless Shortcut Pad").assertDoesNotExist()
+    }
+
+    @Test
+    fun walkthrough_canBeOpenedFromSettings() {
+        openTab("Settings")
+        rule.onNodeWithText("App walkthrough").performScrollTo().performClick()
+        rule.onNodeWithText("Your Wireless Shortcut Pad").assertExists()
+        rule.onNodeWithText("Skip").performClick()
+        rule.onNodeWithText("Your Wireless Shortcut Pad").assertDoesNotExist()
+    }
+
+    @Test
+    fun accessibility_walkthrough() {
+        setSettings { it.copy(hasSeenWalkthrough = false) }
+        rule.enableAccessibilityChecks()
+        rule.onRoot().tryPerformAccessibilityChecks()
+    }
+
+    @Test
     fun accessibility_fullscreen() {
         rule.onNodeWithContentDescription("Fullscreen").performClick()
         rule.enableAccessibilityChecks()
