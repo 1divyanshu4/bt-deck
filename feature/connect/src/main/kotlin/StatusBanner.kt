@@ -24,9 +24,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.btdeck.core.bluetooth.HidStatus
 import dev.btdeck.core.designsystem.component.HelpButton
+import dev.btdeck.core.designsystem.theme.Palette
 import dev.btdeck.core.designsystem.theme.ZexDeckColors
 import dev.btdeck.core.designsystem.theme.ZexDeckShapes
-import dev.btdeck.core.designsystem.theme.Palette
 
 /** Compact connection indicator for the top bar. */
 @Composable

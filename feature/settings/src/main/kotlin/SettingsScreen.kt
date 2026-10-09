@@ -34,9 +34,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.btdeck.core.designsystem.component.TopBar
-import dev.btdeck.core.model.ZexDeckSettings
 import dev.btdeck.core.model.ButtonSpacing
 import dev.btdeck.core.model.ButtonStyle
+import dev.btdeck.core.model.ZexDeckSettings
 
 /**
  * App settings. Each row is one line: choices open a small menu, on/off settings are switches.

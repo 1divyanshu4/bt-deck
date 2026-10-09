@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import dev.btdeck.core.designsystem.theme.ZexDeckShapes
 import dev.btdeck.core.designsystem.theme.Palette
+import dev.btdeck.core.designsystem.theme.ZexDeckShapes
 import kotlinx.coroutines.delay
 
 /** Immersive mode: hides status and navigation bars; an edge swipe shows them briefly. */

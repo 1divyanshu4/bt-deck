@@ -16,8 +16,8 @@ import dev.btdeck.core.bluetooth.HidKeyboard
 import dev.btdeck.core.bluetooth.HidStatus
 import dev.btdeck.core.data.LayoutStore
 import dev.btdeck.core.data.SettingsStore
-import dev.btdeck.core.model.ZexDeckSettings
 import dev.btdeck.core.model.Keys
+import dev.btdeck.core.model.ZexDeckSettings
 import dev.btdeck.core.model.buildReport
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlinx.coroutines.runBlocking

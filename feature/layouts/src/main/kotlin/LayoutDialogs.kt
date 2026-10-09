@@ -25,8 +25,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import dev.btdeck.core.data.LayoutStore
 import dev.btdeck.core.designsystem.component.CompactTextField
-import dev.btdeck.core.designsystem.theme.ZexDeckShapes
 import dev.btdeck.core.designsystem.theme.Palette
+import dev.btdeck.core.designsystem.theme.ZexDeckShapes
 import dev.btdeck.core.model.PadLayout
 
 /** The dialogs the Layouts screen can open. */

@@ -57,9 +57,9 @@ import dev.btdeck.core.designsystem.component.CornerBadge
 import dev.btdeck.core.designsystem.component.TopBar
 import dev.btdeck.core.designsystem.component.hasIcon
 import dev.btdeck.core.designsystem.component.softCircles
+import dev.btdeck.core.designsystem.theme.Palette
 import dev.btdeck.core.designsystem.theme.ZexDeckColors
 import dev.btdeck.core.designsystem.theme.ZexDeckShapes
-import dev.btdeck.core.designsystem.theme.Palette
 import dev.btdeck.core.model.PadLayout
 import dev.btdeck.core.model.PadState
 import kotlinx.coroutines.launch

@@ -47,9 +47,9 @@ import dev.btdeck.core.designsystem.component.ButtonIcon
 import dev.btdeck.core.designsystem.component.CompactTextField
 import dev.btdeck.core.designsystem.component.HelpButton
 import dev.btdeck.core.designsystem.component.hasIcon
+import dev.btdeck.core.designsystem.theme.Palette
 import dev.btdeck.core.designsystem.theme.ZexDeckColors
 import dev.btdeck.core.designsystem.theme.ZexDeckShapes
-import dev.btdeck.core.designsystem.theme.Palette
 import dev.btdeck.core.model.Mod
 import dev.btdeck.core.model.PadButton
 import dev.btdeck.core.model.PressMode

@@ -59,9 +59,9 @@ import dev.btdeck.core.bluetooth.ScanState
 import dev.btdeck.core.bluetooth.bluetoothClassOrNull
 import dev.btdeck.core.bluetooth.displayName
 import dev.btdeck.core.designsystem.component.HelpButton
+import dev.btdeck.core.designsystem.theme.Palette
 import dev.btdeck.core.designsystem.theme.ZexDeckColors
 import dev.btdeck.core.designsystem.theme.ZexDeckShapes
-import dev.btdeck.core.designsystem.theme.Palette
 
 /** What the Bluetooth controls ask the app to do. Android shows its own confirm dialog for each. */
 enum class BluetoothAction { TurnOn, TurnOff, Restart }

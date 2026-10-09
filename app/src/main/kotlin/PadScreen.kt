@@ -26,11 +26,11 @@ import dev.btdeck.core.bluetooth.HidKeyboard
 import dev.btdeck.core.bluetooth.HidStatus
 import dev.btdeck.core.data.LayoutStore
 import dev.btdeck.core.designsystem.component.TopBar
-import dev.btdeck.core.model.ZexDeckSettings
 import dev.btdeck.core.model.Mod
 import dev.btdeck.core.model.PadButton
 import dev.btdeck.core.model.PadLayout
 import dev.btdeck.core.model.PadState
+import dev.btdeck.core.model.ZexDeckSettings
 import dev.btdeck.feature.connect.StatusBanner
 import dev.btdeck.feature.connect.StatusChip
 import dev.btdeck.feature.editor.ButtonEditor

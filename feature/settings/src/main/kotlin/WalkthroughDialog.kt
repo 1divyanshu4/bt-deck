@@ -57,9 +57,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import dev.btdeck.core.designsystem.theme.Palette
 import dev.btdeck.core.designsystem.theme.ZexDeckColors
 import dev.btdeck.core.designsystem.theme.ZexDeckShapes
-import dev.btdeck.core.designsystem.theme.Palette
 import kotlinx.coroutines.launch
 
 private data class WalkthroughPageData(

@@ -67,13 +67,13 @@ import dev.btdeck.core.designsystem.component.ButtonIcon
 import dev.btdeck.core.designsystem.component.CornerBadge
 import dev.btdeck.core.designsystem.component.hasIcon
 import dev.btdeck.core.designsystem.component.softCircles
-import dev.btdeck.core.designsystem.theme.ZexDeckShapes
 import dev.btdeck.core.designsystem.theme.Palette
-import dev.btdeck.core.model.ZexDeckSettings
+import dev.btdeck.core.designsystem.theme.ZexDeckShapes
 import dev.btdeck.core.model.ButtonStyle
 import dev.btdeck.core.model.PadButton
 import dev.btdeck.core.model.PadLayout
 import dev.btdeck.core.model.PressMode
+import dev.btdeck.core.model.ZexDeckSettings
 import dev.btdeck.core.model.comboLabel
 
 private val KeyShape = ZexDeckShapes.Medium
