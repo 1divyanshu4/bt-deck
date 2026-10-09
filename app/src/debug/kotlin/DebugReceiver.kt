@@ -11,7 +11,7 @@ import dev.btdeck.core.bluetooth.HidKeyboard
 import dev.btdeck.core.model.comboLabel
 
 /**
- * Debug builds only. Drive the keyboard from adb and read results from logcat (tag BTDeckDebug):
+ * Debug builds only. Drive the keyboard from adb and read results from logcat (tag ZexDeckDebug):
  *
  *   adb shell am broadcast -n dev.btdeck/.DebugReceiver --es cmd status
  *   ... --es cmd connect --es addr AA:BB:CC:DD:EE:FF
@@ -23,7 +23,7 @@ import dev.btdeck.core.model.comboLabel
 class DebugReceiver : BroadcastReceiver() {
     @SuppressLint("MissingPermission")
     override fun onReceive(context: Context, intent: Intent) {
-        val app = context.applicationContext as BTDeckApp
+        val app = context.applicationContext as ZexDeckApp
         val out = when (val cmd = intent.getStringExtra("cmd")) {
             "status" -> "status=${HidKeyboard.status.value} host=${HidKeyboard.connectedAddress()}"
             "connect" -> {
@@ -68,6 +68,6 @@ class DebugReceiver : BroadcastReceiver() {
     }
 
     private fun log(msg: String) {
-        Log.i("BTDeckDebug", msg)
+        Log.i("ZexDeckDebug", msg)
     }
 }

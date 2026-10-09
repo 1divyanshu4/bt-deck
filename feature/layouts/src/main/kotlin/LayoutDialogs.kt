@@ -25,8 +25,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import dev.btdeck.core.data.LayoutStore
 import dev.btdeck.core.designsystem.component.CompactTextField
-import dev.btdeck.core.designsystem.theme.BTDeckShapes
 import dev.btdeck.core.designsystem.theme.Palette
+import dev.btdeck.core.designsystem.theme.ZexDeckShapes
 import dev.btdeck.core.model.PadLayout
 
 /** The dialogs the Layouts screen can open. */
@@ -58,7 +58,7 @@ internal fun LayoutDialogHost(dialog: LayoutDialog, store: LayoutStore, onClose:
                 Button(onClick = {
                     store.restoreDefaults()
                     onClose()
-                }, shape = BTDeckShapes.Small) { Text("Restore") }
+                }, shape = ZexDeckShapes.Small) { Text("Restore") }
             },
             dismissButton = { TextButton(onClick = onClose) { Text("Cancel") } },
         )
@@ -91,7 +91,7 @@ private fun NamePrompt(title: String, initial: String, onDismiss: () -> Unit, on
             CompactTextField(name, { name = it }, placeholder = "Name", modifier = Modifier.fillMaxWidth())
         },
         confirmButton = {
-            Button(enabled = name.isNotBlank(), onClick = { onDone(name.trim()) }, shape = BTDeckShapes.Small) {
+            Button(enabled = name.isNotBlank(), onClick = { onDone(name.trim()) }, shape = ZexDeckShapes.Small) {
                 Text("OK")
             }
         },
@@ -108,7 +108,7 @@ private fun ConfirmDelete(name: String, onDismiss: () -> Unit, onConfirm: () -> 
         confirmButton = {
             Button(
                 onClick = onConfirm,
-                shape = BTDeckShapes.Small,
+                shape = ZexDeckShapes.Small,
                 colors = ButtonDefaults.buttonColors(containerColor = Palette[4]),
             ) {
                 Text("Delete")
@@ -130,7 +130,7 @@ internal fun ColumnsPicker(columns: Int, onChange: (Int) -> Unit) {
                 Modifier
                     .padding(2.dp)
                     .size(36.dp)
-                    .clip(BTDeckShapes.Small)
+                    .clip(ZexDeckShapes.Small)
                     .background(background)
                     .clickable { onChange(n) },
                 contentAlignment = Alignment.Center,

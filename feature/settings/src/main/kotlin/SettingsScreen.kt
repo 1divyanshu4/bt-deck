@@ -34,9 +34,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.btdeck.core.designsystem.component.TopBar
-import dev.btdeck.core.model.BTDeckSettings
 import dev.btdeck.core.model.ButtonSpacing
 import dev.btdeck.core.model.ButtonStyle
+import dev.btdeck.core.model.ZexDeckSettings
 
 /**
  * App settings. Each row is one line: choices open a small menu, on/off settings are switches.
@@ -44,8 +44,9 @@ import dev.btdeck.core.model.ButtonStyle
  */
 @Composable
 fun SettingsScreen(
-    settings: BTDeckSettings,
-    onChange: ((BTDeckSettings) -> BTDeckSettings) -> Unit,
+    settings: ZexDeckSettings,
+    onChange: ((ZexDeckSettings) -> ZexDeckSettings) -> Unit,
+    onOpenWalkthrough: () -> Unit = {},
     onOpenTutorials: () -> Unit,
     onOpenPrivacy: () -> Unit,
     onOpenAbout: () -> Unit,
@@ -70,9 +71,10 @@ fun SettingsScreen(
             SwitchRow("Keep screen on", settings.keepScreenOn) { on -> onChange { it.copy(keepScreenOn = on) } }
 
             Spacer(Modifier.height(16.dp))
+            LinkRow("App walkthrough", onOpenWalkthrough)
             LinkRow("Tutorials", onOpenTutorials)
             LinkRow("Privacy policy", onOpenPrivacy)
-            LinkRow("About BTDeck", onOpenAbout)
+            LinkRow("About ZexDeck", onOpenAbout)
         }
     }
 }

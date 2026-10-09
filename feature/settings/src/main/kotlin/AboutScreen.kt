@@ -11,16 +11,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import dev.btdeck.core.designsystem.component.PageTitle
 
-/** Version, and the licenses of BTDeck and the libraries it uses. */
+/** Version, and the licenses of ZexDeck and the libraries it uses. */
 @Composable
 fun AboutScreen(appVersion: String, onBack: () -> Unit, onOpenLicenses: () -> Unit, modifier: Modifier = Modifier) {
     Column(modifier.fillMaxSize()) {
-        PageTitle("About BTDeck", onBack)
+        PageTitle("About ZexDeck", onBack)
         Column(Modifier.padding(horizontal = 16.dp)) {
             Text("Version $appVersion", color = Color.Gray, modifier = Modifier.padding(vertical = 8.dp))
             LinkRow("Open-source licenses", onOpenLicenses)
             Text(
-                "BTDeck is open source under the Apache License 2.0.",
+                "ZexDeck is open source under the Apache License 2.0.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color.Gray,
                 modifier = Modifier.padding(vertical = 16.dp),

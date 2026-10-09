@@ -67,16 +67,16 @@ import dev.btdeck.core.designsystem.component.ButtonIcon
 import dev.btdeck.core.designsystem.component.CornerBadge
 import dev.btdeck.core.designsystem.component.hasIcon
 import dev.btdeck.core.designsystem.component.softCircles
-import dev.btdeck.core.designsystem.theme.BTDeckShapes
 import dev.btdeck.core.designsystem.theme.Palette
-import dev.btdeck.core.model.BTDeckSettings
+import dev.btdeck.core.designsystem.theme.ZexDeckShapes
 import dev.btdeck.core.model.ButtonStyle
 import dev.btdeck.core.model.PadButton
 import dev.btdeck.core.model.PadLayout
 import dev.btdeck.core.model.PressMode
+import dev.btdeck.core.model.ZexDeckSettings
 import dev.btdeck.core.model.comboLabel
 
-private val KeyShape = BTDeckShapes.Medium
+private val KeyShape = ZexDeckShapes.Medium
 
 /**
  * The grid of shortcut keys for [layout], drawn according to [settings]. In [editing] mode
@@ -87,7 +87,7 @@ fun Pad(
     layout: PadLayout,
     editing: Boolean,
     heldIds: Set<String>,
-    settings: BTDeckSettings,
+    settings: ZexDeckSettings,
     onEdit: (PadButton) -> Unit,
     onAdd: () -> Unit,
     modifier: Modifier = Modifier,
@@ -169,7 +169,7 @@ private fun PadKey(
     button: PadButton,
     editing: Boolean,
     held: Boolean,
-    settings: BTDeckSettings,
+    settings: ZexDeckSettings,
     onEdit: () -> Unit,
     dropTarget: Boolean,
     arrange: DragActions,
@@ -285,7 +285,7 @@ private fun toggleKey(button: PadButton) {
  * text. Keys without an icon always show text.
  */
 @Composable
-private fun KeyFace(button: PadButton, settings: BTDeckSettings, color: Color) {
+private fun KeyFace(button: PadButton, settings: ZexDeckSettings, color: Color) {
     val showIcon = hasIcon(button.icon) && settings.buttonStyle != ButtonStyle.TEXT_ONLY
     BoxWithConstraints(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         // On short keys the label comes first, then the mode tag; the icon gets what's left.
@@ -339,7 +339,7 @@ private fun TextFace(button: PadButton) {
 
 /** The key's shortcut (e.g. Ctrl+Z) in its top-right corner. */
 @Composable
-private fun ShortcutBadge(button: PadButton, settings: BTDeckSettings) {
+private fun ShortcutBadge(button: PadButton, settings: ZexDeckSettings) {
     // A text key without a label already shows its shortcut as its text.
     val showsShortcutAlready = button.label.isBlank() &&
         (!hasIcon(button.icon) || settings.buttonStyle == ButtonStyle.TEXT_ONLY)

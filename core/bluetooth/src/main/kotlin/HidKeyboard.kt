@@ -43,7 +43,7 @@ sealed interface HidStatus {
     data class ConnectFailed(val name: String) : HidStatus
 
     /**
-     * The stack is stuck holding an old keyboard session (e.g. BTDeck was killed while
+     * The stack is stuck holding an old keyboard session (e.g. ZexDeck was killed while
      * connected and the phone never finished releasing it). Only a Bluetooth restart clears it.
      */
     data object NeedsBluetoothRestart : HidStatus
@@ -118,9 +118,9 @@ object HidKeyboard {
     )
 
     private val SDP = BluetoothHidDeviceAppSdpSettings(
-        "BTDeck",
-        "BTDeck shortcut pad",
-        "BTDeck",
+        "ZexDeck",
+        "ZexDeck shortcut pad",
+        "ZexDeck",
         BluetoothHidDevice.SUBCLASS1_KEYBOARD,
         DESCRIPTOR,
     )
@@ -165,6 +165,9 @@ object HidKeyboard {
 
     /** Unregistering on purpose to reset a stuck stack; re-register when it's done. */
     private var reRegistering = false
+
+    /** [stop] is releasing the keyboard; the callbacks it triggers mustn't change the status. */
+    private var stopping = false
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     /** Currently held keys, by source (a button id). */
@@ -179,7 +182,7 @@ object HidKeyboard {
 
     /**
      * Whether Caps Lock is on. The host reports it through the LED byte; [toggleCapsLock]
-     * guesses ahead for hosts that don't (ones that paired before BTDeck sent LEDs).
+     * guesses ahead for hosts that don't (ones that paired before ZexDeck sent LEDs).
      */
     val capsLock: StateFlow<Boolean> = _capsLock.asStateFlow()
 
@@ -216,6 +219,7 @@ object HidKeyboard {
             if (_status.value == HidStatus.Starting) _status.value = HidStatus.Ready
             return
         }
+        if (stopping) return
         val a = adapter ?: return run { _status.value = HidStatus.NoBluetooth }
         if (!a.isEnabled) return run { _status.value = HidStatus.BluetoothOff }
         val h = hid
@@ -252,15 +256,42 @@ object HidKeyboard {
         }
     }
 
-    fun stop() {
+    /**
+     * Releases keyboard mode, then calls [onStopped]. Each step waits for the stack to confirm:
+     * tearing down mid-disconnect leaves the stack (and the host) half-connected, so the next
+     * registration fails and later connects hang at "Connecting".
+     */
+    fun stop(onStopped: () -> Unit = {}) {
+        if (stopping) return // the stop already running finishes the job
         connectJob?.cancel()
         releaseAll()
-        hid?.let { h ->
-            // Disconnect hosts before unregistering, as the platform sample does.
-            runCatching { h.connectedDevices }.getOrDefault(emptyList()).forEach { h.disconnect(it) }
-            if (registered) h.unregisterApp()
-            adapter?.closeProfileProxy(BluetoothProfile.HID_DEVICE, h)
+        val h = hid
+        if (h == null) {
+            finishStop()
+            onStopped()
+            return
         }
+        stopping = true
+        scope.launch {
+            runCatching { h.connectedDevices }.getOrDefault(emptyList()).forEach { device ->
+                awaitingDisconnect = device.address
+                h.disconnect(device)
+                withTimeoutOrNull(2_500) { while (awaitingDisconnect != null) delay(100) }
+            }
+            awaitingDisconnect = null
+            // Also ends a disconnect that never finished (MIUI), as releaseHost() relies on.
+            if (registered) {
+                h.unregisterApp()
+                withTimeoutOrNull(2_000) { while (registered) delay(100) }
+            }
+            adapter?.closeProfileProxy(BluetoothProfile.HID_DEVICE, h)
+            finishStop()
+            onStopped()
+        }
+    }
+
+    private fun finishStop() {
+        stopping = false
         resetState()
         _status.value = HidStatus.Stopped
     }
@@ -318,7 +349,7 @@ object HidKeyboard {
         }
         registerAttempts = 0
         // Usually our own old session the stack never released, occasionally another
-        // keyboard app. A Bluetooth restart fixes the first and BTDeck re-registers itself.
+        // keyboard app. A Bluetooth restart fixes the first and ZexDeck re-registers itself.
         _status.value = HidStatus.NeedsBluetoothRestart
     }
 
@@ -328,6 +359,7 @@ object HidKeyboard {
             Log.d(TAG, "app registered=$isRegistered plugged=${pluggedDevice?.address}")
             registerPending = false
             registered = isRegistered
+            if (stopping) return
             if (!isRegistered && reRegistering) {
                 reRegistering = false
                 host = null
@@ -540,7 +572,7 @@ object HidKeyboard {
         _heldIds.value = emptySet()
         lastReport = ByteArray(8)
         // While a connect job runs it decides the status (it may retry).
-        if (registered && connectJob?.isActive != true) _status.value = HidStatus.Ready
+        if (registered && !stopping && connectJob?.isActive != true) _status.value = HidStatus.Ready
     }
 
     fun connectedAddress(): String? = host?.address

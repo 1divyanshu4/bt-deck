@@ -59,9 +59,9 @@ import dev.btdeck.core.bluetooth.ScanState
 import dev.btdeck.core.bluetooth.bluetoothClassOrNull
 import dev.btdeck.core.bluetooth.displayName
 import dev.btdeck.core.designsystem.component.HelpButton
-import dev.btdeck.core.designsystem.theme.BTDeckColors
-import dev.btdeck.core.designsystem.theme.BTDeckShapes
 import dev.btdeck.core.designsystem.theme.Palette
+import dev.btdeck.core.designsystem.theme.ZexDeckColors
+import dev.btdeck.core.designsystem.theme.ZexDeckShapes
 
 /** What the Bluetooth controls ask the app to do. Android shows its own confirm dialog for each. */
 enum class BluetoothAction { TurnOn, TurnOff, Restart }
@@ -86,7 +86,7 @@ fun ConnectSheet(
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
-        containerColor = BTDeckColors.Surface,
+        containerColor = ZexDeckColors.Surface,
         // Half-open hides Scan/Pair on landscape tablets.
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     ) {
@@ -124,14 +124,14 @@ private fun BluetoothControls(status: HidStatus, onBluetooth: (BluetoothAction) 
     SheetHeader(
         "Bluetooth",
         help = "Restart turns Bluetooth off and on again. It fixes most connection problems; " +
-            "BTDeck reconnects by itself afterwards.",
+            "ZexDeck reconnects by itself afterwards.",
     ) {
         if (on) TextButton(onClick = { onBluetooth(BluetoothAction.Restart) }) { Text("Restart") }
     }
     Row(
         Modifier
             .fillMaxWidth()
-            .clip(BTDeckShapes.Small)
+            .clip(ZexDeckShapes.Small)
             .toggleable(value = on, role = Role.Switch) {
                 onBluetooth(if (on) BluetoothAction.TurnOff else BluetoothAction.TurnOn)
             }
@@ -221,7 +221,7 @@ private fun NearbyDevices(scan: ScanState, onScan: () -> Unit) {
 private fun DiscoverableFallback(onMakeDiscoverable: () -> Unit) {
     Spacer(Modifier.size(16.dp))
     Row(verticalAlignment = Alignment.CenterVertically) {
-        OutlinedButton(onClick = onMakeDiscoverable, shape = BTDeckShapes.Small, modifier = Modifier.weight(1f)) {
+        OutlinedButton(onClick = onMakeDiscoverable, shape = ZexDeckShapes.Small, modifier = Modifier.weight(1f)) {
             Text("Make phone discoverable")
         }
         HelpButton(
@@ -261,7 +261,7 @@ private fun DeviceRow(
     Row(
         Modifier
             .fillMaxWidth()
-            .clip(BTDeckShapes.Small)
+            .clip(ZexDeckShapes.Small)
             .background(if (highlighted) Palette[2].copy(alpha = 0.18f) else Color.Transparent)
             .clickable(onClick = onClick)
             .padding(vertical = 12.dp, horizontal = 8.dp),

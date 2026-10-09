@@ -14,7 +14,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "BTDeck"
+rootProject.name = "ZexDeck"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":app")

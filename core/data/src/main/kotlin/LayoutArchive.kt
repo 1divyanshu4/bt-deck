@@ -77,7 +77,7 @@ object LayoutArchive {
                 }
             }
         }
-        val found = layout ?: throw InvalidFileException("This isn't a BTDeck layout file.")
+        val found = layout ?: throw InvalidFileException("This isn't a ZexDeck layout file.")
         // Drop references to images the file doesn't contain; those buttons show their text.
         val cleaned = found.copy(
             buttons = found.buttons.map { button ->
@@ -97,13 +97,13 @@ object LayoutArchive {
 
     private fun parseLayout(bytes: ByteArray): PadLayout {
         val json = runCatching { JSONObject(String(bytes)) }.getOrNull()
-            ?: throw InvalidFileException("This BTDeck file is damaged.")
-        if (json.optString("format") != FORMAT) throw InvalidFileException("This isn't a BTDeck layout file.")
+            ?: throw InvalidFileException("This ZexDeck file is damaged.")
+        if (json.optString("format") != FORMAT) throw InvalidFileException("This isn't a ZexDeck layout file.")
         if (json.optInt("version") > VERSION) {
-            throw InvalidFileException("This layout was made with a newer BTDeck. Update the app to import it.")
+            throw InvalidFileException("This layout was made with a newer ZexDeck. Update the app to import it.")
         }
         return runCatching { json.getJSONObject("layout").toLayout() }.getOrNull()
-            ?: throw InvalidFileException("This BTDeck file is damaged.")
+            ?: throw InvalidFileException("This ZexDeck file is damaged.")
     }
 
     /** Reads the current entry, refusing to go past [limit] bytes. */
@@ -113,7 +113,7 @@ object LayoutArchive {
         while (true) {
             val n = read(buffer)
             if (n < 0) break
-            if (out.size() + n > limit) throw InvalidFileException("This BTDeck file is too large.")
+            if (out.size() + n > limit) throw InvalidFileException("This ZexDeck file is too large.")
             out.write(buffer, 0, n)
         }
         return out.toByteArray()

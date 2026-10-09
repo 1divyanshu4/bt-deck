@@ -25,3 +25,7 @@ captures/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Store listing and promotional assets
+store-listing/
+

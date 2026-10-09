@@ -28,7 +28,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class EditorTest : BTDeckUiTest() {
+class EditorTest : ZexDeckUiTest() {
 
     private fun enterEdit() = rule.onNodeWithContentDescription("Edit layout").performClick()
     private fun exitEdit() = rule.onNodeWithContentDescription("Done editing").performClick()

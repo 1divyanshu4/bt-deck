@@ -20,7 +20,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import dev.btdeck.core.designsystem.theme.BTDeckShapes
+import dev.btdeck.core.designsystem.theme.ZexDeckShapes
 
 /**
  * A single-line text field, 48dp tall instead of Material's 56dp. [placeholder] names the field
@@ -63,7 +63,7 @@ fun CompactTextField(
                         isError = false,
                         interactionSource = interaction,
                         colors = colors,
-                        shape = BTDeckShapes.Small,
+                        shape = ZexDeckShapes.Small,
                     )
                 },
             )

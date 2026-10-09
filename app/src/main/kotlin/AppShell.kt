@@ -12,10 +12,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ViewQuilt
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.ViewQuilt
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -42,7 +42,7 @@ import dev.btdeck.core.bluetooth.HidStatus
 import dev.btdeck.core.data.LayoutStore
 import dev.btdeck.core.data.LayoutTransfer
 import dev.btdeck.core.data.SettingsStore
-import dev.btdeck.core.designsystem.theme.BTDeckColors
+import dev.btdeck.core.designsystem.theme.ZexDeckColors
 import dev.btdeck.feature.connect.BluetoothAction
 import dev.btdeck.feature.connect.ConnectSheet
 import dev.btdeck.feature.connect.StatusBanner
@@ -56,11 +56,12 @@ import dev.btdeck.feature.settings.AboutScreen
 import dev.btdeck.feature.settings.PrivacyScreen
 import dev.btdeck.feature.settings.SettingsScreen
 import dev.btdeck.feature.settings.TutorialsScreen
+import dev.btdeck.feature.settings.WalkthroughDialog
 
 /** The four tabs, in the order they appear in the bottom bar / side rail. */
 enum class Tab(val label: String, val icon: ImageVector) {
     Pad("Pad", Icons.Default.GridView),
-    Layouts("Layouts", Icons.Default.ViewQuilt),
+    Layouts("Layouts", Icons.AutoMirrored.Filled.ViewQuilt),
     Keyboard("Keyboard", Icons.Default.Keyboard),
     Settings("Settings", Icons.Default.Settings),
 }
@@ -86,13 +87,16 @@ fun AppShell(
 ) {
     val state by layouts.state.collectAsState()
     val settings by settingsStore.settings.collectAsState()
+    val settingsLoaded by settingsStore.loaded.collectAsState()
     val status by HidKeyboard.status.collectAsState()
 
     var tab by rememberSaveable { mutableStateOf(Tab.Pad) }
     var settingsPage by rememberSaveable { mutableStateOf(SettingsPage.Main) }
     var fullscreen by rememberSaveable { mutableStateOf(false) }
     var showConnect by rememberSaveable { mutableStateOf(false) }
+    var showWalkthrough by rememberSaveable { mutableStateOf(false) }
     val openConnect = { showConnect = true }
+    val openWalkthrough = { showWalkthrough = true }
 
     // Picking Settings in the bar always opens its main page, not the page last left open.
     val selectTab = { picked: Tab ->
@@ -127,7 +131,7 @@ fun AppShell(
     val showRail = !fullscreen && landscape
 
     Scaffold(
-        containerColor = BTDeckColors.Background,
+        containerColor = ZexDeckColors.Background,
         contentWindowInsets = WindowInsets.safeDrawing,
         bottomBar = { if (showBottomBar) BottomBar(tab, onSelect = selectTab) },
     ) { padding ->
@@ -165,6 +169,7 @@ fun AppShell(
                     SettingsPage.Main -> SettingsScreen(
                         settings = settings,
                         onChange = settingsStore::update,
+                        onOpenWalkthrough = openWalkthrough,
                         onOpenTutorials = { settingsPage = SettingsPage.Tutorials },
                         onOpenPrivacy = { settingsPage = SettingsPage.Privacy },
                         onOpenAbout = { settingsPage = SettingsPage.About },
@@ -179,6 +184,7 @@ fun AppShell(
                     )
                     SettingsPage.Tutorials -> TutorialsScreen(
                         onBack = { settingsPage = SettingsPage.Main },
+                        onOpenWalkthrough = openWalkthrough,
                         modifier = content,
                     )
                     SettingsPage.Privacy -> PrivacyScreen(
@@ -196,11 +202,29 @@ fun AppShell(
     if (showConnect) {
         ConnectSheet(status, onBluetooth, onMakeDiscoverable, onScan, onDismiss = { showConnect = false })
     }
+
+    if ((settingsLoaded && !settings.hasSeenWalkthrough) || showWalkthrough) {
+        WalkthroughDialog(
+            onDismiss = {
+                if (!settings.hasSeenWalkthrough) {
+                    settingsStore.update { it.copy(hasSeenWalkthrough = true) }
+                }
+                showWalkthrough = false
+            },
+            onConnect = {
+                if (!settings.hasSeenWalkthrough) {
+                    settingsStore.update { it.copy(hasSeenWalkthrough = true) }
+                }
+                showWalkthrough = false
+                showConnect = true
+            },
+        )
+    }
 }
 
 @Composable
 private fun BottomBar(selected: Tab, onSelect: (Tab) -> Unit) {
-    NavigationBar(containerColor = BTDeckColors.Surface) {
+    NavigationBar(containerColor = ZexDeckColors.Surface) {
         for (tab in Tab.entries) {
             NavigationBarItem(
                 selected = tab == selected,
@@ -214,7 +238,7 @@ private fun BottomBar(selected: Tab, onSelect: (Tab) -> Unit) {
 
 @Composable
 private fun SideRail(selected: Tab, onSelect: (Tab) -> Unit) {
-    NavigationRail(containerColor = BTDeckColors.Surface) {
+    NavigationRail(containerColor = ZexDeckColors.Surface) {
         Spacer(Modifier.weight(1f))
         for (tab in Tab.entries) {
             NavigationRailItem(
@@ -228,7 +252,7 @@ private fun SideRail(selected: Tab, onSelect: (Tab) -> Unit) {
     }
 }
 
-/** Keeps the phone awake while BTDeck is on screen, if the setting is on. */
+/** Keeps the phone awake while ZexDeck is on screen, if the setting is on. */
 @Composable
 private fun KeepScreenOn(enabled: Boolean) {
     val view = LocalView.current

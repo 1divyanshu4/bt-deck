@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import dev.btdeck.core.designsystem.theme.BTDeckShapes
 import dev.btdeck.core.designsystem.theme.Palette
+import dev.btdeck.core.designsystem.theme.ZexDeckShapes
 import kotlinx.coroutines.delay
 
 /** Immersive mode: hides status and navigation bars; an edge swipe shows them briefly. */
@@ -65,7 +65,7 @@ fun BoxScope.FullscreenHint() {
         modifier = Modifier
             .align(Alignment.BottomCenter)
             .padding(bottom = 24.dp, start = 16.dp, end = 16.dp)
-            .clip(BTDeckShapes.Small)
+            .clip(ZexDeckShapes.Small)
             .background(Color(0xE6202026))
             .padding(horizontal = 14.dp, vertical = 8.dp),
     )
@@ -78,7 +78,7 @@ fun DisconnectedStrip(onExit: () -> Unit) {
         Modifier
             .fillMaxWidth()
             .padding(top = 8.dp)
-            .clip(BTDeckShapes.Medium)
+            .clip(ZexDeckShapes.Medium)
             .background(Palette[4])
             .clickable(onClick = onExit)
             .padding(horizontal = 14.dp, vertical = 8.dp),

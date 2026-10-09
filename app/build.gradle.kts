@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.btdeck.android.application)
+    alias(libs.plugins.zexdeck.android.application)
     // Generates the open-source licenses list shown in Settings.
     alias(libs.plugins.aboutlibraries)
 }
@@ -9,9 +9,9 @@ android {
 
     defaultConfig {
         applicationId = "dev.btdeck"
-        versionCode = 1
-        versionName = "0.1.0"
-        testInstrumentationRunner = "dev.btdeck.BTDeckTestRunner"
+        versionCode = 4
+        versionName = "0.1.2"
+        testInstrumentationRunner = "dev.btdeck.ZexDeckTestRunner"
     }
 
     // The release key lives outside the repository; its location and passwords come from
@@ -32,6 +32,8 @@ android {
             // Shrinks the icon library down to the icons actually used.
             isMinifyEnabled = true
             isShrinkResources = true
+            // Without this, R8 uses proguard-android.txt, which turns optimisation off.
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
             signingConfig = signingConfigs.findByName("release")
         }
     }

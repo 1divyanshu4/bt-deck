@@ -16,7 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import dev.btdeck.core.data.LayoutArchive
 import dev.btdeck.core.data.LayoutTransfer
-import dev.btdeck.core.designsystem.theme.BTDeckShapes
+import dev.btdeck.core.designsystem.theme.ZexDeckShapes
 import kotlinx.coroutines.launch
 
 /**
@@ -55,7 +55,7 @@ fun ImportLayoutDialog(uri: Uri, transfer: LayoutTransfer, onDone: () -> Unit) {
                         Toast.makeText(context, "Imported \"$name\"", Toast.LENGTH_SHORT).show()
                         onDone()
                     }
-                }, shape = BTDeckShapes.Small) { Text("Import") }
+                }, shape = ZexDeckShapes.Small) { Text("Import") }
             },
             dismissButton = { TextButton(onClick = onDone) { Text("Cancel") } },
         )

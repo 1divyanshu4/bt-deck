@@ -17,7 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class ScreensTest : BTDeckUiTest() {
+class ScreensTest : ZexDeckUiTest() {
 
     private fun status(s: HidStatus) {
         rule.runOnUiThread { HidKeyboard.setStatusForTest(s) }
@@ -155,6 +155,36 @@ class ScreensTest : BTDeckUiTest() {
         rule.onNodeWithText("Not connected").performClick()
         rule.enableAccessibilityChecks()
         rule.onNodeWithText("Connect a device").tryPerformAccessibilityChecks()
+    }
+
+    @Test
+    fun walkthrough_canBeNavigatedAndDismissed() {
+        setSettings { it.copy(hasSeenWalkthrough = false) }
+        rule.onNodeWithText("Your Wireless Shortcut Pad").assertExists()
+        rule.onNodeWithText("Next").performClick()
+        rule.onNodeWithText("Pair Once, Connect Anytime").assertExists()
+        rule.onNodeWithText("Next").performClick()
+        rule.onNodeWithText("Customize Your Buttons").assertExists()
+        rule.onNodeWithText("Next").performClick()
+        rule.onNodeWithText("Profiles for Every App").assertExists()
+        rule.onNodeWithText("Explore Pad First").performClick()
+        rule.onNodeWithText("Your Wireless Shortcut Pad").assertDoesNotExist()
+    }
+
+    @Test
+    fun walkthrough_canBeOpenedFromSettings() {
+        openTab("Settings")
+        rule.onNodeWithText("App walkthrough").performScrollTo().performClick()
+        rule.onNodeWithText("Your Wireless Shortcut Pad").assertExists()
+        rule.onNodeWithText("Skip").performClick()
+        rule.onNodeWithText("Your Wireless Shortcut Pad").assertDoesNotExist()
+    }
+
+    @Test
+    fun accessibility_walkthrough() {
+        setSettings { it.copy(hasSeenWalkthrough = false) }
+        rule.enableAccessibilityChecks()
+        rule.onRoot().tryPerformAccessibilityChecks()
     }
 
     @Test

@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 /** Fixed dark palette: the pad sits next to a drawing tablet, often in a dim room. */
-object BTDeckColors {
+object ZexDeckColors {
     val Background = Color(0xFF121214)
     val Surface = Color(0xFF1C1C20)
     val SurfaceHigh = Color(0xFF26262C)
@@ -25,7 +25,7 @@ object BTDeckColors {
  * surfaces (pad keys, cards, dialogs, sheets) get [Medium], and badges that sit inside a
  * key or card get [XSmall], so they're squarer than what they sit on.
  */
-object BTDeckShapes {
+object ZexDeckShapes {
     val XSmall = RoundedCornerShape(6.dp)
     val Small = RoundedCornerShape(8.dp)
     val Medium = RoundedCornerShape(12.dp)
@@ -42,22 +42,22 @@ val Palette = listOf(
 )
 
 @Composable
-fun BTDeckTheme(content: @Composable () -> Unit) {
+fun ZexDeckTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = darkColorScheme(
-            primary = BTDeckColors.Primary,
-            background = BTDeckColors.Background,
-            surface = BTDeckColors.Surface,
-            surfaceContainer = BTDeckColors.Surface,
-            surfaceContainerHigh = BTDeckColors.SurfaceHigh,
+            primary = ZexDeckColors.Primary,
+            background = ZexDeckColors.Background,
+            surface = ZexDeckColors.Surface,
+            surfaceContainer = ZexDeckColors.Surface,
+            surfaceContainerHigh = ZexDeckColors.SurfaceHigh,
         ),
         // Material components pick from these; nothing is rounder than Medium.
         shapes = Shapes(
-            extraSmall = BTDeckShapes.Small,
-            small = BTDeckShapes.Small,
-            medium = BTDeckShapes.Medium,
-            large = BTDeckShapes.Medium,
-            extraLarge = BTDeckShapes.Medium,
+            extraSmall = ZexDeckShapes.Small,
+            small = ZexDeckShapes.Small,
+            medium = ZexDeckShapes.Medium,
+            large = ZexDeckShapes.Medium,
+            extraLarge = ZexDeckShapes.Medium,
         ),
         content = content,
     )

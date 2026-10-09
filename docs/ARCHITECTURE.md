@@ -1,6 +1,6 @@
 # How the code is organised
 
-BTDeck is split into small modules so each part is easy to find and change on its own. The
+ZexDeck is split into small modules so each part is easy to find and change on its own. The
 layout follows Google's [modularization guide](https://developer.android.com/topic/modularization/patterns),
 kept small to match the size of the app.
 

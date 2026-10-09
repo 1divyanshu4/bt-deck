@@ -1,3 +1,3 @@
 plugins {
-    alias(libs.plugins.btdeck.jvm.library)
+    alias(libs.plugins.zexdeck.jvm.library)
 }
