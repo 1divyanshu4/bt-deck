@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.btdeck.core.designsystem.theme.BTDeckShapes
+import dev.btdeck.core.designsystem.theme.ZexDeckShapes
 import dev.btdeck.core.model.Key
 import dev.btdeck.core.model.Keys
 
@@ -78,7 +78,7 @@ private fun GroupTab(name: String, selected: Boolean, onClick: () -> Unit) {
         color = if (selected) primary else Color.Gray,
         fontSize = 13.sp,
         modifier = Modifier
-            .clip(BTDeckShapes.Small)
+            .clip(ZexDeckShapes.Small)
             .background(if (selected) primary.copy(alpha = 0.16f) else Color.Transparent)
             .selectable(selected = selected, role = Role.Tab, onClick = onClick)
             .padding(horizontal = 10.dp, vertical = 6.dp),

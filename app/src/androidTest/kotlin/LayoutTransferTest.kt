@@ -26,9 +26,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class LayoutTransferTest : BTDeckUiTest() {
+class LayoutTransferTest : ZexDeckUiTest() {
     private val context get() = InstrumentationRegistry.getInstrumentation().targetContext
-    private val transfer get() = (context.applicationContext as BTDeckApp).transfer
+    private val transfer get() = (context.applicationContext as ZexDeckApp).transfer
 
     /** Adds a button with a freshly imported custom image to the current layout. */
     private fun addCustomImageButton(): String {

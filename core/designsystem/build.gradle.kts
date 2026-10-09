@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.btdeck.android.compose)
+    alias(libs.plugins.zexdeck.android.compose)
 }
 
 android {

@@ -8,7 +8,7 @@
    `app/build/outputs/apk/release/app-release.apk`; install it and try it once, since release
    builds are shrunk by R8.
 5. Tag the release (for example `git tag v0.2.0`) and publish it on GitHub with the APK
-   attached, named like `BTDeck-0.2.0.apk`.
+   attached, named like `ZexDeck-0.2.0.apk`.
 
 ## About signing
 

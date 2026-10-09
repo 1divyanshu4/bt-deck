@@ -42,7 +42,7 @@ import dev.btdeck.core.bluetooth.HidStatus
 import dev.btdeck.core.data.LayoutStore
 import dev.btdeck.core.data.LayoutTransfer
 import dev.btdeck.core.data.SettingsStore
-import dev.btdeck.core.designsystem.theme.BTDeckColors
+import dev.btdeck.core.designsystem.theme.ZexDeckColors
 import dev.btdeck.feature.connect.BluetoothAction
 import dev.btdeck.feature.connect.ConnectSheet
 import dev.btdeck.feature.connect.StatusBanner
@@ -131,7 +131,7 @@ fun AppShell(
     val showRail = !fullscreen && landscape
 
     Scaffold(
-        containerColor = BTDeckColors.Background,
+        containerColor = ZexDeckColors.Background,
         contentWindowInsets = WindowInsets.safeDrawing,
         bottomBar = { if (showBottomBar) BottomBar(tab, onSelect = selectTab) },
     ) { padding ->
@@ -224,7 +224,7 @@ fun AppShell(
 
 @Composable
 private fun BottomBar(selected: Tab, onSelect: (Tab) -> Unit) {
-    NavigationBar(containerColor = BTDeckColors.Surface) {
+    NavigationBar(containerColor = ZexDeckColors.Surface) {
         for (tab in Tab.entries) {
             NavigationBarItem(
                 selected = tab == selected,
@@ -238,7 +238,7 @@ private fun BottomBar(selected: Tab, onSelect: (Tab) -> Unit) {
 
 @Composable
 private fun SideRail(selected: Tab, onSelect: (Tab) -> Unit) {
-    NavigationRail(containerColor = BTDeckColors.Surface) {
+    NavigationRail(containerColor = ZexDeckColors.Surface) {
         Spacer(Modifier.weight(1f))
         for (tab in Tab.entries) {
             NavigationRailItem(
@@ -252,7 +252,7 @@ private fun SideRail(selected: Tab, onSelect: (Tab) -> Unit) {
     }
 }
 
-/** Keeps the phone awake while BTDeck is on screen, if the setting is on. */
+/** Keeps the phone awake while ZexDeck is on screen, if the setting is on. */
 @Composable
 private fun KeepScreenOn(enabled: Boolean) {
     val view = LocalView.current

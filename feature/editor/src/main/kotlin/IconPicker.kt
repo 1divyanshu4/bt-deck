@@ -44,7 +44,7 @@ import dev.btdeck.core.designsystem.component.ButtonIcon
 import dev.btdeck.core.designsystem.component.CompactTextField
 import dev.btdeck.core.designsystem.icon.PadIcon
 import dev.btdeck.core.designsystem.icon.PadIcons
-import dev.btdeck.core.designsystem.theme.BTDeckShapes
+import dev.btdeck.core.designsystem.theme.ZexDeckShapes
 import dev.btdeck.core.designsystem.theme.Palette
 import kotlinx.coroutines.launch
 
@@ -184,7 +184,7 @@ private fun IconTile(
     onClick: () -> Unit,
     content: @Composable () -> Unit,
 ) {
-    val shape = BTDeckShapes.Small
+    val shape = ZexDeckShapes.Small
     val background = if (selected) tint else Color.White.copy(alpha = 0.06f)
     val outline = if (selected) Color.White else Color.Transparent
     Box(

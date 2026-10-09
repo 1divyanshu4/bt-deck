@@ -8,7 +8,7 @@ body:
   - type: input
     id: phone
     attributes:
-      label: Phone running BTDeck
+      label: Phone running ZexDeck
       placeholder: e.g. Redmi Note 10S, Android 13 (MIUI 14)
     validations:
       required: true

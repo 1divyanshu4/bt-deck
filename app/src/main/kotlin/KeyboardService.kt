@@ -84,7 +84,7 @@ class KeyboardService : Service() {
 
     /**
      * Swiped away from recents while not connected: release keyboard mode. A device registered
-     * as a keyboard can't accept one, so a tablet with BTDeck idling would reject the phone.
+     * as a keyboard can't accept one, so a tablet with ZexDeck idling would reject the phone.
      */
     override fun onTaskRemoved(rootIntent: Intent?) {
         if (HidKeyboard.connectedAddress() == null) stopKeyboard()
@@ -122,7 +122,7 @@ class KeyboardService : Service() {
                 is HidStatus.Connected -> "Connected to ${status.name}"
                 is HidStatus.Connecting -> "Connecting to ${status.name}…"
                 HidStatus.Ready -> "Keyboard ready — not connected"
-                else -> "BTDeck keyboard"
+                else -> "ZexDeck keyboard"
             },
         )
         .setContentText("Tap to open the shortcut pad")

@@ -14,7 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class SettingsTest : BTDeckUiTest() {
+class SettingsTest : ZexDeckUiTest() {
 
     @Test
     fun iconOnly_hidesLabelsButKeepsNamesForScreenReaders() {
@@ -82,7 +82,7 @@ class SettingsTest : BTDeckUiTest() {
         rule.onNodeWithText("Privacy policy").performScrollTo().performClick()
         rule.onNodeWithText("Bluetooth").assertExists()
         rule.onNodeWithContentDescription("Back").performClick() // Privacy → Settings
-        rule.onNodeWithText("About BTDeck").performScrollTo().performClick()
+        rule.onNodeWithText("About ZexDeck").performScrollTo().performClick()
         rule.onNodeWithText("Open-source licenses").performClick()
         // The list loads in the background; several entries mention Compose.
         rule.waitUntil(5_000) {

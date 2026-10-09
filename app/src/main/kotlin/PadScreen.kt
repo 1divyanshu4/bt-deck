@@ -26,7 +26,7 @@ import dev.btdeck.core.bluetooth.HidKeyboard
 import dev.btdeck.core.bluetooth.HidStatus
 import dev.btdeck.core.data.LayoutStore
 import dev.btdeck.core.designsystem.component.TopBar
-import dev.btdeck.core.model.BTDeckSettings
+import dev.btdeck.core.model.ZexDeckSettings
 import dev.btdeck.core.model.Mod
 import dev.btdeck.core.model.PadButton
 import dev.btdeck.core.model.PadLayout
@@ -43,7 +43,7 @@ import dev.btdeck.feature.pad.Pad
 fun PadScreen(
     state: PadState,
     store: LayoutStore,
-    settings: BTDeckSettings,
+    settings: ZexDeckSettings,
     status: HidStatus,
     fullscreen: Boolean,
     onFullscreenChange: (Boolean) -> Unit,

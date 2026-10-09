@@ -13,8 +13,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.btdeck.core.designsystem.theme.BTDeckColors
-import dev.btdeck.core.designsystem.theme.BTDeckShapes
+import dev.btdeck.core.designsystem.theme.ZexDeckColors
+import dev.btdeck.core.designsystem.theme.ZexDeckShapes
 
 /**
  * A small badge that floats over a corner, like a button's shortcut or a layout's button
@@ -24,7 +24,7 @@ import dev.btdeck.core.designsystem.theme.BTDeckShapes
 fun CornerBadge(
     text: String,
     modifier: Modifier = Modifier,
-    background: Color = BTDeckColors.Background.copy(alpha = 0.85f),
+    background: Color = ZexDeckColors.Background.copy(alpha = 0.85f),
     color: Color = Color.White,
 ) {
     Text(
@@ -38,7 +38,7 @@ fun CornerBadge(
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
         modifier = modifier
-            .clip(BTDeckShapes.XSmall)
+            .clip(ZexDeckShapes.XSmall)
             .background(background)
             .defaultMinSize(minWidth = 16.dp)
             .padding(horizontal = 6.dp, vertical = 2.dp),

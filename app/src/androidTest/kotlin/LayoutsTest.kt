@@ -21,7 +21,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class LayoutsTest : BTDeckUiTest() {
+class LayoutsTest : ZexDeckUiTest() {
 
     private fun layouts() = store.state.value.layouts
     private fun selected() = store.state.value.selected

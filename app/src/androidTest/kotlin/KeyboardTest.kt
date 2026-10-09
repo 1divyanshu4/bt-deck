@@ -27,7 +27,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class KeyboardTest : BTDeckUiTest() {
+class KeyboardTest : ZexDeckUiTest() {
 
     /** The key with this accessibility name (the left one, for keys that appear twice like Shift). */
     private fun keyNode(description: String) = rule.onAllNodesWithContentDescription(description)[0]
@@ -65,6 +65,28 @@ class KeyboardTest : BTDeckUiTest() {
         reports.clear()
         tapKey("z")
         awaitReport(expected(0 to key("Z")))
+    }
+
+    @Test
+    fun shiftTappedAgainSlowlyTurnsOff() {
+        tapKey("Shift")
+        Thread.sleep(600) // longer than a double tap
+        tapKey("Shift")
+        keyNode("Shift").assert(SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, "Off"))
+        tapKey("a")
+        awaitReport(expected(0 to key("A")))
+    }
+
+    @Test
+    fun heldBackspaceRepeatsWhileWriting() {
+        rule.onNode(hasSetTextAction()).performClick()
+        repeat(5) { tapKey("q") }
+        keyNode("Backspace").performTouchInput { down(center) }
+        // The text box, not the q key: it empties only if Backspace kept repeating.
+        val boxWithQ = hasSetTextAction() and hasText("q", substring = true)
+        rule.waitUntil(3_000) { rule.onAllNodes(boxWithQ).fetchSemanticsNodes().isEmpty() }
+        keyNode("Backspace").performTouchInput { up() }
+        rule.onNode(hasSetTextAction()).assert(hasText(""))
     }
 
     @Test

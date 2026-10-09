@@ -1,6 +1,8 @@
 package dev.btdeck.feature.keyboard
 
+import android.os.SystemClock
 import android.view.HapticFeedbackConstants
+import android.view.ViewConfiguration
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.awaitEachGesture
@@ -44,6 +46,7 @@ import androidx.compose.ui.platform.InterceptPlatformTextInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.onClick
@@ -57,10 +60,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.btdeck.core.bluetooth.HidKeyboard
 import dev.btdeck.core.designsystem.component.CompactTextField
-import dev.btdeck.core.designsystem.theme.BTDeckColors
-import dev.btdeck.core.designsystem.theme.BTDeckShapes
+import dev.btdeck.core.designsystem.theme.ZexDeckColors
+import dev.btdeck.core.designsystem.theme.ZexDeckShapes
 import dev.btdeck.core.model.Keys
 import dev.btdeck.core.model.Mod
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -171,7 +175,7 @@ private fun TextSender(
         }
         FilledIconButton(
             onClick = onSend,
-            shape = BTDeckShapes.Small,
+            shape = ZexDeckShapes.Small,
             enabled = draft.text.isNotEmpty() && !sending,
             modifier = Modifier.padding(start = 8.dp).size(44.dp),
         ) {
@@ -184,13 +188,15 @@ private fun TextSender(
     }
 }
 
-/** Off → applies to the next key → locked on → off. */
+/** Off → applies to the next key → off again, or locked on by a quick double tap. */
 private enum class ModifierState { OFF, NEXT_KEY, LOCKED }
 
 /**
- * The keys and their state. Modifiers work two ways: tap one for the next key (tap again
- * to lock it), or hold it down while pressing another key, like a real keyboard.
- * With [writeKey] set, keys go to the text box instead of the other device.
+ * The keys and their state. Modifiers work like Gboard's Shift: tap one for the next key,
+ * tap it again to turn it off, or double-tap quickly to lock it. They can also be held down
+ * while pressing another key, like a real keyboard.
+ * With [writeKey] set, keys go to the text box instead of the other device, and a held key
+ * repeats there the way the other device repeats it.
  */
 @Composable
 private fun FullKeyboard(vibrate: Boolean, writeKey: ((KeySpec, String) -> Unit)?, modifier: Modifier) {
@@ -200,6 +206,11 @@ private fun FullKeyboard(vibrate: Boolean, writeKey: ((KeySpec, String) -> Unit)
     val heldModifiers = remember { mutableStateListOf<Int>() }
     val usedWhileHeld = remember { mutableSetOf<Int>() }
     val capsLock by HidKeyboard.capsLock.collectAsState()
+    val doubleTapTimeout = LocalViewConfiguration.current.doubleTapTimeoutMillis
+    // When each modifier was last tapped on, to tell a double tap from two separate taps.
+    val tappedOnAt = remember { mutableMapOf<Int, Long>() }
+    val scope = rememberCoroutineScope()
+    var repeatJob by remember { mutableStateOf<Job?>(null) }
 
     fun stateOf(bit: Int) = modifiers[bit] ?: ModifierState.OFF
     val shiftOn = stateOf(Mod.SHIFT) != ModifierState.OFF || Mod.SHIFT in heldModifiers
@@ -216,7 +227,10 @@ private fun FullKeyboard(vibrate: Boolean, writeKey: ((KeySpec, String) -> Unit)
         // Caps Lock belongs to the other device, so it goes there even while writing.
         if (writeKey != null && !spec.isCapsLock) {
             // Shift is already in the label; Ctrl/Alt/Meta shortcuts mean nothing in the box.
-            if (activeModifiers() and Mod.SHIFT.inv() == 0) writeKey(spec, spec.labelFor(shiftOn, capsLock))
+            if (activeModifiers() and Mod.SHIFT.inv() != 0) return
+            val text = spec.labelFor(shiftOn, capsLock)
+            writeKey(spec, text)
+            if (spec.repeatsWhileWriting) repeatJob = scope.launch { repeatWhileHeld { writeKey(spec, text) } }
             return
         }
         HidKeyboard.press(spec.source, activeModifiers(), spec.usage)
@@ -224,6 +238,7 @@ private fun FullKeyboard(vibrate: Boolean, writeKey: ((KeySpec, String) -> Unit)
     }
 
     fun releaseKey(spec: KeySpec) {
+        repeatJob?.cancel()
         HidKeyboard.release(spec.source)
         // Sticky modifiers are used up by one key.
         modifiers.keys.filter { modifiers[it] == ModifierState.NEXT_KEY }.forEach { modifiers[it] = ModifierState.OFF }
@@ -233,9 +248,11 @@ private fun FullKeyboard(vibrate: Boolean, writeKey: ((KeySpec, String) -> Unit)
         heldModifiers.remove(bit)
         // Held down for a combo: it was only held, so it doesn't also toggle.
         if (usedWhileHeld.remove(bit) || !lifted) return
+        val now = SystemClock.uptimeMillis()
+        val doubleTap = now - (tappedOnAt[bit] ?: 0L) <= doubleTapTimeout
         modifiers[bit] = when (stateOf(bit)) {
-            ModifierState.OFF -> ModifierState.NEXT_KEY
-            ModifierState.NEXT_KEY -> ModifierState.LOCKED
+            ModifierState.OFF -> ModifierState.NEXT_KEY.also { tappedOnAt[bit] = now }
+            ModifierState.NEXT_KEY -> if (doubleTap) ModifierState.LOCKED else ModifierState.OFF
             ModifierState.LOCKED -> ModifierState.OFF
         }
     }
@@ -295,6 +312,18 @@ private fun KeySpec.labelFor(shift: Boolean, capsLock: Boolean): String {
     return if (upper && shifted != null) shifted else label
 }
 
+/** Enter sends the text and Esc leaves the box, so only those two don't repeat. */
+private val KeySpec.repeatsWhileWriting get() = usage != Keys.usage("Enter") && usage != Keys.usage("Esc")
+
+/** Repeats [action] like Android repeats a held hardware key, until cancelled on release. */
+private suspend fun repeatWhileHeld(action: () -> Unit) {
+    delay(ViewConfiguration.getKeyRepeatTimeout().toLong())
+    while (true) {
+        action()
+        delay(ViewConfiguration.getKeyRepeatDelay().toLong())
+    }
+}
+
 /** Held keys are tracked by this id, so each key releases only itself. */
 private val KeySpec.source get() = "keyboard:$usage"
 
@@ -327,12 +356,12 @@ private fun KeyboardKey(
     ) {
         MaterialTheme.colorScheme.primary.copy(alpha = 0.55f)
     } else {
-        BTDeckColors.SurfaceHigh
+        ZexDeckColors.SurfaceHigh
     }
 
     Box(
         modifier
-            .clip(BTDeckShapes.Small)
+            .clip(ZexDeckShapes.Small)
             .background(background)
             .semantics(mergeDescendants = true) {
                 contentDescription = spec.description
@@ -386,7 +415,7 @@ private fun KeyboardKey(
 @Composable
 private fun LockMark() {
     Box(Modifier.fillMaxSize().padding(bottom = 4.dp), contentAlignment = Alignment.BottomCenter) {
-        Box(Modifier.size(width = 14.dp, height = 3.dp).clip(BTDeckShapes.Small).background(Color.White))
+        Box(Modifier.size(width = 14.dp, height = 3.dp).clip(ZexDeckShapes.Small).background(Color.White))
     }
 }
 

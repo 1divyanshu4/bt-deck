@@ -57,8 +57,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import dev.btdeck.core.designsystem.theme.BTDeckColors
-import dev.btdeck.core.designsystem.theme.BTDeckShapes
+import dev.btdeck.core.designsystem.theme.ZexDeckColors
+import dev.btdeck.core.designsystem.theme.ZexDeckShapes
 import dev.btdeck.core.designsystem.theme.Palette
 import kotlinx.coroutines.launch
 
@@ -75,7 +75,7 @@ private data class WalkthroughPageData(
 private val pages = listOf(
     WalkthroughPageData(
         badge = "WELCOME",
-        title = "Welcome to BTDeck",
+        title = "Welcome to ZexDeck",
         description = "Turn your phone into a customizable wireless macro pad and keyboard " +
             "for your PC, Mac, iPad, or tablet.",
         showLogo = true,
@@ -96,7 +96,7 @@ private val pages = listOf(
             Icons.Default.Keyboard to "Accept the pairing prompt on both screens. That's it!",
         ),
         image = R.drawable.tutorial_connect_2,
-        tip = "Once paired, BTDeck reconnects automatically whenever you open the app.",
+        tip = "Once paired, ZexDeck reconnects automatically whenever you open the app.",
     ),
     WalkthroughPageData(
         badge = "STEP 2 · SHORTCUTS",
@@ -151,10 +151,10 @@ fun WalkthroughDialog(onDismiss: () -> Unit, onConnect: () -> Unit = onDismiss, 
                 modifier = Modifier
                     .widthIn(max = 520.dp)
                     .fillMaxHeight(0.92f)
-                    .clip(BTDeckShapes.Medium)
-                    .border(1.dp, Color.White.copy(alpha = 0.12f), BTDeckShapes.Medium),
-                color = BTDeckColors.Background,
-                shape = BTDeckShapes.Medium,
+                    .clip(ZexDeckShapes.Medium)
+                    .border(1.dp, Color.White.copy(alpha = 0.12f), ZexDeckShapes.Medium),
+                color = ZexDeckColors.Background,
+                shape = ZexDeckShapes.Medium,
             ) {
                 Column(
                     modifier = Modifier
@@ -236,14 +236,14 @@ fun WalkthroughDialog(onDismiss: () -> Unit, onConnect: () -> Unit = onDismiss, 
                                 onClick = {
                                     scope.launch { pager.animateScrollToPage(pager.currentPage + 1) }
                                 },
-                                shape = BTDeckShapes.Small,
+                                shape = ZexDeckShapes.Small,
                             ) {
                                 Text("Next")
                             }
                         } else {
                             Button(
                                 onClick = onConnect,
-                                shape = BTDeckShapes.Small,
+                                shape = ZexDeckShapes.Small,
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = MaterialTheme.colorScheme.primary,
                                     contentColor = Color.Black,
@@ -276,7 +276,7 @@ private fun AppLogo(modifier: Modifier = Modifier) {
         modifier = modifier
             .size(76.dp)
             .clip(RoundedCornerShape(18.dp))
-            .background(BTDeckColors.SurfaceHigh)
+            .background(ZexDeckColors.SurfaceHigh)
             .border(1.dp, Color.White.copy(alpha = 0.12f), RoundedCornerShape(18.dp))
             .padding(12.dp),
         contentAlignment = Alignment.Center,
@@ -345,8 +345,8 @@ private fun WalkthroughPageContent(page: WalkthroughPageData) = BoxWithConstrain
                     .widthIn(max = 440.dp)
                     .heightIn(max = pictureMaxHeight)
                     .aspectRatio(picture.intrinsicSize.width / picture.intrinsicSize.height)
-                    .clip(BTDeckShapes.Medium)
-                    .border(1.dp, Color.White.copy(alpha = 0.08f), BTDeckShapes.Medium),
+                    .clip(ZexDeckShapes.Medium)
+                    .border(1.dp, Color.White.copy(alpha = 0.08f), ZexDeckShapes.Medium),
             )
             Spacer(Modifier.height(14.dp))
         }
@@ -384,8 +384,8 @@ private fun WalkthroughPageContent(page: WalkthroughPageData) = BoxWithConstrain
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(BTDeckShapes.Small)
-                                .background(BTDeckColors.Surface)
+                                .clip(ZexDeckShapes.Small)
+                                .background(ZexDeckColors.Surface)
                                 .padding(horizontal = 10.dp, vertical = 8.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
@@ -412,9 +412,9 @@ private fun WalkthroughPageContent(page: WalkthroughPageData) = BoxWithConstrain
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(BTDeckShapes.Small)
+                        .clip(ZexDeckShapes.Small)
                         .background(Palette[1].copy(alpha = 0.15f))
-                        .border(1.dp, Palette[1].copy(alpha = 0.3f), BTDeckShapes.Small)
+                        .border(1.dp, Palette[1].copy(alpha = 0.3f), ZexDeckShapes.Small)
                         .padding(horizontal = 12.dp, vertical = 8.dp),
                 ) {
                     Text(

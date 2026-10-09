@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.btdeck.core.bluetooth.HidStatus
 import dev.btdeck.core.designsystem.component.HelpButton
-import dev.btdeck.core.designsystem.theme.BTDeckColors
-import dev.btdeck.core.designsystem.theme.BTDeckShapes
+import dev.btdeck.core.designsystem.theme.ZexDeckColors
+import dev.btdeck.core.designsystem.theme.ZexDeckShapes
 import dev.btdeck.core.designsystem.theme.Palette
 
 /** Compact connection indicator for the top bar. */
@@ -34,13 +34,13 @@ fun StatusChip(status: HidStatus, onClick: () -> Unit, modifier: Modifier = Modi
     val (text, color) = chipText(status)
     Row(
         modifier
-            .clip(BTDeckShapes.Small)
-            .background(BTDeckColors.Surface)
+            .clip(ZexDeckShapes.Small)
+            .background(ZexDeckColors.Surface)
             .clickable(onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(Modifier.size(8.dp).clip(BTDeckShapes.Small).background(color))
+        Box(Modifier.size(8.dp).clip(ZexDeckShapes.Small).background(color))
         Spacer(Modifier.width(8.dp))
         Text(text, fontSize = 14.sp, color = Color.White, maxLines = 1, overflow = TextOverflow.Ellipsis)
     }
@@ -73,7 +73,7 @@ fun StatusBanner(
         HidStatus.NoBluetooth -> Banner("No Bluetooth", "This phone has no Bluetooth adapter.", null)
         HidStatus.BluetoothOff -> Banner("Bluetooth is off", null, "Turn on")
         HidStatus.NeedsPermission ->
-            Banner("Permission needed", "BTDeck needs Bluetooth permission to act as a keyboard.", "Allow")
+            Banner("Permission needed", "ZexDeck needs Bluetooth permission to act as a keyboard.", "Allow")
         is HidStatus.Unsupported -> Banner(status.title, status.detail, "Retry")
         is HidStatus.ConnectFailed -> Banner(
             "Connect from ${status.name} once",
@@ -86,8 +86,8 @@ fun StatusBanner(
         HidStatus.NeedsBluetoothRestart -> Banner(
             "Restart Bluetooth",
             "The phone's Bluetooth is still holding an old keyboard session (this happens after " +
-                "BTDeck is updated or closed while connected). Restart turns Bluetooth off and on; " +
-                "BTDeck reconnects by itself.",
+                "ZexDeck is updated or closed while connected). Restart turns Bluetooth off and on; " +
+                "ZexDeck reconnects by itself.",
             "Restart",
         )
         else -> return
@@ -96,8 +96,8 @@ fun StatusBanner(
         modifier
             .fillMaxWidth()
             .padding(top = 4.dp)
-            .clip(BTDeckShapes.Medium)
-            .background(BTDeckColors.Surface)
+            .clip(ZexDeckShapes.Medium)
+            .background(ZexDeckColors.Surface)
             .padding(start = 14.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {

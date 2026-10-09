@@ -22,21 +22,21 @@
     <uses-feature android:name="android.hardware.bluetooth" android:required="true" />
 
     <application
-        android:name=".BTDeckApp"
+        android:name=".ZexDeckApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.BTDeck">
+        android:theme="@style/Theme.ZexDeck">
         <!--
             configChanges: a Bluetooth keyboard connecting to this device must not recreate the
-            screen, or BTDeck would register as a keyboard again on the way back up and Android
+            screen, or ZexDeck would register as a keyboard again on the way back up and Android
             would drop the keyboard that just connected. Compose redraws for these by itself.
         -->
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.BTDeck.Starting"
+            android:theme="@style/Theme.ZexDeck.Starting"
             android:configChanges="keyboard|keyboardHidden|navigation"
             android:exported="true"
             android:launchMode="singleTop"
@@ -48,7 +48,7 @@
             </intent-filter>
             <!--
                 Opening or sharing a .keyset layout file. Apps rarely know the extension, so the
-                file arrives as generic binary or zip; BTDeck checks the contents itself.
+                file arrives as generic binary or zip; ZexDeck checks the contents itself.
             -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

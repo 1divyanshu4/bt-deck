@@ -57,8 +57,8 @@ import dev.btdeck.core.designsystem.component.CornerBadge
 import dev.btdeck.core.designsystem.component.TopBar
 import dev.btdeck.core.designsystem.component.hasIcon
 import dev.btdeck.core.designsystem.component.softCircles
-import dev.btdeck.core.designsystem.theme.BTDeckColors
-import dev.btdeck.core.designsystem.theme.BTDeckShapes
+import dev.btdeck.core.designsystem.theme.ZexDeckColors
+import dev.btdeck.core.designsystem.theme.ZexDeckShapes
 import dev.btdeck.core.designsystem.theme.Palette
 import dev.btdeck.core.model.PadLayout
 import dev.btdeck.core.model.PadState
@@ -172,9 +172,9 @@ private fun LayoutCard(
 ) {
     // Same surface as the pad keys; the layout in use is tinted with the accent colour.
     val surface = if (selected) {
-        MaterialTheme.colorScheme.primary.copy(alpha = 0.16f).compositeOver(BTDeckColors.Surface)
+        MaterialTheme.colorScheme.primary.copy(alpha = 0.16f).compositeOver(ZexDeckColors.Surface)
     } else {
-        BTDeckColors.Surface
+        ZexDeckColors.Surface
     }
     Card(
         onClick = onOpen,
@@ -222,7 +222,7 @@ private fun LayoutPreview(layout: PadLayout, modifier: Modifier) {
     if (rows.isEmpty()) {
         // A dark panel where the buttons would be, so an empty card still has a picture.
         Box(
-            modifier.clip(BTDeckShapes.Small).background(Color.Black.copy(alpha = 0.25f)),
+            modifier.clip(ZexDeckShapes.Small).background(Color.Black.copy(alpha = 0.25f)),
             contentAlignment = Alignment.Center,
         ) { Text("Empty", color = Color.Gray) }
         return
@@ -239,9 +239,9 @@ private fun LayoutPreview(layout: PadLayout, modifier: Modifier) {
                         Modifier
                             .weight(1f)
                             .fillMaxSize()
-                            .clip(BTDeckShapes.Small)
+                            .clip(ZexDeckShapes.Small)
                             .background(color.copy(alpha = 0.62f))
-                            .border(1.dp, edge, BTDeckShapes.Small),
+                            .border(1.dp, edge, ZexDeckShapes.Small),
                         contentAlignment = Alignment.Center,
                     ) {
                         if (hasIcon(button.icon)) {

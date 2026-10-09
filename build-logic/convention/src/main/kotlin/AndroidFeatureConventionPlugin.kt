@@ -11,7 +11,7 @@ import org.gradle.kotlin.dsl.project
  */
 class AndroidFeatureConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) = with(target) {
-        pluginManager.apply("btdeck.android.compose")
+        pluginManager.apply("zexdeck.android.compose")
         dependencies {
             add("implementation", project(":core:model"))
             add("implementation", project(":core:designsystem"))

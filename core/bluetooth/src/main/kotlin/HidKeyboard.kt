@@ -43,7 +43,7 @@ sealed interface HidStatus {
     data class ConnectFailed(val name: String) : HidStatus
 
     /**
-     * The stack is stuck holding an old keyboard session (e.g. BTDeck was killed while
+     * The stack is stuck holding an old keyboard session (e.g. ZexDeck was killed while
      * connected and the phone never finished releasing it). Only a Bluetooth restart clears it.
      */
     data object NeedsBluetoothRestart : HidStatus
@@ -118,9 +118,9 @@ object HidKeyboard {
     )
 
     private val SDP = BluetoothHidDeviceAppSdpSettings(
-        "BTDeck",
-        "BTDeck shortcut pad",
-        "BTDeck",
+        "ZexDeck",
+        "ZexDeck shortcut pad",
+        "ZexDeck",
         BluetoothHidDevice.SUBCLASS1_KEYBOARD,
         DESCRIPTOR,
     )
@@ -182,7 +182,7 @@ object HidKeyboard {
 
     /**
      * Whether Caps Lock is on. The host reports it through the LED byte; [toggleCapsLock]
-     * guesses ahead for hosts that don't (ones that paired before BTDeck sent LEDs).
+     * guesses ahead for hosts that don't (ones that paired before ZexDeck sent LEDs).
      */
     val capsLock: StateFlow<Boolean> = _capsLock.asStateFlow()
 
@@ -349,7 +349,7 @@ object HidKeyboard {
         }
         registerAttempts = 0
         // Usually our own old session the stack never released, occasionally another
-        // keyboard app. A Bluetooth restart fixes the first and BTDeck re-registers itself.
+        // keyboard app. A Bluetooth restart fixes the first and ZexDeck re-registers itself.
         _status.value = HidStatus.NeedsBluetoothRestart
     }
 

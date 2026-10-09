@@ -17,7 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class ScreensTest : BTDeckUiTest() {
+class ScreensTest : ZexDeckUiTest() {
 
     private fun status(s: HidStatus) {
         rule.runOnUiThread { HidKeyboard.setStatusForTest(s) }

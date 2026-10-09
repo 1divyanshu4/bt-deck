@@ -17,7 +17,7 @@ internal suspend fun shareLayout(context: Context, transfer: LayoutTransfer, lay
     val send = Intent(Intent.ACTION_SEND)
         .setType(KEYSET_MIME)
         .putExtra(Intent.EXTRA_STREAM, uri)
-        .putExtra(Intent.EXTRA_SUBJECT, "BTDeck layout: ${layout.name}")
+        .putExtra(Intent.EXTRA_SUBJECT, "ZexDeck layout: ${layout.name}")
         .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     context.startActivity(Intent.createChooser(send, "Share layout"))
 }

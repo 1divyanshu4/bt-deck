@@ -134,6 +134,7 @@ object PadIcons {
         "Brushes & tools" to listOf(
             PadIcon("brush", "Brush", Icons.Filled.Brush),
             PadIcon("pen", "Pen", Icons.Filled.Draw),
+            PadIcon("pen_tool", "Pen tool (paths)", DrawnIcons.PenTool),
             PadIcon("pencil", "Pencil", Icons.Filled.ModeEdit),
             PadIcon("marker", "Marker", Icons.Filled.BorderColor),
             PadIcon("highlighter", "Highlighter", Icons.Filled.Highlight),

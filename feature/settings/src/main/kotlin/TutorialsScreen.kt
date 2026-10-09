@@ -47,8 +47,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.btdeck.core.designsystem.component.PageTitle
 import dev.btdeck.core.designsystem.component.softCircles
-import dev.btdeck.core.designsystem.theme.BTDeckColors
-import dev.btdeck.core.designsystem.theme.BTDeckShapes
+import dev.btdeck.core.designsystem.theme.ZexDeckColors
+import dev.btdeck.core.designsystem.theme.ZexDeckShapes
 import kotlinx.coroutines.launch
 
 /**
@@ -83,7 +83,7 @@ private val tutorials = listOf(
             Step(
                 "Connect sheet",
                 "After that, just tap Connect.",
-                "BTDeck also reconnects by itself. If the very first connect fails, connect once from " +
+                "ZexDeck also reconnects by itself. If the very first connect fails, connect once from " +
                     "the tablet or laptop's Bluetooth settings.",
                 R.drawable.tutorial_connect_3,
             ),
@@ -103,7 +103,7 @@ private val tutorials = listOf(
             Step(
                 "Layouts tab",
                 "The tinted card is the layout in use.",
-                "Tap another card to switch to it; BTDeck takes you straight to the Pad.",
+                "Tap another card to switch to it; ZexDeck takes you straight to the Pad.",
                 R.drawable.tutorial_layout_3,
             ),
             Step(
@@ -232,18 +232,18 @@ private val tutorials = listOf(
             Step(
                 "Connect sheet",
                 "Restart Bluetooth.",
-                "Fixes most stuck connections. BTDeck reconnects by itself afterwards.",
+                "Fixes most stuck connections. ZexDeck reconnects by itself afterwards.",
                 R.drawable.tutorial_fix_1,
             ),
             Step(
                 "Your tablet or laptop",
-                "Run BTDeck on the phone only.",
+                "Run ZexDeck on the phone only.",
                 "A device that's acting as a keyboard can't receive keys from another one.",
             ),
             Step(
                 "Your tablet or laptop",
                 "Odd characters? Use a US keyboard layout.",
-                "BTDeck types as a US keyboard, so the other device should be set to that layout.",
+                "ZexDeck types as a US keyboard, so the other device should be set to that layout.",
             ),
         ),
     ),
@@ -277,10 +277,10 @@ private fun TutorialList(onOpenWalkthrough: (() -> Unit)?, onOpen: (Int) -> Unit
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .clip(BTDeckShapes.Medium)
-                    .background(BTDeckColors.SurfaceHigh)
+                    .clip(ZexDeckShapes.Medium)
+                    .background(ZexDeckColors.SurfaceHigh)
                     .softCircles()
-                    .border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f), BTDeckShapes.Medium)
+                    .border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f), ZexDeckShapes.Medium)
                     .clickable(role = Role.Button, onClick = onOpenWalkthrough)
                     .padding(12.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -289,7 +289,7 @@ private fun TutorialList(onOpenWalkthrough: (() -> Unit)?, onOpen: (Int) -> Unit
                     painterResource(R.drawable.tutorial_connect_2),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(64.dp).clip(BTDeckShapes.Small),
+                    modifier = Modifier.size(64.dp).clip(ZexDeckShapes.Small),
                 )
                 Column(Modifier.padding(start = 14.dp).weight(1f)) {
                     Text(
@@ -315,10 +315,10 @@ private fun TutorialCard(tutorial: Tutorial, onClick: () -> Unit) {
     Row(
         Modifier
             .fillMaxWidth()
-            .clip(BTDeckShapes.Medium)
-            .background(BTDeckColors.Surface)
+            .clip(ZexDeckShapes.Medium)
+            .background(ZexDeckColors.Surface)
             .softCircles()
-            .border(1.dp, Color.White.copy(alpha = 0.06f), BTDeckShapes.Medium)
+            .border(1.dp, Color.White.copy(alpha = 0.06f), ZexDeckShapes.Medium)
             .clickable(role = Role.Button, onClick = onClick)
             .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -329,7 +329,7 @@ private fun TutorialCard(tutorial: Tutorial, onClick: () -> Unit) {
                 painterResource(thumbnail),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.size(64.dp).clip(BTDeckShapes.Small),
+                modifier = Modifier.size(64.dp).clip(ZexDeckShapes.Small),
             )
         }
         Column(Modifier.padding(start = 14.dp).weight(1f)) {
@@ -359,7 +359,7 @@ private fun TutorialSteps(tutorial: Tutorial, onDone: () -> Unit) {
             PageDots(count = tutorial.steps.size, current = pager.currentPage, modifier = Modifier.weight(1f))
             Button(
                 onClick = { if (last) onDone() else scope.launch { pager.animateScrollToPage(pager.currentPage + 1) } },
-                shape = BTDeckShapes.Small,
+                shape = ZexDeckShapes.Small,
             ) { Text(if (last) "Done" else "Next") }
         }
     }
@@ -386,8 +386,8 @@ private fun StepPage(step: Step, number: Int) = BoxWithConstraints(Modifier.fill
                     .widthIn(max = 480.dp)
                     .heightIn(max = pictureHeight)
                     .aspectRatio(picture.intrinsicSize.width / picture.intrinsicSize.height)
-                    .clip(BTDeckShapes.Medium)
-                    .border(1.dp, Color.White.copy(alpha = 0.08f), BTDeckShapes.Medium),
+                    .clip(ZexDeckShapes.Medium)
+                    .border(1.dp, Color.White.copy(alpha = 0.08f), ZexDeckShapes.Medium),
             )
         }
         Column(Modifier.fillMaxWidth().padding(top = 16.dp)) {

@@ -1,14 +1,18 @@
 # Changelog
 
-Notable changes to BTDeck, newest first.
+Notable changes to ZexDeck, newest first.
+
+## 0.1.2 (9 October 2026)
+
+- BTDeck is now ZexDeck. Your layouts and settings carry over; the app updates in place.
 
 ## 0.1.1 (28 September 2026)
 
 - A walkthrough on first launch, which Settings and Tutorials can open again.
 - Stop in the notification now releases the keyboard cleanly. Before, pressing it with
-  BTDeck closed could leave the phone and the other device half-connected, so connecting
+  ZexDeck closed could leave the phone and the other device half-connected, so connecting
   again stayed stuck on "Connecting".
-- Opening BTDeck turns the keyboard back on after Stop; no need to tap Start.
+- Opening ZexDeck turns the keyboard back on after Stop; no need to tap Start.
 - The notification goes away when the keyboard is stopped.
 
 ## 0.1.0 (24 September 2026)
@@ -46,7 +50,7 @@ First release.
 
 ### Connecting
 
-- Scan, pair and connect from inside the app. BTDeck reconnects to the last device by
+- Scan, pair and connect from inside the app. ZexDeck reconnects to the last device by
   itself and stays connected while you use other apps.
 - Turn Bluetooth on or off, or restart it, from the Connect sheet.
 - Works around Bluetooth quirks on Xiaomi and Redmi phones, and on tablets and laptops that

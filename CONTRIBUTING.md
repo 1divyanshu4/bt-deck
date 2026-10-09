@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping out. Bug reports, notes about how BTDeck works on your devices, and pull
+Thanks for helping out. Bug reports, notes about how ZexDeck works on your devices, and pull
 requests are all welcome.
 
 ## Reporting a bug
@@ -8,7 +8,7 @@ requests are all welcome.
 Open an issue using the bug report form. Bluetooth problems depend a lot on the exact
 devices, so please tell us:
 
-- which phone runs BTDeck, and its Android version
+- which phone runs ZexDeck, and its Android version
 - which tablet or computer you're connecting to
 - what you did, what you expected, and what happened instead
 

@@ -1,6 +1,6 @@
-# BTDeck
+# ZexDeck
 
-BTDeck turns your Android phone into a shortcut pad for drawing.
+ZexDeck turns your Android phone into a shortcut pad for drawing.
 
 Your phone connects to your tablet or laptop as a normal Bluetooth keyboard. You fill the
 screen with big buttons like Undo, Brush, Eraser or Pan, and tap them with one hand while
@@ -24,20 +24,20 @@ you draw with the other. Nothing needs to be installed on the tablet or laptop.
 - A phone with Android 9 or newer
 - A tablet or computer with Bluetooth
 
-A few phone makers switch off the Bluetooth keyboard feature. If yours has, BTDeck will
+A few phone makers switch off the Bluetooth keyboard feature. If yours has, ZexDeck will
 tell you.
 
 ## How to use it
 
-1. Install BTDeck on your phone (download it from [Releases](../../releases)).
+1. Install ZexDeck on your phone (download it from [Releases](../../releases)).
 2. Open it and allow Bluetooth access.
 3. On your tablet or laptop, open the Bluetooth settings page.
-4. In BTDeck, tap the status button in the top left, then **Scan**, then **Pair** next to
+4. In ZexDeck, tap the status button in the top left, then **Scan**, then **Pair** next to
    your device.
-5. Start drawing. Next time, BTDeck reconnects on its own.
+5. Start drawing. Next time, ZexDeck reconnects on its own.
 
 If the first connection fails, connect once from the tablet or laptop's Bluetooth settings.
-After that it works from BTDeck too. [docs/BLUETOOTH.md](docs/BLUETOOTH.md) explains why and
+After that it works from ZexDeck too. [docs/BLUETOOTH.md](docs/BLUETOOTH.md) explains why and
 lists known device quirks.
 
 ## Building it yourself

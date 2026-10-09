@@ -8,7 +8,7 @@ import dev.btdeck.core.data.LayoutStore
 import dev.btdeck.core.data.LayoutTransfer
 import dev.btdeck.core.data.SettingsStore
 
-class BTDeckApp : Application() {
+class ZexDeckApp : Application() {
     lateinit var layouts: LayoutStore
         private set
     lateinit var settings: SettingsStore

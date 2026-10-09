@@ -20,7 +20,7 @@ enum class ButtonSpacing(val label: String, val dp: Int) {
 }
 
 /** User preferences from the Settings screen. */
-data class BTDeckSettings(
+data class ZexDeckSettings(
     val buttonStyle: ButtonStyle = ButtonStyle.ICON_AND_LABEL,
     /** Show the key combination (e.g. "Ctrl+Z") on text buttons. */
     val showShortcut: Boolean = true,
